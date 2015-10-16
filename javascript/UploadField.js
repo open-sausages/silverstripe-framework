@@ -168,7 +168,8 @@
 					return;
 				}
 
-				var $fileInput = this.find('.ss-uploadfield-fromcomputer-fileinput'),
+				var self = this,
+					$fileInput = this.find('.ss-uploadfield-fromcomputer-fileinput'),
 					$dropZone = $('.ss-uploadfield-dropzone'),
 					config = $fileInput.data('config');
 
@@ -190,11 +191,10 @@
 
 				$dropZone.on('drop', function (e) {
 					$dropZone.removeClass('hover active');
-
 					if (e.target !== $dropZone[0]) {
 						return false;
 					}
-				})
+				});
 
 				this.setConfig(config);
 				this.fileupload($.extend(true, {

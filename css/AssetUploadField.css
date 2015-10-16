@@ -10,7 +10,7 @@
 /*Mixin used to generate slightly smaller text and forms
 Used in side panels and action tabs
 */
-.ss-uploadfield-view-allowed-extensions { margin-top: -42px; max-width: 400px; width: 30%; background: #ECEFF1; display: block; float: right; position: relative; }
+.ss-uploadfield-view-allowed-extensions { margin-top: 8px; max-width: 400px; width: 30%; background: #ECEFF1; display: block; float: right; position: relative; }
 .ss-uploadfield-view-allowed-extensions .toggle { font-style: normal; font-size: 16px; float: right; color: #9ba5ae; position: absolute; top: 4px; right: 0; width: 16px; height: 16px; overflow: hidden; }
 .ss-uploadfield-view-allowed-extensions .toggle:hover, .ss-uploadfield-view-allowed-extensions .toggle:active, .ss-uploadfield-view-allowed-extensions .toggle:focus { text-decoration: none; color: #66727d; }
 .ss-uploadfield-view-allowed-extensions h4 { margin: 0 0 6px; padding-right: 20px; }
@@ -23,7 +23,8 @@ body.cms.ss-uploadfield-edit-iframe .fieldholder-small label, .composite.ss-asse
 
 .composite.ss-assetuploadfield .details fieldset { padding: 16px; }
 
-.ss-assetuploadfield { border-bottom: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; margin: 0; position: relative; padding: 0; }
+.ss-assetuploadfield { border-bottom: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; position: relative; padding: 0; margin: 0 0 -16px; }
+.ss-insert-media .ss-assetuploadfield { margin: 0 0 16px; }
 .ss-assetuploadfield h3 { border-bottom: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); margin: 0 0 8px; padding: 0 0 7px; clear: both; position: relative; }
 .ss-assetuploadfield .field { border-bottom: 0; box-shadow: none; }
 .ss-assetuploadfield .fileOverview { clear: both; margin-top: 10px; position: relative; }
@@ -71,13 +72,13 @@ body.cms.ss-uploadfield-edit-iframe .fieldholder-small label, .composite.ss-asse
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform.loading { width: 100%; height: 22px; padding: 15px 0; background: url(../admin/images/spinner.gif) no-repeat 50% 50%; }
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform.loading iframe { /* Old IE needs this or it'll give the iframe a white background, covering the spinner */ padding-top: 0; margin-top: 37px; border: none; }
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform iframe { width: 100%; padding: 16px; background: #E2E2E2; }
-.ss-assetuploadfield .ss-uploadfield-addfile { margin: 0 0 16px; padding: 0; }
-.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { text-align: center; width: 50%; margin: -12px auto 0; }
+.ss-assetuploadfield .ss-uploadfield-addfile { margin: 0; padding: 0; }
+.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { text-align: center; width: 50%; margin: 8px auto 0; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { margin: 0 auto; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info > span { margin-top: 0; }
-.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info > span { display: block; padding: 0; line-height: 1; color: #9ba5ae; margin-top: -12px; }
+.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info > span { display: block; padding: 0; line-height: 1; color: #9ba5ae; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info .upload-url { display: inline; color: #0073C1; cursor: pointer; }
-.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer { font-size: 14px; padding: 4px 8px; display: inline-block; float: none; overflow: hidden; margin: -40px 0 6px; font-weight: normal; }
+.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer { font-size: 14px; padding: 4px 8px; display: inline-block; float: none; overflow: hidden; margin: 4px 0; font-weight: normal; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer { margin: 8px 0 4px; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer::before { font-size: 20px; margin-right: 6px; }
 

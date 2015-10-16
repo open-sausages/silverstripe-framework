@@ -1594,27 +1594,41 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			}
 		});
 
-		$('.htmleditorfield-from-gallery .item').entwine({
+		$('.htmleditorfield-from-gallery .item__thumbnail').entwine({
 			onclick: function (e) {
+				e.stopPropagation();
+
 				//Don't count if folder or edit/delete button is clicked
-				if (this.hasClass('folder') || $(e.target).hasClass('item__actions__action')) {
+				if (this.parent().hasClass('folder') || $(e.target).hasClass('item__actions__action')) {
 					return;
 				}
 
 				var form = this.closest('form');
 
-				if (!this.hasClass('selected')) {
-					this.addClass('selected')
-					form.closest('form').showFileView(this.data('id'));
+				if (!this.parent().hasClass('selected')) {
+					form.closest('form').showFileView(this.parent().data('id'));
 					form.parent().trigger('scroll');
 				} else {
-					this.removeClass('selected');
-					form.getFileView(this.data('id')).remove();
+					form.getFileView(this.parent().data('id')).remove();
 				}
 
 				form.redraw();
 			}
 		});
+
+		$('.htmleditorfield-from-gallery .gallery').entwine({
+			onclick: function(e) {
+				if (e.target !== this[0]) {
+					return;
+				}
+
+				var form = this.closest('form');
+
+				this.find('.item.selected').each(function () {
+					form.getFileView($(this).data('id')).remove();
+				})
+			}
+		})
 	});
 })(jQuery);
 
