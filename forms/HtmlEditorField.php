@@ -332,7 +332,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$computerUploadField->setTemplate('HtmlEditorField_UploadField');
 		$computerUploadField->setFolderName(Config::inst()->get('Upload', 'uploads_folder'));
 
-		$fromCMSGallery = AssetGalleryField::create('Assets')->setCurrentPath('')->setLimit(15);
+		$fromCMSGallery = AssetGalleryField::create('Assets')->setCurrentPath('')->setLimit(15)->disableBulkActions();
 		$fromCMSGallery->addExtraClass('htmleditorfield-from-gallery');
 
 		$tabSet = new TabSet(

@@ -23,7 +23,7 @@ body.cms.ss-uploadfield-edit-iframe .fieldholder-small label, .composite.ss-asse
 
 .composite.ss-assetuploadfield .details fieldset { padding: 16px; }
 
-.ss-assetuploadfield { border-bottom: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; position: relative; padding: 0; margin: 0 0 -16px; }
+.ss-assetuploadfield { border-bottom: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; position: relative; padding: 0; margin: 0 -8px; }
 .ss-insert-media .ss-assetuploadfield { margin: 0 0 16px; }
 .ss-assetuploadfield h3 { border-bottom: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); margin: 0 0 8px; padding: 0 0 7px; clear: both; position: relative; }
 .ss-assetuploadfield .field { border-bottom: 0; box-shadow: none; }

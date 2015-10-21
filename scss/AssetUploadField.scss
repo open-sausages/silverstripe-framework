@@ -73,7 +73,7 @@ body.cms.ss-uploadfield-edit-iframe {
 	@include box-shadow(none);
 	position: relative;
 	padding: 0;
-	margin: 0 0 -2 * $grid-y;
+	margin: 0 0 -$grid-y;
 
 	.ss-insert-media & {
 		margin: 0 0 2 * $grid-y;

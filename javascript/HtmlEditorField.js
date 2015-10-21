@@ -1598,18 +1598,19 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			onclick: function (e) {
 				e.stopPropagation();
 
+				var item = this.closest('.item');
+				var form = this.closest('form');
+
 				//Don't count if folder or edit/delete button is clicked
-				if (this.parent().hasClass('folder') || $(e.target).hasClass('item__actions__action')) {
+				if (item.hasClass('folder') || $(e.target).hasClass('item__actions__action:not(.item__actions__action--select)')) {
 					return;
 				}
 
-				var form = this.closest('form');
-
-				if (!this.parent().hasClass('selected')) {
-					form.closest('form').showFileView(this.parent().data('id'));
+				if (!item.hasClass('selected')) {
+					form.closest('form').showFileView(item.data('id'));
 					form.parent().trigger('scroll');
 				} else {
-					form.getFileView(this.parent().data('id')).remove();
+					form.getFileView(item.data('id')).remove();
 				}
 
 				form.redraw();
