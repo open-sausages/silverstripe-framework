@@ -31,7 +31,7 @@
 					}
 				}
 
-				form.addClass('loading');
+				form.closest('.cms-content').addClass('loading');
 
 				$.ajax($.extend({}, {
 					headers: {"X-Pjax" : 'CurrentField'},
@@ -62,13 +62,13 @@
 							self.find('.sortable-header th:last').html(content);
 						}
 
-						form.removeClass('loading');
+						form.closest('.cms-content').removeClass('loading');
 						if(successCallback) successCallback.apply(this, arguments);
 						self.trigger('reload', self);
 					},
 					error: function(e) {
 						alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
-						form.removeClass('loading');
+						form.closest('.cms-content').removeClass('loading');
 					}
 				}, ajaxOpts));
 			},
