@@ -1602,7 +1602,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var form = this.closest('form');
 
 				//Don't count if folder or edit/delete button is clicked
-				if (item.hasClass('folder') || $(e.target).hasClass('item__actions__action:not(.item__actions__action--select)')) {
+				if (item.hasClass('folder') || $(e.target).is('.item__actions__action:not(.item__actions__action--select)')) {
 					return;
 				}
 
@@ -1629,7 +1629,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					form.getFileView($(this).data('id')).remove();
 				})
 			}
-		})
+		});
 	});
 })(jQuery);
 
