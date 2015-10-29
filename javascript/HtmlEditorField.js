@@ -1046,6 +1046,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				if (editingSelected) {
 					this.find('.htmleditorfield-from-web').hide();
 				}
+				
+				// Hide gallery view when editing an existing file
+				this.find('.ss-tabset')[editingSelected ? 'hide' : 'show']();
 
 				// TODO Way too much knowledge on UploadField internals, use viewfile URL directly instead
 				this.find('.htmleditorfield-mediaform-heading.insert')[editingSelected ? 'hide' : 'show']();
