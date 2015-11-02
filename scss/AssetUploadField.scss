@@ -73,7 +73,6 @@ body.cms.ss-uploadfield-edit-iframe {
 	@include box-shadow(none);
 	position: relative;
 	padding: 0;
-	margin: 0 0 -$grid-y;
 
 	.ss-insert-media & {
 		margin: 0 0 2 * $grid-y;
@@ -91,19 +90,23 @@ body.cms.ss-uploadfield-edit-iframe {
 		border-bottom: 0;
 		box-shadow:none;
 	}
+	
 	.fileOverview{
 		clear:both;
-		margin-top:10px;
+		margin: 1.5*$grid-y 0 $grid-y;
 		position:relative;
 
 		.uploadStatus{
+			margin: 0;
 			@include clearfix;
+			
 			.state{
 				float:left;
 				font-size: 16px;
 				font-weight:bold;
 				line-height:1.1em;
 			}
+			
 			.details{
 				opacity:0.9;
 				float:right;

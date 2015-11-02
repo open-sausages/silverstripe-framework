@@ -599,14 +599,16 @@ form.small .field, .field.small {
 			font-weight: normal;
 			color: $color-text;
 			
-			&:hover {
+			&:hover,
+			&.ui-state-hover {
 				@include box-shadow(none);
 				background: #dee3e8;
 				color: $color-text;
 				border: 0;
 			}
 
-			&:focus {
+			&:focus,
+			&.ui-state-focus {
 				@include box-shadow(none);
 				background: #dee3e8;
 				color: $color-text;
@@ -618,10 +620,6 @@ form.small .field, .field.small {
 				margin-right: 5px;
 				margin-top: 0;
 				vertical-align: middle;
-			}
-
-			&.ui-state-focus {
-				@include box-shadow(none);
 			}
 
 			&.active,
