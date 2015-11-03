@@ -1094,6 +1094,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.find('.ss-htmleditorfield-file').remove(); // Remove any existing views
 				this.find('.ss-gridfield-items .ui-selected').removeClass('ui-selected'); // Unselect all items
 				this.find('li.ss-uploadfield-item').remove(); // Remove all selected items
+				$('.asset-gallery').trigger('cms.clearSelected'); // Remove selected items in gallery view
 				this.redraw();
 
 				this._super();
@@ -1636,43 +1637,51 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				}
 			}
 		});
-
-		$('.htmleditorfield-from-gallery .item__thumbnail').entwine({
-			onclick: function (e) {
-				e.stopPropagation();
-
-				var item = this.closest('.item');
+		
+		$('.htmleditorfield-from-gallery.asset-gallery').entwine({
+			onmatch: function() {
 				var form = this.closest('form');
+				
+				//Keep selected state of files when navigating folders
+				$(document).on('gallery-component.navigate', function () {
+					var selectedFiles = [];
 
-				//Don't count if folder or edit/delete button is clicked
-				if (item.hasClass('folder') || $(e.target).is('.item__actions__action:not(.item__actions__action--select)')) {
-					return;
-				}
-
-				if (!item.hasClass('selected')) {
-					form.closest('form').showFileView(item.data('id'));
-					form.parent().trigger('scroll');
-				} else {
-					form.getFileView(item.data('id')).remove();
-				}
-
-				form.redraw();
+					form.find('.ss-htmleditorfield-file').each(function() {
+						var dataid = $(this).data('id');
+						if (typeof dataid !== 'undefined' && selectedFiles.indexOf(dataid) < 0) {
+							selectedFiles.push(dataid);
+						}
+					});
+					
+					$('.asset-gallery').trigger('cms.updateSelected', [selectedFiles]);
+				});
+				
+				$(document).on('gallery-component.file-select', function (event, file) {
+					//Don't select folders
+					if (file.category === 'folder') {
+						if (!file.selected) {
+							$('.asset-gallery').trigger('cms.deselectFolder', file);
+						}
+						
+						return null;
+					}
+					
+					//Add/Remove files to be inserted
+					if (!file.selected) { //if file is not currently selected
+						form.closest('form').showFileView(file.id);
+						form.parent().trigger('scroll');
+					} else { 
+						form.getFileView(file.id).remove();
+					}
+					
+					form.redraw();
+				});
+			},
+			
+			onunmatch: function() {
+				$(document).off('gallery-component.file-select gallery-component.navigate');
 			}
-		});
-
-		$('.htmleditorfield-from-gallery .gallery').entwine({
-			onclick: function(e) {
-				if (e.target !== this[0]) {
-					return;
-				}
-
-				var form = this.closest('form');
-
-				this.find('.item.selected').each(function () {
-					form.getFileView($(this).data('id')).remove();
-				})
-			}
-		});
+		})
 	});
 })(jQuery);
 
