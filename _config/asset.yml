@@ -8,11 +8,25 @@ Injector:
   # Define the default adapter for this filesystem
   FlysystemDefaultAdapter:
     class: 'SilverStripe\Filesystem\Flysystem\AssetAdapter'
+  # Define the secondary adapter for secure assets
+  FlysystemSecureAdapter:
+    class: 'SilverStripe\Filesystem\Flysystem\SecureAssetAdapter'
   # Define the default filesystem
   FlysystemBackend:
     class: 'League\Flysystem\Filesystem'
     constructor:
       Adapter: '%$FlysystemDefaultAdapter'
+      Config:
+        visibility: public
+    calls:
+      PublicURLPlugin: [ addPlugin, [ %$FlysystemUrlPlugin ] ]
+  # Define the secondary filesystem for secured assets
+  FlysystemSecureBackend:
+    class: 'League\Flysystem\Filesystem'
+    constructor:
+      Adapter: '%$FlysystemSecureAdapter'
+      Config:
+        visibility: private
     calls:
       PublicURLPlugin: [ addPlugin, [ %$FlysystemUrlPlugin ] ]
   # Define our SS asset backend
@@ -20,6 +34,7 @@ Injector:
     class: 'SilverStripe\Filesystem\Flysystem\FlysystemAssetStore'
     properties:
       Filesystem: '%$FlysystemBackend'
+      SecureFilesystem: '%$FlysystemSecureBackend'
   AssetNameGenerator:
     class: SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator
     type: prototype

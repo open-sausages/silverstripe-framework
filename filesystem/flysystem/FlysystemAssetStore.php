@@ -4,6 +4,7 @@ namespace SilverStripe\Filesystem\Flysystem;
 
 use Config;
 use Injector;
+use Session;
 use InvalidArgumentException;
 use League\Flysystem\Exception;
 use League\Flysystem\Filesystem;
@@ -23,6 +24,13 @@ class FlysystemAssetStore implements AssetStore {
 	 * @var Filesystem
 	 */
 	private $filesystem = null;
+
+	/**
+	 * Filesystem to use for secure files
+	 *
+	 * @var Filesystem
+	 */
+	private $secureFilesystem = null;
 
 	/**
 	 * Enable to use legacy filename behaviour (omits hash)
@@ -52,6 +60,26 @@ class FlysystemAssetStore implements AssetStore {
 		return $this->filesystem;
 	}
 
+	/**
+	 * Assign filesystem to use for non-public files
+	 *
+	 * @param Filesystem $filesystem
+	 * @return $this
+	 */
+	public function setSecureFilesystem(Filesystem $filesystem) {
+		$this->secureFilesystem = $filesystem;
+		return $this;
+	}
+
+	/**
+	 * Get filesystem to use for non-public files
+	 *
+	 * @return Filesystem
+	 */
+	public function getSecureFilesystem() {
+		return $this->secureFilesystem;
+	}
+
 	public function getAsStream($filename, $hash, $variant = null) {
 		$fileID = $this->getFileID($filename, $hash, $variant);
 		return $this->getFilesystem()->readStream($fileID);
@@ -62,7 +90,10 @@ class FlysystemAssetStore implements AssetStore {
 		return $this->getFilesystem()->read($fileID);
 	}
 
-	public function getAsURL($filename, $hash, $variant = null) {
+	public function getAsURL($filename, $hash, $variant = null, $grant = true) {
+		if($grant) {
+			$this->grant($filename, $hash);
+		}
 		$fileID = $this->getFileID($filename, $hash, $variant);
 		return $this->getFilesystem()->getPublicUrl($fileID);
 	}
@@ -138,6 +169,25 @@ class FlysystemAssetStore implements AssetStore {
 
 		// Submit to conflict check
 		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution);
+	}
+
+	public function delete($filename, $hash) {
+		// TODO: Implement delete() method.
+	}
+
+	public function publish($filename, $hash) {
+		// TODO: Implement publish() method.
+	}
+
+	public function protect($filename, $hash) {
+		// TODO: Implement protect() method.
+	}
+
+	public function grant($filename, $hash) {
+		$fileID = $this->getFileID($filename, $hash);
+		$granted = Session::get('AssetStore_Grants') ?: array();
+		$granted[$fileID] = true;
+		Session::set('AssetStore_Grants', $granted);
 	}
 
 	/**
@@ -233,7 +283,7 @@ class FlysystemAssetStore implements AssetStore {
 			$filename = $this->getOriginalFilename($resolvedID);
 			
 		} elseif(empty($variant)) {
-			// If defering to the existing file, return the sha of the existing file,
+			// If deferring to the existing file, return the sha of the existing file,
 			// unless we are writing a variant (which has the same hash value as its original file)
 			$stream = $this
 				->getFilesystem()

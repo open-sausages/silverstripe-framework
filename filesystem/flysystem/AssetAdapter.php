@@ -12,7 +12,7 @@ use League\Flysystem\Adapter\Local;
  * @package framework
  * @subpackage filesystem
  */
-class AssetAdapter extends Local {
+class AssetAdapter extends Local implements URLAdapter {
 
 	/**
 	 * Config compatible permissions configuration
@@ -33,21 +33,37 @@ class AssetAdapter extends Local {
 
 	public function __construct($root = null, $writeFlags = LOCK_EX, $linkHandling = self::DISALLOW_LINKS) {
 		// Get root path
-		if (!$root) {
-			// Empty root will set the path to assets
-			$root = ASSETS_PATH;
-		} elseif(strpos($root, './') === 0) {
-			// Substitute leading ./ with BASE_PATH
-			$root = BASE_PATH . substr($root, 1);
-		} elseif(strpos($root, '../') === 0) {
-			// Substitute leading ./ with parent of BASE_PATH, in case storage is outside of the webroot.
-			$root = dirname(BASE_PATH) . substr($root, 2);
-		}
+		$root = $this->findRoot($root);
 
 		// Override permissions with config
 		$permissions = \Config::inst()->get(get_class($this), 'file_permissions');
 
 		parent::__construct($root, $writeFlags, $linkHandling, $permissions);
+	}
+
+	/**
+	 * Determine the root folder absolute system path
+	 *
+	 * @param string $root
+	 * @return string
+	 */
+	protected function findRoot($root) {
+		// Empty root will set the path to assets
+		if (!$root) {
+			return ASSETS_PATH;
+		}
+
+		// Substitute leading ./ with BASE_PATH
+		if(strpos($root, './') === 0) {
+			return BASE_PATH . substr($root, 1);
+		}
+
+		// Substitute leading ./ with parent of BASE_PATH, in case storage is outside of the webroot.
+		if(strpos($root, '../') === 0) {
+			return dirname(BASE_PATH) . substr($root, 2);
+		}
+
+		return $root;
 	}
 
 	/**

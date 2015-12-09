@@ -126,9 +126,14 @@ interface AssetStore {
 	 * @param string $hash sha1 hash of the file content.
 	 * If a variant is requested, this is the hash of the file before it was modified.
      * @param string|null $variant Optional variant string for this file
+	 * @param bool $grant Ensures that the url for any protected assets is granted for the current user.
+	 * If set to true, and the file is currently in protected mode, the asset store will ensure the
+	 * returned URL is accessible for the duration of the current session / user.
+	 * This will have no effect if the file is in published mode.
+	 * This will not grant access to users other than the owner of the current session.
      * @return string public url to this resource
      */
-    public function getAsURL($filename, $hash, $variant = null);
+    public function getAsURL($filename, $hash, $variant = null, $grant = true);
 
 	/**
 	 * Get metadata for this file, if available
@@ -162,4 +167,48 @@ interface AssetStore {
 	 * @return bool Flag as to whether the file exists
 	 */
 	public function exists($filename, $hash, $variant = null);
+
+	/**
+	 * Delete a file (and all variants) identified by the given filename and hash
+	 *
+	 * @param string $filename
+	 * @param string $hash
+	 * @return bool Flag if a file was deleted
+	 */
+	public function delete($filename, $hash);
+
+	/**
+	 * Publicly expose the file (and all variants) identified by the given filename and hash
+	 *
+	 * @param string $filename Filename (not including assets)
+	 * @param string $hash sha1 hash of the file content.
+	 * @return bool True if the file is verified and made publicly available
+	 */
+	public function publish($filename, $hash);
+
+	/**
+	 * Protect a file (and all variants) from public access, identified by the given filename and hash.
+	 *
+	 * A protected file can be granted access to users on a per-session or per-user basis as response
+	 * to any future invocations of {@see grant()} or {@see getAsURL()} with $grant = true
+	 *
+	 * @param string $filename Filename (not including assets)
+	 * @param string $hash sha1 hash of the file content.
+	 * @return bool True if the file is verified and protected
+	 */
+	public function protect($filename, $hash);
+
+	/**
+	 * Ensures that access to the specified protected file is granted for the current user.
+	 * If this file is currently in protected mode, the asset store will ensure the
+	 * returned asset for the duration of the current session / user.
+	 * This will have no effect if the file is in published mode.
+	 * This will not grant access to users other than the owner of the current session.
+	 * Does not require a member to be logged in.
+	 *
+	 * @param $filename
+	 * @param $hash
+	 * @return bool True if the file is verified and grants access to the current session / user.
+	 */
+	public function grant($filename, $hash);
 }
