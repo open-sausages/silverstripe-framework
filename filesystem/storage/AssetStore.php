@@ -58,6 +58,16 @@ interface AssetStore {
 	const CONFLICT_USE_EXISTING = 'existing';
 
 	/**
+	 * Protect this file
+	 */
+	const VISIBILITY_PROTECTED = 'protected';
+
+	/**
+	 * Make this file public
+	 */
+	const VISIBILITY_PUBLIC = 'public';
+
+	/**
 	 * Assign a set of data to the backend
 	 *
 	 * @param string $data Raw binary/text content
@@ -65,26 +75,34 @@ interface AssetStore {
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
 	 * @param string $conflictResolution {@see AssetStore}. Will default to one chosen by the backend
+	 * @param string $visibility Set visibility of this file
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the given data.
 	 */
-	public function setFromString($data, $filename, $hash = null, $variant = null, $conflictResolution = null);
+	public function setFromString(
+		$data, $filename, $hash = null, $variant = null, $conflictResolution = null,
+		$visibility = self::VISIBILITY_PROTECTED
+	);
 
-    /**
+	/**
 	 * Assign a local file to the backend.
 	 *
 	 * @param string $path Absolute filesystem path to file
-	 * @param type $filename Optional path to ask the backend to name as.
+	 * @param string $filename Optional path to ask the backend to name as.
 	 * Will default to the filename of the $path, excluding directories.
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
 	 * @param string $conflictResolution {@see AssetStore}
+	 * @param string $visibility Set visibility of this file
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the local file content.
 	 */
-    public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $conflictResolution = null);
+    public function setFromLocalFile(
+		$path, $filename = null, $hash = null, $variant = null, $conflictResolution = null,
+		$visibility = self::VISIBILITY_PROTECTED
+	);
 
-    /**
+	/**
 	 * Assign a stream to the backend
 	 *
 	 * @param resource $stream Streamable resource
@@ -92,10 +110,14 @@ interface AssetStore {
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
 	 * @param string $conflictResolution {@see AssetStore}
+	 * @param string $visibility Set visibility of this file
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the raw stream.
 	 */
-    public function setFromStream($stream, $filename, $hash = null, $variant = null, $conflictResolution = null);
+    public function setFromStream(
+		$stream, $filename, $hash = null, $variant = null, $conflictResolution = null,
+		$visibility = self::VISIBILITY_PROTECTED
+	);
 
     /**
 	 * Get contents of a given file
@@ -156,6 +178,16 @@ interface AssetStore {
 	 * @return string Mime type for this file
 	 */
 	public function getMimeType($filename, $hash, $variant = null);
+
+	/**
+	 * Determine visibility of the given file
+	 *
+	 * @param string $filename
+	 * @param string $hash
+	 * @return string one of values defined by the constants VISIBILITY_PROTECTED or VISIBILITY_PUBLIC, or
+	 * null if the file does not exist
+	 */
+	public function getVisibility($filename, $hash);
 
 	/**
 	 * Determine if a file exists with the given tuple

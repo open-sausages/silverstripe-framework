@@ -23,17 +23,19 @@ class FlysystemAssetStore implements AssetStore {
 	/**
 	 * @var Filesystem
 	 */
-	private $filesystem = null;
+	private $publicFilesystem = null;
 
 	/**
-	 * Filesystem to use for secure files
+	 * Filesystem to use for protected files
 	 *
 	 * @var Filesystem
 	 */
-	private $secureFilesystem = null;
+	private $protectedFilesystem = null;
 
 	/**
 	 * Enable to use legacy filename behaviour (omits hash)
+	 *
+	 * Note that if using legacy filenames then duplicate files will not work.
 	 *
 	 * @config
 	 * @var bool
@@ -46,8 +48,8 @@ class FlysystemAssetStore implements AssetStore {
 	 * @param Filesystem $filesystem
 	 * @return $this
 	 */
-	public function setFilesystem(Filesystem $filesystem) {
-		$this->filesystem = $filesystem;
+	public function setPublicFilesystem(Filesystem $filesystem) {
+		$this->publicFilesystem = $filesystem;
 		return $this;
 	}
 
@@ -56,8 +58,8 @@ class FlysystemAssetStore implements AssetStore {
 	 *
 	 * @return Filesystem
 	 */
-	public function getFilesystem() {
-		return $this->filesystem;
+	public function getPublicFilesystem() {
+		return $this->publicFilesystem;
 	}
 
 	/**
@@ -66,8 +68,8 @@ class FlysystemAssetStore implements AssetStore {
 	 * @param Filesystem $filesystem
 	 * @return $this
 	 */
-	public function setSecureFilesystem(Filesystem $filesystem) {
-		$this->secureFilesystem = $filesystem;
+	public function setProtectedFilesystem(Filesystem $filesystem) {
+		$this->protectedFilesystem = $filesystem;
 		return $this;
 	}
 
@@ -76,18 +78,54 @@ class FlysystemAssetStore implements AssetStore {
 	 *
 	 * @return Filesystem
 	 */
-	public function getSecureFilesystem() {
-		return $this->secureFilesystem;
+	public function getProtectedFilesystem() {
+		return $this->protectedFilesystem;
 	}
+
+	/**
+	 * Return the store that contains the given fileID
+	 *
+	 * @param string $fileID Internal file identifier
+	 * @return Filesystem
+	 */
+	protected function getFilesystemFor($fileID) {
+		if($this->getPublicFilesystem()->has($fileID)) {
+			return $this->getPublicFilesystem();
+		}
+
+		if($this->getProtectedFilesystem()->has($fileID)) {
+			return $this->getProtectedFilesystem();
+		}
+
+		return null;
+	}
+
+	public function getVisibility($filename, $hash) {
+		$fileID = $this->getFileID($filename, $hash);
+		if($this->getPublicFilesystem()->has($fileID)) {
+			return self::VISIBILITY_PUBLIC;
+		}
+
+		if($this->getProtectedFilesystem()->has($fileID)) {
+			return self::VISIBILITY_PROTECTED;
+		}
+
+		return null;
+	}
+
 
 	public function getAsStream($filename, $hash, $variant = null) {
 		$fileID = $this->getFileID($filename, $hash, $variant);
-		return $this->getFilesystem()->readStream($fileID);
+		return $this
+			->getFilesystemFor($fileID)
+			->readStream($fileID);
 	}
 
 	public function getAsString($filename, $hash, $variant = null) {
 		$fileID = $this->getFileID($filename, $hash, $variant);
-		return $this->getFilesystem()->read($fileID);
+		return $this
+			->getFilesystemFor($fileID)
+			->read($fileID);
 	}
 
 	public function getAsURL($filename, $hash, $variant = null, $grant = true) {
@@ -95,10 +133,15 @@ class FlysystemAssetStore implements AssetStore {
 			$this->grant($filename, $hash);
 		}
 		$fileID = $this->getFileID($filename, $hash, $variant);
-		return $this->getFilesystem()->getPublicUrl($fileID);
+		return $this
+			->getFilesystemFor($fileID)
+			->getPublicUrl($fileID);
 	}
 
-	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $conflictResolution = null) {
+	public function setFromLocalFile(
+		$path, $filename = null, $hash = null, $variant = null, $conflictResolution = null,
+		$visibility = self::VISIBILITY_PROTECTED
+	) {
 		// Validate this file exists
 		if(!file_exists($path)) {
 			throw new InvalidArgumentException("$path does not exist");
@@ -110,8 +153,7 @@ class FlysystemAssetStore implements AssetStore {
 		}
 
 		// Callback for saving content
-		$filesystem = $this->getFilesystem();
-		$callback = function($fileID) use ($filesystem, $path) {
+		$callback = function(Filesystem $filesystem, $fileID) use ($path) {
 			// Read contents as string into flysystem
 			$handle = fopen($path, 'r');
 			if($handle === false) {
@@ -128,13 +170,15 @@ class FlysystemAssetStore implements AssetStore {
 		}
 
 		// Submit to conflict check
-		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution);
+		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution, $visibility);
 	}
 
-	public function setFromString($data, $filename, $hash = null, $variant = null, $conflictResolution = null) {
+	public function setFromString(
+		$data, $filename, $hash = null, $variant = null, $conflictResolution = null,
+		$visibility = self::VISIBILITY_PROTECTED
+	) {
 		// Callback for saving content
-		$filesystem = $this->getFilesystem();
-		$callback = function($fileID) use ($filesystem, $data) {
+		$callback = function(Filesystem $filesystem, $fileID) use ($data) {
 			return $filesystem->put($fileID, $data);
 		};
 
@@ -144,21 +188,23 @@ class FlysystemAssetStore implements AssetStore {
 		}
 
 		// Submit to conflict check
-		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution);
+		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution, $visibility);
 	}
 
-	public function setFromStream($stream, $filename, $hash = null, $variant = null, $conflictResolution = null) {
+	public function setFromStream(
+		$stream, $filename, $hash = null, $variant = null, $conflictResolution = null,
+		$visibility = self::VISIBILITY_PROTECTED
+	) {
 		// If the stream isn't rewindable, write to a temporary filename
 		if(!$this->isSeekableStream($stream)) {
 			$path = $this->getStreamAsFile($stream);
-			$result = $this->setFromLocalFile($path, $filename, $hash, $variant, $conflictResolution);
+			$result = $this->setFromLocalFile($path, $filename, $hash, $variant, $conflictResolution, $visibility);
 			unlink($path);
 			return $result;
 		}
 
 		// Callback for saving content
-		$filesystem = $this->getFilesystem();
-		$callback = function($fileID) use ($filesystem, $stream) {
+		$callback = function(Filesystem $filesystem, $fileID) use ($stream) {
 			return $filesystem->putStream($fileID, $stream);
 		};
 
@@ -168,7 +214,7 @@ class FlysystemAssetStore implements AssetStore {
 		}
 
 		// Submit to conflict check
-		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution);
+		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution, $visibility);
 	}
 
 	public function delete($filename, $hash) {
@@ -246,10 +292,14 @@ class FlysystemAssetStore implements AssetStore {
 	 * @param string $hash SHA1 of the original file content
 	 * @param string $variant Variant to write
 	 * @param string $conflictResolution {@see AssetStore}. Will default to one chosen by the backend
+	 * @param string $visibility Set visibility of this file
 	 * @return array Tuple associative array (Filename, Hash, Variant)
 	 * @throws Exception
 	 */
-	protected function writeWithCallback($callback, $filename, $hash, $variant = null, $conflictResolution = null) {
+	protected function writeWithCallback(
+		$callback, $filename, $hash, $variant = null, $conflictResolution = null,
+		$visibility = self::VISIBILITY_PROTECTED
+	) {
 		// Set default conflict resolution
 		if(!$conflictResolution) {
 			$conflictResolution = $this->getDefaultConflictResolution($variant);
@@ -273,8 +323,21 @@ class FlysystemAssetStore implements AssetStore {
 		// Check conflict resolution scheme
 		$resolvedID = $this->resolveConflicts($conflictResolution, $fileID);
 		if($resolvedID !== false) {
+			// Check if source file already exists on the filesystem
+			$mainID = $this->getFileID($filename, $hash);
+			$filesystem = $this->getFilesystemFor($mainID);
+
+			// If writing a new file use the correct visibility
+			if(!$filesystem) {
+				if($visibility === self::VISIBILITY_PROTECTED) {
+					$filesystem = $this->getProtectedFilesystem();
+				} else {
+					$filesystem = $this->getPublicFilesystem();
+				}
+			}
+
 			// Submit and validate result
-			$result = $callback($resolvedID);
+			$result = $callback($filesystem, $resolvedID);
 			if(!$result) {
 				throw new Exception("Could not save {$filename}");
 			}
@@ -286,7 +349,7 @@ class FlysystemAssetStore implements AssetStore {
 			// If deferring to the existing file, return the sha of the existing file,
 			// unless we are writing a variant (which has the same hash value as its original file)
 			$stream = $this
-				->getFilesystem()
+				->getFilesystemFor($fileID)
 				->readStream($fileID);
 			$hash = $this->getStreamSHA1($stream);
 		}
@@ -327,17 +390,23 @@ class FlysystemAssetStore implements AssetStore {
 
 	public function getMetadata($filename, $hash, $variant = null) {
 		$fileID = $this->getFileID($filename, $hash, $variant);
-		return $this->getFilesystem()->getMetadata($fileID);
+		return $this
+			->getFilesystemFor($fileID)
+			->getMetadata($fileID);
 	}
 
 	public function getMimeType($filename, $hash, $variant = null) {
 		$fileID = $this->getFileID($filename, $hash, $variant);
-		return $this->getFilesystem()->getMimetype($fileID);
+		return $this
+			->getFilesystemFor($fileID)
+			->getMimetype($fileID);
 	}
 
 	public function exists($filename, $hash, $variant = null) {
 		$fileID = $this->getFileID($filename, $hash, $variant);
-		return $this->getFilesystem()->has($fileID);
+		return $this
+			->getFilesystemFor($fileID)
+			->has($fileID);
 	}
 
 	/**
@@ -355,7 +424,7 @@ class FlysystemAssetStore implements AssetStore {
 		}
 
 		// Otherwise, check if this exists
-		$exists = $this->getFilesystem()->has($fileID);
+		$exists = $this->getFilesystemFor($fileID);
 		if(!$exists) {
 			return $fileID;
 		}
@@ -370,8 +439,7 @@ class FlysystemAssetStore implements AssetStore {
 			// Rename
 			case AssetStore::CONFLICT_RENAME: {
 				foreach($this->fileGeneratorFor($fileID) as $candidate) {
-					// @todo better infinite loop breaking
-					if(!$this->getFilesystem()->has($candidate)) {
+					if(!$this->getFilesystemFor($candidate)) {
 						return $candidate;
 					}
 				}

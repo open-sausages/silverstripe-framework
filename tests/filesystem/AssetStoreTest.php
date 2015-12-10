@@ -421,7 +421,7 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 		$filesystem = new Filesystem($adapter);
 		$filesystem->addPlugin(new FlysystemUrlPlugin());
 		$backend = new AssetStoreTest_SpyStore();
-		$backend->setFilesystem($filesystem);
+		$backend->setPublicFilesystem($filesystem);
 		Injector::inst()->registerService($backend, 'AssetStore');
 
 		// Assign flysystem backend to generated asset handler at the same time
