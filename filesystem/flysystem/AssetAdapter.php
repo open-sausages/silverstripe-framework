@@ -15,6 +15,21 @@ use League\Flysystem\Adapter\Local;
 class AssetAdapter extends Local implements URLAdapter {
 
 	/**
+	 * Server specific configuration necessary to block http traffic to a local folder
+	 *
+	 * @config
+	 * @var array Mapping of server configurations to configuration files necessary
+	 */
+	private static $server_configuration = array(
+		'*' => array(
+			'.htaccess' => "Assets_HTAccess"
+		),
+		'iis' => array(
+			'web.config' => "Assets_WebConfig"
+		)
+	);
+
+	/**
 	 * Config compatible permissions configuration
 	 *
 	 * @config
@@ -37,8 +52,11 @@ class AssetAdapter extends Local implements URLAdapter {
 
 		// Override permissions with config
 		$permissions = \Config::inst()->get(get_class($this), 'file_permissions');
-
 		parent::__construct($root, $writeFlags, $linkHandling, $permissions);
+
+		// Configure server
+		$serverType = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '*';
+		$this->configureServer($serverType);
 	}
 
 	/**
@@ -64,6 +82,52 @@ class AssetAdapter extends Local implements URLAdapter {
 		}
 
 		return $root;
+	}
+
+	/**
+	 * Configure server files for this store
+	 *
+	 * @param string $type Name of server configuration
+	 */
+	protected function configureServer($type) {
+		// Determine configurations to write
+		$type = strtolower($type);
+		$rules = \Config::inst()->get(get_class($this), 'server_configuration', \Config::FIRST_SET);
+		$configurations = isset($rules[$type]) ? $rules[$type] : $rules['*'];
+
+		// Apply each configuration
+		$config = new \League\Flysystem\Config();
+		$config->set('visibility', 'private');
+		foreach($configurations as $file => $template) {
+			if (!$this->has($file)) {
+				// Evaluate file
+				$content = $this->renderTemplate($template);
+				$this->write($file, $content, $config);
+			}
+		}
+	}
+
+	/**
+	 * Render server configuration file from a template file
+	 *
+	 * @param string $template
+	 * @return \HTMLText Rendered results
+	 */
+	protected function renderTemplate($template) {
+		// Build allowed extensions
+		$allowedExtensions = new \ArrayList();
+		foreach(\File::config()->allowed_extensions as $extension) {
+			if($extension) {
+				$allowedExtensions->push(new \ArrayData(array(
+					'Extension' => $extension
+				)));
+			}
+		}
+
+		$viewer = new \SSViewer(array($template));
+		return (string)$viewer->process(new \ArrayData(array(
+			'AllowedExtensions' => $allowedExtensions
+		)));
 	}
 
 	/**

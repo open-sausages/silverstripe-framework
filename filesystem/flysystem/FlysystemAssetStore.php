@@ -5,6 +5,7 @@ namespace SilverStripe\Filesystem\Flysystem;
 use Config;
 use Injector;
 use Session;
+use Flushable;
 use InvalidArgumentException;
 use League\Flysystem\Exception;
 use League\Flysystem\Filesystem;
@@ -18,7 +19,7 @@ use SilverStripe\Filesystem\Storage\AssetStore;
  * @package framework
  * @subpackage filesystem
  */
-class FlysystemAssetStore implements AssetStore {
+class FlysystemAssetStore implements AssetStore, Flushable {
 
 	/**
 	 * @var Filesystem
@@ -555,4 +556,16 @@ class FlysystemAssetStore implements AssetStore {
 		return $fileID;
 	}
 
+	/**
+	 * This function is triggered early in the request if the "flush" query
+	 * parameter has been set. Each class that implements Flushable implements
+	 * this function which looks after it's own specific flushing functionality.
+	 *
+	 * @see FlushRequestFilter
+	 */
+	public static function flush() {
+		// Ensure that this instance is constructed on flush, thus forcing
+		// bootstrapping of necessary .htaccess / web.config files
+		singleton('AssetStore');
+	}
 }
