@@ -21,7 +21,7 @@ class AssetAdapter extends Local implements URLAdapter {
 	 * @var array Mapping of server configurations to configuration files necessary
 	 */
 	private static $server_configuration = array(
-		'*' => array(
+		'apache' => array(
 			'.htaccess' => "Assets_HTAccess"
 		),
 		'iis' => array(
@@ -55,8 +55,7 @@ class AssetAdapter extends Local implements URLAdapter {
 		parent::__construct($root, $writeFlags, $linkHandling, $permissions);
 
 		// Configure server
-		$serverType = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '*';
-		$this->configureServer($serverType);
+		$this->configureServer();
 	}
 
 	/**
@@ -85,21 +84,34 @@ class AssetAdapter extends Local implements URLAdapter {
 	}
 
 	/**
+	 * Force flush and regeneration of server files
+	 */
+	public function flush() {
+		$this->configureServer(true);
+	}
+
+	/**
 	 * Configure server files for this store
 	 *
-	 * @param string $type Name of server configuration
+	 * @param bool $forceOverwrite Force regeneration even if files already exist
 	 */
-	protected function configureServer($type) {
+	protected function configureServer($forceOverwrite = false) {
+		// Get server type
+		$type = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '*';
+		list($type) = explode('/', strtolower($type));
+
 		// Determine configurations to write
-		$type = strtolower($type);
 		$rules = \Config::inst()->get(get_class($this), 'server_configuration', \Config::FIRST_SET);
-		$configurations = isset($rules[$type]) ? $rules[$type] : $rules['*'];
+		if(empty($rules[$type])) {
+			return;
+		}
+		$configurations = $rules[$type];
 
 		// Apply each configuration
 		$config = new \League\Flysystem\Config();
 		$config->set('visibility', 'private');
 		foreach($configurations as $file => $template) {
-			if (!$this->has($file)) {
+			if ($forceOverwrite || !$this->has($file)) {
 				// Evaluate file
 				$content = $this->renderTemplate($template);
 				$this->write($file, $content, $config);
@@ -148,4 +160,5 @@ class AssetAdapter extends Local implements URLAdapter {
 		// File outside of webroot can't be used
 		return null;
 	}
+
 }

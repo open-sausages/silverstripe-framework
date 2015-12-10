@@ -13,7 +13,7 @@ class ProtectedAssetAdapter extends AssetAdapter {
     private static $secure_folder = 'assets/.protected';
 
     private static $server_configuration = array(
-        '*' => array(
+        'apache' => array(
             '.htaccess' => "Protected_HTAccess"
         ),
         'iis' => array(

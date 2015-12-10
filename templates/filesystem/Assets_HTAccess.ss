@@ -7,6 +7,10 @@
     SetEnv HTTP_MOD_REWRITE On
     RewriteEngine On
 
+    # Allow error pages
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule error[^\\/]*\.html$ - [L]
+
     # Block invalid file extensions
     RewriteCond %{REQUEST_URI} !\.(?i:<% loop $AllowedExtensions %>$Extension<% if not $Last %>|<% end_if %><% end_loop %>)$
     RewriteRule .* - [F]

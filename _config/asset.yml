@@ -1,5 +1,5 @@
 ---
-Name: assetstore
+Name: coreflysystem
 ---
 Injector:
   # Public url plugin
@@ -29,6 +29,12 @@ Injector:
         visibility: private
     calls:
       PublicURLPlugin: [ addPlugin, [ %$FlysystemUrlPlugin ] ]
+---
+Name: coreassets
+After:
+  - '#coreflysystem'
+---
+Injector:
   # Define our SS asset backend
   AssetStore:
     class: 'SilverStripe\Filesystem\Flysystem\FlysystemAssetStore'
@@ -38,8 +44,6 @@ Injector:
   AssetNameGenerator:
     class: SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator
     type: prototype
-  # Image mechanism
-  Image_Backend: GDBackend
   # Requirements config
   GeneratedAssetHandler:
     class: SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler
@@ -50,3 +54,11 @@ Injector:
   Requirements_Backend:
     properties:
       AssetHandler: '%$GeneratedAssetHandler'
+Director:
+  rules:
+    'assets': 'SilverStripe\Filesystem\Storage\ProtectedFileController'
+---
+Name: imageconfig
+---
+Injector:
+  Image_Backend: GDBackend

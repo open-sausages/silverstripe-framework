@@ -557,15 +557,23 @@ class FlysystemAssetStore implements AssetStore, Flushable {
 	}
 
 	/**
-	 * This function is triggered early in the request if the "flush" query
-	 * parameter has been set. Each class that implements Flushable implements
-	 * this function which looks after it's own specific flushing functionality.
-	 *
-	 * @see FlushRequestFilter
+	 * Ensure each adaptor re-generates its own server configuration files
 	 */
 	public static function flush() {
 		// Ensure that this instance is constructed on flush, thus forcing
 		// bootstrapping of necessary .htaccess / web.config files
-		singleton('AssetStore');
+		$instance = singleton('AssetStore');
+		if ($instance instanceof FlysystemAssetStore) {
+			$filesystems = array(
+				$instance->getPublicFilesystem(),
+				$instance->getProtectedFilesystem()
+			);
+			foreach($filesystems as $filesystem) {
+				$store = $filesystem->getAdapter();
+				if($store instanceof AssetAdapter) {
+					$store->flush();
+				}
+			}
+		}
 	}
 }
