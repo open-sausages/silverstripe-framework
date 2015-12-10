@@ -390,23 +390,24 @@ class FlysystemAssetStore implements AssetStore {
 
 	public function getMetadata($filename, $hash, $variant = null) {
 		$fileID = $this->getFileID($filename, $hash, $variant);
-		return $this
-			->getFilesystemFor($fileID)
-			->getMetadata($fileID);
+		$filesystem = $this->getFilesystemFor($fileID);
+		if($filesystem) {
+			return $filesystem->getMetadata($fileID);
+		}
 	}
 
 	public function getMimeType($filename, $hash, $variant = null) {
 		$fileID = $this->getFileID($filename, $hash, $variant);
-		return $this
-			->getFilesystemFor($fileID)
-			->getMimetype($fileID);
+		$filesystem = $this->getFilesystemFor($fileID);
+		if($filesystem) {
+			return $filesystem->getMimetype($fileID);
+		}
 	}
 
 	public function exists($filename, $hash, $variant = null) {
 		$fileID = $this->getFileID($filename, $hash, $variant);
-		return $this
-			->getFilesystemFor($fileID)
-			->has($fileID);
+		$filesystem = $this->getFilesystemFor($fileID);
+		return !empty($filesystem);
 	}
 
 	/**
