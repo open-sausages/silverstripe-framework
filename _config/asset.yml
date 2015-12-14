@@ -41,6 +41,10 @@ Injector:
     properties:
       PublicFilesystem: '%$FlysystemBackend'
       ProtectedFilesystem: '%$FlysystemProtectedBackend'
+  ProtectedFileController:
+    class: SilverStripe\Filesystem\Storage\ProtectedFileController
+    properties:
+      RouteHandler: '%$AssetStore'
   AssetNameGenerator:
     class: SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator
     type: prototype
@@ -54,9 +58,14 @@ Injector:
   Requirements_Backend:
     properties:
       AssetHandler: '%$GeneratedAssetHandler'
+---
+Name: coreassetroutes
+After:
+  - '#coreassets'
+---
 Director:
   rules:
-    'assets': 'SilverStripe\Filesystem\Storage\ProtectedFileController'
+    'assets': 'ProtectedFileController'
 ---
 Name: imageconfig
 ---

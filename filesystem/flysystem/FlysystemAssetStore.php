@@ -12,6 +12,9 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\Util;
 use SilverStripe\Filesystem\Storage\AssetNameGenerator;
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\Filesystem\Storage\AssetStoreRouter;
+use SS_HTTPResponse;
+use SS_HTTPResponse_Exception;
 
 /**
  * Asset store based on flysystem Filesystem as a backend
@@ -19,7 +22,7 @@ use SilverStripe\Filesystem\Storage\AssetStore;
  * @package framework
  * @subpackage filesystem
  */
-class FlysystemAssetStore implements AssetStore, Flushable {
+class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 
 	/**
 	 * @var Filesystem
@@ -565,5 +568,10 @@ class FlysystemAssetStore implements AssetStore, Flushable {
 				}
 			}
 		}
+	}
+
+	public function getResponseFor($asset) {
+		\Debug::dump($asset);
+		die;
 	}
 }
