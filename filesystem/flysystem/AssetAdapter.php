@@ -24,7 +24,7 @@ class AssetAdapter extends Local implements URLAdapter {
 		'apache' => array(
 			'.htaccess' => "Assets_HTAccess"
 		),
-		'iis' => array(
+		'microsoft-iis' => array(
 			'web.config' => "Assets_WebConfig"
 		)
 	);

@@ -16,7 +16,7 @@ class ProtectedAssetAdapter extends AssetAdapter {
         'apache' => array(
             '.htaccess' => "Protected_HTAccess"
         ),
-        'iis' => array(
+        'microsoft-iis' => array(
             'web.config' => "Protected_WebConfig"
         )
     );
