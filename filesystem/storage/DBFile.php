@@ -174,11 +174,11 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		return $this->getBasename();
 	}
 
-	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $conflictResolution = null) {
+	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array()) {
 		$this->assertFilenameValid($filename ?: $path);
 		$result = $this
 			->getStore()
-			->setFromLocalFile($path, $filename, $hash, $variant, $conflictResolution);
+			->setFromLocalFile($path, $filename, $hash, $variant, $config);
 		// Update from result
 		if($result) {
 			$this->setValue($result);
@@ -186,11 +186,11 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		return $result;
 	}
 
-	public function setFromStream($stream, $filename, $hash = null, $variant = null, $conflictResolution = null) {
+	public function setFromStream($stream, $filename, $hash = null, $variant = null, $config = array()) {
 		$this->assertFilenameValid($filename);
 		$result = $this
 			->getStore()
-			->setFromStream($stream, $filename, $hash, $variant, $conflictResolution);
+			->setFromStream($stream, $filename, $hash, $variant, $config);
 		// Update from result
 		if($result) {
 			$this->setValue($result);
@@ -198,11 +198,11 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		return $result;
 	}
 
-	public function setFromString($data, $filename, $hash = null, $variant = null, $conflictResolution = null) {
+	public function setFromString($data, $filename, $hash = null, $variant = null, $config = array()) {
 		$this->assertFilenameValid($filename);
 		$result = $this
 			->getStore()
-			->setFromString($data, $filename, $hash, $variant, $conflictResolution);
+			->setFromString($data, $filename, $hash, $variant, $config);
 		// Update from result
 		if($result) {
 			$this->setValue($result);

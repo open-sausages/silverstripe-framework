@@ -971,8 +971,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		}
 	}
 
-	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $conflictResolution = null) {
-		$result = $this->File->setFromLocalFile($path, $filename, $hash, $variant, $conflictResolution);
+	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array()) {
+		$result = $this->File->setFromLocalFile($path, $filename, $hash, $variant, $config);
 		
 		// Update File record to name of the uploaded asset
 		if($result) {
@@ -981,8 +981,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		return $result;
 	}
 
-	public function setFromStream($stream, $filename, $hash = null, $variant = null, $conflictResolution = null) {
-		$result = $this->File->setFromStream($stream, $filename, $hash, $variant, $conflictResolution);
+	public function setFromStream($stream, $filename, $hash = null, $variant = null, $config = array()) {
+		$result = $this->File->setFromStream($stream, $filename, $hash, $variant, $config);
 
 		// Update File record to name of the uploaded asset
 		if($result) {
@@ -991,8 +991,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		return $result;
 	}
 
-	public function setFromString($data, $filename, $hash = null, $variant = null, $conflictResolution = null) {
-		$result = $this->File->setFromString($data, $filename, $hash, $variant, $conflictResolution);
+	public function setFromString($data, $filename, $hash = null, $variant = null, $config = array()) {
+		$result = $this->File->setFromString($data, $filename, $hash, $variant, $config);
 
 		// Update File record to name of the uploaded asset
 		if($result) {

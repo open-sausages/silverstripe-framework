@@ -106,7 +106,13 @@ class AssetStoreTest extends SapphireTest {
 		// Write a different file with same name. Should not detect duplicates since sha are different
 		$fish2 = realpath(__DIR__ .'/../model/testimages/test-image-low-quality.jpg');
 		try {
-			$fish2Tuple = $backend->setFromLocalFile($fish2, 'directory/lovely-fish.jpg', null, null, AssetStore::CONFLICT_EXCEPTION);
+			$fish2Tuple = $backend->setFromLocalFile(
+				$fish2,
+				'directory/lovely-fish.jpg',
+				null,
+				null,
+				array('conflict' => AssetStore::CONFLICT_EXCEPTION)
+			);
 		} catch(Exception $ex) {
 			return $this->fail('Writing file with different sha to same location failed with exception');
 		}
@@ -125,7 +131,13 @@ class AssetStoreTest extends SapphireTest {
 
 		// Write original file back with rename
 		$this->assertFileExists($fish1);
-		$fish3Tuple = $backend->setFromLocalFile($fish1, 'directory/lovely-fish.jpg', null, null, AssetStore::CONFLICT_RENAME);
+		$fish3Tuple = $backend->setFromLocalFile(
+			$fish1,
+			'directory/lovely-fish.jpg',
+			null,
+			null,
+			array('conflict' => AssetStore::CONFLICT_RENAME)
+		);
 		$this->assertEquals(
 			array(
 				'Hash' => 'a870de278b475cb75f5d9f451439b2d378e13af1',
@@ -140,7 +152,13 @@ class AssetStoreTest extends SapphireTest {
 		);
 
 		// Write another file should increment to -v3
-		$fish4Tuple = $backend->setFromLocalFile($fish1, 'directory/lovely-fish-v2.jpg', null, null, AssetStore::CONFLICT_RENAME);
+		$fish4Tuple = $backend->setFromLocalFile(
+			$fish1,
+			'directory/lovely-fish-v2.jpg',
+			null,
+			null,
+			array('conflict' => AssetStore::CONFLICT_RENAME)
+		);
 		$this->assertEquals(
 			array(
 				'Hash' => 'a870de278b475cb75f5d9f451439b2d378e13af1',
@@ -155,7 +173,13 @@ class AssetStoreTest extends SapphireTest {
 		);
 
 		// Test conflict use existing file
-		$fish5Tuple = $backend->setFromLocalFile($fish1, 'directory/lovely-fish.jpg', null, null, AssetStore::CONFLICT_USE_EXISTING);
+		$fish5Tuple = $backend->setFromLocalFile(
+			$fish1,
+			'directory/lovely-fish.jpg',
+			null,
+			null,
+			array('conflict' => AssetStore::CONFLICT_USE_EXISTING)
+		);
 		$this->assertEquals(
 			array(
 				'Hash' => 'a870de278b475cb75f5d9f451439b2d378e13af1',
@@ -170,7 +194,13 @@ class AssetStoreTest extends SapphireTest {
 		);
 
 		// Test conflict use existing file
-		$fish6Tuple = $backend->setFromLocalFile($fish1, 'directory/lovely-fish.jpg', null, null, AssetStore::CONFLICT_OVERWRITE);
+		$fish6Tuple = $backend->setFromLocalFile(
+			$fish1,
+			'directory/lovely-fish.jpg',
+			null,
+			null,
+			array('conflict' => AssetStore::CONFLICT_OVERWRITE)
+		);
 		$this->assertEquals(
 			array(
 				'Hash' => 'a870de278b475cb75f5d9f451439b2d378e13af1',
@@ -321,14 +351,26 @@ class AssetStoreTest extends SapphireTest {
 		// Since we are using legacy filenames, this should generate a new filename
 		$fish2 = realpath(__DIR__ .'/../model/testimages/test-image-low-quality.jpg');
 		try {
-			$backend->setFromLocalFile($fish2, 'directory/lovely-fish.jpg', null, null, AssetStore::CONFLICT_EXCEPTION);
+			$backend->setFromLocalFile(
+				$fish2,
+				'directory/lovely-fish.jpg',
+				null,
+				null,
+				array('conflict' => AssetStore::CONFLICT_EXCEPTION)
+			);
 			return $this->fail('Writing file with different sha to same location should throw exception');
 		} catch(Exception $ex) {
 			// Success
 		}
 
 		// Re-attempt this file write with conflict_rename
-		$fish3Tuple = $backend->setFromLocalFile($fish2, 'directory/lovely-fish.jpg', null, null, AssetStore::CONFLICT_RENAME);
+		$fish3Tuple = $backend->setFromLocalFile(
+			$fish2,
+			'directory/lovely-fish.jpg',
+			null,
+			null,
+			array('conflict' => AssetStore::CONFLICT_RENAME)
+		);
 		$this->assertEquals(
 			array(
 				'Hash' => '33be1b95cba0358fe54e8b13532162d52f97421c',
@@ -343,7 +385,13 @@ class AssetStoreTest extends SapphireTest {
 		);
 
 		// Write back original file, but with CONFLICT_EXISTING. The file should not change
-		$fish4Tuple = $backend->setFromLocalFile($fish1, 'directory/lovely-fish-v2.jpg', null, null, AssetStore::CONFLICT_USE_EXISTING);
+		$fish4Tuple = $backend->setFromLocalFile(
+			$fish1,
+			'directory/lovely-fish-v2.jpg',
+			null,
+			null,
+			array('conflict' => AssetStore::CONFLICT_USE_EXISTING)
+		);
 		$this->assertEquals(
 			array(
 				'Hash' => '33be1b95cba0358fe54e8b13532162d52f97421c',
@@ -358,7 +406,13 @@ class AssetStoreTest extends SapphireTest {
 		);
 
 		// Write back original file with CONFLICT_OVERWRITE. The file sha should now be updated
-		$fish5Tuple = $backend->setFromLocalFile($fish1, 'directory/lovely-fish-v2.jpg', null, null, AssetStore::CONFLICT_OVERWRITE);
+		$fish5Tuple = $backend->setFromLocalFile(
+			$fish1,
+			'directory/lovely-fish-v2.jpg',
+			null,
+			null,
+			array('conflict' => AssetStore::CONFLICT_OVERWRITE)
+		);
 		$this->assertEquals(
 			array(
 				'Hash' => 'a870de278b475cb75f5d9f451439b2d378e13af1',

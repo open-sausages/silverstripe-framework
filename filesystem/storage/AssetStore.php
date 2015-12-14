@@ -18,6 +18,10 @@ namespace SilverStripe\Filesystem\Storage;
  *   of the mechanism used to generate this file, and is up to user code to perform the actual
  *   generation. An empty variant identifies this file as the original file.
  *
+ * Write options have an additional $config parameter to provide additional options to the backend.
+ * This is an associative array. Standard array options include 'visibility' and 'conflict'.
+ *
+ * 'conflict' config option determines the conflict resolution mechanism.
  * When assets are stored in the backend, user code may request one of the following conflict resolution
  * mechanisms:
  *
@@ -28,6 +32,12 @@ namespace SilverStripe\Filesystem\Storage;
  * - CONFLICT_USE_EXISTING - If there is an existing file with this tuple, return the tuple for the
  *   existing file instead.
  * - CONFLICT_EXCEPTION - If there is an existing file with this tuple, throw an exception.
+ *
+ * 'visibility' config option determines whether the file should be marked as publicly visible.
+ * This may be assigned to one of the below values:
+ *
+ * - VISIBILITY_PUBLIC: This file may be accessed by any public user.
+ * - VISIBILITY_PROTECTED: This file must be whitelisted for individual users before being made available to that user.
  *
  * @package framework
  * @subpackage filesystem
@@ -74,15 +84,11 @@ interface AssetStore {
 	 * @param string $filename Name for the resulting file
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
-	 * @param string $conflictResolution {@see AssetStore}. Will default to one chosen by the backend
-	 * @param string $visibility Set visibility of this file
+	 * @param array $config Write options. {@see AssetStore}
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the given data.
 	 */
-	public function setFromString(
-		$data, $filename, $hash = null, $variant = null, $conflictResolution = null,
-		$visibility = self::VISIBILITY_PROTECTED
-	);
+	public function setFromString($data, $filename, $hash = null, $variant = null, $config = array());
 
 	/**
 	 * Assign a local file to the backend.
@@ -92,15 +98,11 @@ interface AssetStore {
 	 * Will default to the filename of the $path, excluding directories.
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
-	 * @param string $conflictResolution {@see AssetStore}
-	 * @param string $visibility Set visibility of this file
+	 * @param array $config Write options. {@see AssetStore}
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the local file content.
 	 */
-    public function setFromLocalFile(
-		$path, $filename = null, $hash = null, $variant = null, $conflictResolution = null,
-		$visibility = self::VISIBILITY_PROTECTED
-	);
+    public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array());
 
 	/**
 	 * Assign a stream to the backend
@@ -109,15 +111,11 @@ interface AssetStore {
 	 * @param string $filename Name for the resulting file
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
-	 * @param string $conflictResolution {@see AssetStore}
-	 * @param string $visibility Set visibility of this file
+	 * @param array $config Write options. {@see AssetStore}
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the raw stream.
 	 */
-    public function setFromStream(
-		$stream, $filename, $hash = null, $variant = null, $conflictResolution = null,
-		$visibility = self::VISIBILITY_PROTECTED
-	);
+    public function setFromStream($stream, $filename, $hash = null, $variant = null, $config = array());
 
     /**
 	 * Get contents of a given file

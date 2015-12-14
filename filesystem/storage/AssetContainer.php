@@ -22,25 +22,25 @@ interface AssetContainer {
 	 * @param string $filename Name for the resulting file
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
-	 * @param string $conflictResolution {@see AssetStore}. Will default to one chosen by the backend
+	 * @param array $config Write options. {@see AssetStore}
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the given data.
 	 */
-	public function setFromString($data, $filename, $hash = null, $variant = null, $conflictResolution = null);
+	public function setFromString($data, $filename, $hash = null, $variant = null, $config = array());
 
     /**
 	 * Assign a local file to the backend.
 	 *
 	 * @param string $path Absolute filesystem path to file
-	 * @param type $filename Optional path to ask the backend to name as.
+	 * @param string $filename Optional path to ask the backend to name as.
 	 * Will default to the filename of the $path, excluding directories.
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
-	 * @param string $conflictResolution {@see AssetStore}
+	 * @param array $config Write options. {@see AssetStore}
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the local file content.
 	 */
-    public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $conflictResolution = null);
+    public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array());
 
     /**
 	 * Assign a stream to the backend
@@ -49,11 +49,11 @@ interface AssetContainer {
 	 * @param string $filename Name for the resulting file
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
-	 * @param string $conflictResolution {@see AssetStore}
+	 * @param array $config Write options. {@see AssetStore}
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the raw stream.
 	 */
-    public function setFromStream($stream, $filename, $hash = null, $variant = null, $conflictResolution = null);
+    public function setFromStream($stream, $filename, $hash = null, $variant = null, $config = array());
 
     /**
      * @return string Data from the file in this container

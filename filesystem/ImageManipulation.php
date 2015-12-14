@@ -692,7 +692,10 @@ trait ImageManipulation {
 					return null;
 				}
 
-				return $backend->writeToStore($store, $filename, $hash, $variant, AssetStore::CONFLICT_USE_EXISTING);
+				return $backend->writeToStore(
+					$store, $filename, $hash, $variant,
+					array('conflict' => AssetStore::CONFLICT_USE_EXISTING)
+				);
 			}
 		);
 	}

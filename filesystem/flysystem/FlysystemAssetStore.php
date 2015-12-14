@@ -139,10 +139,7 @@ class FlysystemAssetStore implements AssetStore, Flushable {
 			->getPublicUrl($fileID);
 	}
 
-	public function setFromLocalFile(
-		$path, $filename = null, $hash = null, $variant = null, $conflictResolution = null,
-		$visibility = self::VISIBILITY_PROTECTED
-	) {
+	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array()) {
 		// Validate this file exists
 		if(!file_exists($path)) {
 			throw new InvalidArgumentException("$path does not exist");
@@ -171,13 +168,10 @@ class FlysystemAssetStore implements AssetStore, Flushable {
 		}
 
 		// Submit to conflict check
-		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution, $visibility);
+		return $this->writeWithCallback($callback, $filename, $hash, $variant, $config);
 	}
 
-	public function setFromString(
-		$data, $filename, $hash = null, $variant = null, $conflictResolution = null,
-		$visibility = self::VISIBILITY_PROTECTED
-	) {
+	public function setFromString($data, $filename, $hash = null, $variant = null, $config = array()) {
 		// Callback for saving content
 		$callback = function(Filesystem $filesystem, $fileID) use ($data) {
 			return $filesystem->put($fileID, $data);
@@ -189,17 +183,14 @@ class FlysystemAssetStore implements AssetStore, Flushable {
 		}
 
 		// Submit to conflict check
-		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution, $visibility);
+		return $this->writeWithCallback($callback, $filename, $hash, $variant, $config);
 	}
 
-	public function setFromStream(
-		$stream, $filename, $hash = null, $variant = null, $conflictResolution = null,
-		$visibility = self::VISIBILITY_PROTECTED
-	) {
+	public function setFromStream($stream, $filename, $hash = null, $variant = null, $config = array()) {
 		// If the stream isn't rewindable, write to a temporary filename
 		if(!$this->isSeekableStream($stream)) {
 			$path = $this->getStreamAsFile($stream);
-			$result = $this->setFromLocalFile($path, $filename, $hash, $variant, $conflictResolution, $visibility);
+			$result = $this->setFromLocalFile($path, $filename, $hash, $variant, $config);
 			unlink($path);
 			return $result;
 		}
@@ -215,7 +206,7 @@ class FlysystemAssetStore implements AssetStore, Flushable {
 		}
 
 		// Submit to conflict check
-		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution, $visibility);
+		return $this->writeWithCallback($callback, $filename, $hash, $variant, $config);
 	}
 
 	public function delete($filename, $hash) {
@@ -292,18 +283,16 @@ class FlysystemAssetStore implements AssetStore, Flushable {
 	 * @param string $filename Name for the resulting file
 	 * @param string $hash SHA1 of the original file content
 	 * @param string $variant Variant to write
-	 * @param string $conflictResolution {@see AssetStore}. Will default to one chosen by the backend
-	 * @param string $visibility Set visibility of this file
+	 * @param array $config Write options. {@see AssetStore}
 	 * @return array Tuple associative array (Filename, Hash, Variant)
 	 * @throws Exception
 	 */
-	protected function writeWithCallback(
-		$callback, $filename, $hash, $variant = null, $conflictResolution = null,
-		$visibility = self::VISIBILITY_PROTECTED
-	) {
+	protected function writeWithCallback($callback, $filename, $hash, $variant = null, $config = array()) {
 		// Set default conflict resolution
-		if(!$conflictResolution) {
+		if(empty($config['conflict'])) {
 			$conflictResolution = $this->getDefaultConflictResolution($variant);
+		} else {
+			$conflictResolution = $config['conflict'];
 		}
 		
 		// Validate parameters
@@ -330,7 +319,8 @@ class FlysystemAssetStore implements AssetStore, Flushable {
 
 			// If writing a new file use the correct visibility
 			if(!$filesystem) {
-				if($visibility === self::VISIBILITY_PROTECTED) {
+				// Default to public store unless requesting protected store
+				if(isset($config['visibility']) && $config['visibility'] === self::VISIBILITY_PROTECTED) {
 					$filesystem = $this->getProtectedFilesystem();
 				} else {
 					$filesystem = $this->getPublicFilesystem();
@@ -434,12 +424,12 @@ class FlysystemAssetStore implements AssetStore, Flushable {
 		// Flysystem defaults to use_existing
 		switch($conflictResolution) {
 			// Throw tantrum
-			case AssetStore::CONFLICT_EXCEPTION: {
+			case static::CONFLICT_EXCEPTION: {
 				throw new \InvalidArgumentException("File already exists at path {$fileID}");
 			}
 
 			// Rename
-			case AssetStore::CONFLICT_RENAME: {
+			case static::CONFLICT_RENAME: {
 				foreach($this->fileGeneratorFor($fileID) as $candidate) {
 					if(!$this->getFilesystemFor($candidate)) {
 						return $candidate;
@@ -450,7 +440,7 @@ class FlysystemAssetStore implements AssetStore, Flushable {
 			}
 
 			// Use existing file
-			case AssetStore::CONFLICT_USE_EXISTING:
+			case static::CONFLICT_USE_EXISTING:
 			default: {
 				return false;
 			}
