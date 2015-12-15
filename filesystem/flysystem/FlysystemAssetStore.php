@@ -123,6 +123,21 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		return null;
 	}
 
+	public function getCapabilities() {
+		return array(
+			'visibility' => array(
+				self::VISIBILITY_PUBLIC,
+				self::VISIBILITY_PROTECTED
+			),
+			'conflict' => array(
+				self::CONFLICT_EXCEPTION,
+				self::CONFLICT_OVERWRITE,
+				self::CONFLICT_RENAME,
+				self::CONFLICT_USE_EXISTING
+			)
+		);
+	}
+
 	public function getVisibility($filename, $hash) {
 		$fileID = $this->getFileID($filename, $hash);
 		if($this->getPublicFilesystem()->has($fileID)) {

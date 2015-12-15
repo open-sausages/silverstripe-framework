@@ -78,6 +78,16 @@ interface AssetStore {
 	const VISIBILITY_PUBLIC = 'public';
 
 	/**
+	 * Return list of feature capabilities of this backend as an array.
+	 * Array keys will be the options supported by $config, and the
+	 * values will be the list of accepted values for each option (or
+	 * true if any value is allowed).
+	 *
+	 * @return array
+	 */
+	public function getCapabilities();
+
+	/**
 	 * Assign a set of data to the backend
 	 *
 	 * @param string $data Raw binary/text content
