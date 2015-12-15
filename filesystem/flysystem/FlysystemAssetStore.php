@@ -53,7 +53,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * @config
 	 * @var bool
 	 */
-	private static $allow_empty_dirs = false;
+	private static $keep_empty_dirs = false;
 
 	/**
 	 * Custom headers to add to all custom file responses
@@ -267,16 +267,25 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 			$deleted = true;
 		}
 
-		// If directory is empty, remove it
-		$dirname = dirname($fileID);
+		// Truncate empty dirs
+		$this->truncateDirectory(dirname($fileID), $filesystem);
+
+		return $deleted;
+	}
+
+	/**
+	 * Clear directory if it's empty
+	 *
+	 * @param string $dirname Name of directory
+	 * @param Filesystem $filesystem
+	 */
+	protected function truncateDirectory($dirname, Filesystem $filesystem) {
 		if ($dirname
-			&& ! Config::inst()->get(get_class($this), 'allow_empty_dirs')
+			&& ! Config::inst()->get(get_class($this), 'keep_empty_dirs')
 			&& ! $filesystem->listContents($dirname)
 		) {
 			$filesystem->deleteDir($dirname);
 		}
-
-		return $deleted;
 	}
 
 	/**
