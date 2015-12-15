@@ -310,11 +310,37 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	}
 
 	public function publish($filename, $hash) {
-		// TODO: Implement publish() method.
+		$fileID = $this->getFileID($filename, $hash);
+		$protected = $this->getProtectedFilesystem();
+		$public = $this->getPublicFilesystem();
+		$this->moveBetweenFilesystems($fileID, $protected, $public);
 	}
 
 	public function protect($filename, $hash) {
-		// TODO: Implement protect() method.
+		$fileID = $this->getFileID($filename, $hash);
+		$public = $this->getPublicFilesystem();
+		$protected = $this->getProtectedFilesystem();
+		$this->moveBetweenFilesystems($fileID, $public, $protected);
+	}
+
+	/**
+	 * Move a file (and its associative variants) between filesystems
+	 *
+	 * @param string $fileID
+	 * @param Filesystem $from
+	 * @param Filesystem $to
+	 */
+	protected function moveBetweenFilesystems($fileID, Filesystem $from, Filesystem $to) {
+		foreach($this->findVariants($fileID, $from) as $nextID) {
+			// Copy via stream
+			$stream = $from->readStream($nextID);
+			$to->putStream($nextID, $stream);
+			fclose($stream);
+			$from->delete($nextID);
+		}
+
+		// Truncate empty dirs
+		$this->truncateDirectory(dirname($fileID), $from);
 	}
 
 	public function grant($filename, $hash) {
