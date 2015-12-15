@@ -470,4 +470,14 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		}
 		return false;
 	}
+
+	public function delete() {
+		if(!$this->Filename) {
+			return false;
+		}
+
+		return $this
+			->getStore()
+			->delete($this->Filename, $this->Hash);
+	}
 }

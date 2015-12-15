@@ -3,6 +3,7 @@
 namespace SilverStripe\Filesystem\Flysystem;
 
 use Config;
+use Generator;
 use Injector;
 use Session;
 use Flushable;
@@ -44,6 +45,15 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * @var bool
 	 */
 	private static $legacy_filenames = false;
+
+	/**
+	 * Flag if empty folders are allowed.
+	 * If false, empty folders are cleared up when their contents are deleted.
+	 *
+	 * @config
+	 * @var bool
+	 */
+	private static $allow_empty_dirs = false;
 
 	/**
 	 * Custom headers to add to all custom file responses
@@ -222,7 +232,57 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	}
 
 	public function delete($filename, $hash) {
-		// TODO: Implement delete() method.
+		$fileID = $this->getFileID($filename, $hash);
+		$protected = $this->deleteFromFilesystem($fileID, $this->getProtectedFilesystem());
+		$public = $this->deleteFromFilesystem($fileID, $this->getPublicFilesystem());
+		return $protected || $public;
+	}
+
+	/**
+	 * Delete the given file (and any variants) in the given {@see Filesystem}
+	 *
+	 * @param string $fileID
+	 * @param Filesystem $filesystem
+	 * @return bool True if a file was deleted
+	 */
+	protected function deleteFromFilesystem($fileID, Filesystem $filesystem) {
+		$deleted = false;
+		foreach($this->findVariants($fileID, $filesystem) as $nextID) {
+			$filesystem->delete($nextID);
+			$deleted = true;
+		}
+
+		// If directory is empty, remove it
+		$dirname = dirname($fileID);
+		if ($dirname
+			&& ! Config::inst()->get(get_class($this), 'allow_empty_dirs')
+			&& ! $filesystem->listContents($dirname)
+		) {
+			$filesystem->deleteDir($dirname);
+		}
+
+		return $deleted;
+	}
+
+	/**
+	 * Returns an iterable {@see Generator} of all files / variants for the given $fileID in the given $filesystem
+	 * This includes the empty (no) variant.
+	 *
+	 * @param string $fileID ID of original file to compare with.
+	 * @param Filesystem $filesystem
+	 * @return Generator
+	 */
+	protected function findVariants($fileID, Filesystem $filesystem) {
+		foreach($filesystem->listContents(dirname($fileID)) as $next) {
+			if($next['type'] !== 'file') {
+				continue;
+			}
+			$nextID = $next['path'];
+			// Compare given file to target, omitting variant
+			if($fileID === $this->removeVariant($nextID)) {
+				yield $nextID;
+			}
+		}
 	}
 
 	public function publish($filename, $hash) {

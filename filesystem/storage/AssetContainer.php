@@ -130,4 +130,11 @@ interface AssetContainer {
 	 * @return string
 	 */
 	public function getVariant();
+
+	/**
+	 * Remove the underlying asset
+	 *
+	 * @return bool True if the file was deleted
+	 */
+	public function delete();
 }

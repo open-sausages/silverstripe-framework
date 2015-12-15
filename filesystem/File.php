@@ -1063,7 +1063,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		if(count($args) === 1 && is_array($args[0])) {
 			$args = $args[0];
 		}
-		
+
 		$parts = array();
 		foreach($args as $arg) {
 			$part = trim($arg, ' \\/');
@@ -1073,6 +1073,13 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		}
 
 		return implode('/', $parts);
+	}
+
+	public function delete() {
+		parent::delete();
+
+		// Remove the filesystem record
+		return $this->File->delete();
 	}
 
 }
