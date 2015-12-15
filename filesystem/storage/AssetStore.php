@@ -236,9 +236,18 @@ interface AssetStore {
 	 * This will not grant access to users other than the owner of the current session.
 	 * Does not require a member to be logged in.
 	 *
-	 * @param $filename
-	 * @param $hash
+	 * @param string $filename
+	 * @param string $hash
 	 * @return bool True if the file is verified and grants access to the current session / user.
 	 */
 	public function grant($filename, $hash);
+
+	/**
+	 * Check if the current user can view the given file.
+	 *
+	 * @param string $filename
+	 * @param string $hash
+	 * @return bool True if the file is verified and grants access to the current session / user.
+	 */
+	public function canView($filename, $hash);
 }

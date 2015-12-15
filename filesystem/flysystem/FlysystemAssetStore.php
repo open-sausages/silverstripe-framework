@@ -14,7 +14,6 @@ use SilverStripe\Filesystem\Storage\AssetNameGenerator;
 use SilverStripe\Filesystem\Storage\AssetStore;
 use SilverStripe\Filesystem\Storage\AssetStoreRouter;
 use SS_HTTPResponse;
-use SS_HTTPResponse_Exception;
 
 /**
  * Asset store based on flysystem Filesystem as a backend
@@ -45,6 +44,16 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * @var bool
 	 */
 	private static $legacy_filenames = false;
+
+	/**
+	 * Custom headers to add to all custom file responses
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $file_response_headers = array(
+		'Cache-Control' => 'private'
+	);
 
 	/**
 	 * Assign new flysystem backend
@@ -229,6 +238,24 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		$granted = Session::get('AssetStore_Grants') ?: array();
 		$granted[$fileID] = true;
 		Session::set('AssetStore_Grants', $granted);
+	}
+
+	public function canView($filename, $hash) {
+		$fileID = $this->getFileID($filename, $hash);
+		return $this->canViewFileID($fileID);
+	}
+
+	/**
+	 * Determine if the FileID is viewable
+	 *
+	 * @param string $fileID
+	 * @return bool
+	 */
+	protected function canViewFileID($fileID) {
+		if($this->getProtectedFilesystem()->has($fileID)) {
+			return $this->isGranted($fileID);
+		}
+		return true;
 	}
 
 	/**
@@ -474,31 +501,40 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	}
 
 	/**
-	 * Given a FileID, map this back to the original filename, trimming variant
+	 * Given a FileID, map this back to the original filename, trimming variant and hash
 	 *
 	 * @param string $fileID Adaptor specific identifier for this file/version
-	 * @param string $variant Out parameter for any found variant
-	 * @return string
+	 * @return string Filename for this file, omitting hash and variant
 	 */
-	protected function getOriginalFilename($fileID, &$variant = '') {
+	protected function getOriginalFilename($fileID) {
 		// Remove variant
-		$original = $fileID;
-		$variant = '';
-		if(preg_match('/^(?<before>((?<!__).)+)__(?<variant>[^\\.]+)(?<after>.*)$/', $fileID, $matches)) {
-			$original = $matches['before'].$matches['after'];
-			$variant = $matches['variant'];
-		}
+		$originalID = $this->removeVariant($fileID);
 
 		// Remove hash (unless using legacy filenames, without hash)
 		if($this->useLegacyFilenames()) {
-			return $original;
+			return $originalID;
 		} else {
 			return preg_replace(
 				'/(?<hash>[a-zA-Z0-9]{10}\\/)(?<name>[^\\/]+)$/',
 				'$2',
-				$original
+				$originalID
 			);
 		}
+	}
+
+	/**
+	 * Remove variant from a fileID
+	 *
+	 * @param string $fileID
+	 * @return string FileID without variant
+	 */
+	protected function removeVariant($fileID) {
+		// Check variant
+		if (preg_match('/^(?<before>((?<!__).)+)__(?<variant>[^\\.]+)(?<after>.*)$/', $fileID, $matches)) {
+			return $matches['before'] . $matches['after'];
+		}
+		// There is no variant, so return original value
+		return $fileID;
 	}
 
 	/**
@@ -524,7 +560,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		}
 
 		// Unless in legacy mode, inject hash just prior to the filename
-		if(Config::inst()->get(__CLASS__, 'legacy_filenames')) {
+		if($this->useLegacyFilenames()) {
 			$fileID = $name;
 		} else {
 			$fileID = substr($hash, 0, 10) . '/' . $name;
@@ -571,7 +607,76 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	}
 
 	public function getResponseFor($asset) {
-		\Debug::dump($asset);
-		die;
+		// Check if file exists
+		$filesystem = $this->getFilesystemFor($asset);
+		if(!$filesystem) {
+			return $this->createInvalidResponse($asset);
+		}
+
+		// Deny if file is protected and denied
+		if($filesystem === $this->getProtectedFilesystem() && !$this->isGranted($asset)) {
+			return $this->createDeniedResponse($asset);
+		}
+
+		// Serve up file response
+		return $this->createResponseFor($filesystem, $asset);
+	}
+
+	/**
+	 * Generate an {@see SS_HTTPResponse} for the given file from the source filesystem
+	 * @param Filesystem $flysystem
+	 * @param string $fileID
+	 * @return SS_HTTPResponse
+	 */
+	protected function createResponseFor(Filesystem $flysystem, $fileID) {
+		// Build response body
+		// @todo: gzip / buffer response?
+		$body = $flysystem->read($fileID);
+		$mime = $flysystem->getMimetype($fileID);
+		$response = new SS_HTTPResponse($body, 200);
+
+		// Add headers
+		$response->addHeader('Content-Type', $mime);
+		$headers = Config::inst()->get(get_class($this), 'file_response_headers');
+		foreach($headers as $header => $value) {
+			$response->addHeader($header, $value);
+		}
+		return $response;
+	}
+
+	/**
+	 * Generate a 403 response for the given file
+	 *
+	 * @param string $fileID
+	 * @return SS_HTTPResponse
+	 */
+	protected function createDeniedResponse($fileID) {
+		$response = new SS_HTTPResponse(null, 403);
+		return $response;
+	}
+
+	/**
+	 * Generate 404 response for missing file requests
+	 *
+	 * @param string $fileID
+	 * @return SS_HTTPResponse
+	 */
+	protected function createInvalidResponse($fileID) {
+		$response = new SS_HTTPResponse(null, 404);
+		return $response;
+	}
+
+	/**
+	 * Determine if a grant exists for the given FileID
+	 *
+	 * @param string $fileID
+	 * @return bool
+	 */
+	protected function isGranted($fileID) {
+		// Since permissions are applied to the non-variant only,
+		// map back to the original file before checking
+		$originalID = $this->removeVariant($fileID);
+		$granted = Session::get('AssetStore_Grants') ?: array();
+		return !empty($granted[$originalID]);
 	}
 }
