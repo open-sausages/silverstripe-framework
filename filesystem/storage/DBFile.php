@@ -471,7 +471,7 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		return false;
 	}
 
-	public function delete() {
+	public function deleteFile() {
 		if(!$this->Filename) {
 			return false;
 		}
@@ -481,23 +481,35 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 			->delete($this->Filename, $this->Hash);
 	}
 
-	public function publish() {
+	public function publishFile() {
 		if(!$this->Filename) {
-			return false;
+			return $this
+				->getStore()
+				->publish($this->Filename, $this->Hash);
 		}
-
-		return $this
-			->getStore()
-			->publish($this->Filename, $this->Hash);
 	}
 
-	public function protect() {
-		if(!$this->Filename) {
-			return false;
+	public function protectFile() {
+		if($this->Filename) {
+			return $this
+				->getStore()
+				->protect($this->Filename, $this->Hash);
 		}
+	}
 
-		return $this
-			->getStore()
-			->protect($this->Filename, $this->Hash);
+	public function grantFile() {
+		if($this->Filename) {
+			return $this
+				->getStore()
+				->grant($this->Filename, $this->Hash);
+		}
+	}
+
+	public function revokeFile() {
+		if($this->Filename) {
+			return $this
+				->getStore()
+				->revoke($this->Filename, $this->Hash);
+		}
 	}
 }

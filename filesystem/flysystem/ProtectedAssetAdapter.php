@@ -2,15 +2,17 @@
 
 namespace SilverStripe\Filesystem\Flysystem;
 
-class ProtectedAssetAdapter extends AssetAdapter {
+class ProtectedAssetAdapter extends AssetAdapter implements ProtectedAdapter {
 
     /**
-     * Name of default folder to save secure assets in
+     * Name of default folder to save secure assets in under ASSETS_PATH.
+     * This can be bypassed by specifying an absolute filesystem path via
+     * the SS_PROTECTED_ASSETS_PATH environment definition.
      *
      * @config
      * @var string
      */
-    private static $secure_folder = 'assets/.protected';
+    private static $secure_folder = '.protected';
 
     private static $server_configuration = array(
         'apache' => array(
@@ -32,16 +34,17 @@ class ProtectedAssetAdapter extends AssetAdapter {
             return SS_PROTECTED_ASSETS_PATH;
         }
 
-        return BASE_PATH . '/' . \Config::inst()->get(static::class, 'secure_folder');
+        // Default location is under assets
+        return ASSETS_PATH . '/' . \Config::inst()->get(static::class, 'secure_folder');
     }
 
     /**
-     * Provide downloadable url
+     * Provide secure downloadable
      *
      * @param string $path
      * @return string|null
      */
-    public function getPublicUrl($path) {
+    public function getProtectedUrl($path) {
         // Public URLs are handled via a request handler within /assets.
         // If assets are stored locally, then asset paths of protected files should be equivalent.
         return \Controller::join_links(\Director::baseURL(), ASSETS_DIR, $path);

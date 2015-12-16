@@ -7,10 +7,10 @@ use League\Flysystem\AdapterInterface;
 /**
  * Represents an AbstractAdapter which exposes its assets via public urls
  */
-interface URLAdapter extends AdapterInterface {
+interface PublicAdapter extends AdapterInterface {
 
 	/**
-	 * Provide downloadable url
+	 * Provide downloadable url that is open to the public
 	 *
 	 * @param string $path
 	 * @return string|null

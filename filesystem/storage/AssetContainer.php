@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Filesystem\Storage;
 
+use SilverStripe\Filesystem\Storage\AssetStore;
+
 /**
  * Represents a container for a specific asset.
  *
@@ -13,7 +15,8 @@ namespace SilverStripe\Filesystem\Storage;
  * @package framework
  * @subpackage filesystem
  */
-interface AssetContainer {
+interface AssetContainer
+{
 
 	/**
 	 * Assign a set of data to the backend
@@ -28,7 +31,7 @@ interface AssetContainer {
 	 */
 	public function setFromString($data, $filename, $hash = null, $variant = null, $config = array());
 
-    /**
+	/**
 	 * Assign a local file to the backend.
 	 *
 	 * @param string $path Absolute filesystem path to file
@@ -40,9 +43,9 @@ interface AssetContainer {
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the local file content.
 	 */
-    public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array());
+	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array());
 
-    /**
+	/**
 	 * Assign a stream to the backend
 	 *
 	 * @param resource $stream Streamable resource
@@ -53,22 +56,22 @@ interface AssetContainer {
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the raw stream.
 	 */
-    public function setFromStream($stream, $filename, $hash = null, $variant = null, $config = array());
+	public function setFromStream($stream, $filename, $hash = null, $variant = null, $config = array());
 
-    /**
-     * @return string Data from the file in this container
-     */
-    public function getString();
+	/**
+	 * @return string Data from the file in this container
+	 */
+	public function getString();
 
-    /**
+	/**
 	 * @return resource Data stream to the asset in this container
 	 */
-    public function getStream();
+	public function getStream();
 
-    /**
-     * @return string public url to the asset in this container
-     */
-    public function getURL();
+	/**
+	 * @return string public url to the asset in this container
+	 */
+	public function getURL();
 
 	/**
 	 * @return string The absolute URL to the asset in this container
@@ -130,4 +133,40 @@ interface AssetContainer {
 	 * @return string
 	 */
 	public function getVariant();
+
+	/**
+	 * Delete a file (and all variants).
+	 * {@see AssetStore::delete()}
+	 *
+	 * @return bool Flag if a file was deleted
+	 */
+	public function deleteFile();
+
+	/**
+	 * Publicly expose the file (and all variants) identified by the given filename and hash
+	 * {@see AssetStore::publish}
+	 */
+	public function publishFile();
+
+	/**
+	 * Protect a file (and all variants) from public access, identified by the given filename and hash.
+	 * {@see AssetStore::protect()}
+	 */
+	public function protectFile();
+
+	/**
+	 * Ensures that access to the specified protected file is granted for the current user.
+	 * If this file is currently in protected mode, the asset store will ensure the
+	 * returned asset for the duration of the current session / user.
+	 * This will have no effect if the file is in published mode.
+	 * This will not grant access to users other than the owner of the current session.
+	 * Does not require a member to be logged in.
+	 */
+	public function grantFile();
+
+	/**
+	 * Revoke access to the given file for the current user.
+	 * Note: This will have no effect if the given file is public
+	 */
+	public function revokeFile();
 }

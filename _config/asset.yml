@@ -2,24 +2,19 @@
 Name: coreflysystem
 ---
 Injector:
-  # Public url plugin
-  FlysystemUrlPlugin:
-    class: 'SilverStripe\Filesystem\Flysystem\FlysystemUrlPlugin'
   # Define the default adapter for this filesystem
-  FlysystemDefaultAdapter:
-    class: 'SilverStripe\Filesystem\Flysystem\AssetAdapter'
+  FlysystemPublicAdapter:
+    class: 'SilverStripe\Filesystem\Flysystem\PublicAssetAdapter'
   # Define the secondary adapter for protected assets
   FlysystemProtectedAdapter:
     class: 'SilverStripe\Filesystem\Flysystem\ProtectedAssetAdapter'
   # Define the default filesystem
-  FlysystemBackend:
+  FlysystemPublicBackend:
     class: 'League\Flysystem\Filesystem'
     constructor:
-      Adapter: '%$FlysystemDefaultAdapter'
+      Adapter: '%$FlysystemPublicAdapter'
       Config:
         visibility: public
-    calls:
-      PublicURLPlugin: [ addPlugin, [ %$FlysystemUrlPlugin ] ]
   # Define the secondary filesystem for protected assets
   FlysystemProtectedBackend:
     class: 'League\Flysystem\Filesystem'
@@ -27,8 +22,6 @@ Injector:
       Adapter: '%$FlysystemProtectedAdapter'
       Config:
         visibility: private
-    calls:
-      PublicURLPlugin: [ addPlugin, [ %$FlysystemUrlPlugin ] ]
 ---
 Name: coreassets
 After:
@@ -39,7 +32,7 @@ Injector:
   AssetStore:
     class: 'SilverStripe\Filesystem\Flysystem\FlysystemAssetStore'
     properties:
-      PublicFilesystem: '%$FlysystemBackend'
+      PublicFilesystem: '%$FlysystemPublicBackend'
       ProtectedFilesystem: '%$FlysystemProtectedBackend'
   ProtectedFileController:
     class: SilverStripe\Filesystem\Storage\ProtectedFileController
@@ -52,7 +45,7 @@ Injector:
   GeneratedAssetHandler:
     class: SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler
     properties:
-      Filesystem: '%$FlysystemBackend'
+      Filesystem: '%$FlysystemPublicBackend'
   Requirements_Minifier:
     class: SilverStripe\View\JSMinifier
   Requirements_Backend:

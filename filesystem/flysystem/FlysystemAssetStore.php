@@ -25,6 +25,11 @@ use SS_HTTPResponse;
 class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 
 	/**
+	 * Session key to use for user grants
+	 */
+	const GRANTS_SESSION = 'AssetStore_Grants';
+
+	/**
 	 * @var Filesystem
 	 */
 	private $publicFilesystem = null;
@@ -72,6 +77,9 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * @return $this
 	 */
 	public function setPublicFilesystem(Filesystem $filesystem) {
+		if(!$filesystem->getAdapter() instanceof PublicAdapter) {
+			throw new \InvalidArgumentException("Configured adaptor must implement PublicAdapter");
+		}
 		$this->publicFilesystem = $filesystem;
 		return $this;
 	}
@@ -92,6 +100,9 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * @return $this
 	 */
 	public function setProtectedFilesystem(Filesystem $filesystem) {
+		if(!$filesystem->getAdapter() instanceof ProtectedAdapter) {
+			throw new \InvalidArgumentException("Configured adaptor must implement ProtectedAdapter");
+		}
 		$this->protectedFilesystem = $filesystem;
 		return $this;
 	}
@@ -171,9 +182,22 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 			$this->grant($filename, $hash);
 		}
 		$fileID = $this->getFileID($filename, $hash, $variant);
-		return $this
-			->getFilesystemFor($fileID)
-			->getPublicUrl($fileID);
+
+		// Enforce url visibility here
+		if($this->getPublicFilesystem()->has($fileID)) {
+			return $this
+				->getPublicFilesystem()
+				->getAdapter()
+				->getPublicUrl($fileID);
+		}
+
+		// Expose protected url
+		if($this->getProtectedFilesystem()->has($fileID)) {
+			return $this
+				->getProtectedFilesystem()
+				->getAdapter()
+				->getProtectedUrl($fileID);
+		}
 	}
 
 	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array()) {
@@ -345,27 +369,42 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 
 	public function grant($filename, $hash) {
 		$fileID = $this->getFileID($filename, $hash);
-		$granted = Session::get('AssetStore_Grants') ?: array();
+		$granted = Session::get(self::GRANTS_SESSION) ?: array();
 		$granted[$fileID] = true;
-		Session::set('AssetStore_Grants', $granted);
+		Session::set(self::GRANTS_SESSION, $granted);
+	}
+
+	public function revoke($filename, $hash) {
+		$fileID = $this->getFileID($filename, $hash);
+		$granted = Session::get(self::GRANTS_SESSION) ?: array();
+		unset($granted[$fileID]);
+		if($granted) {
+			Session::set(self::GRANTS_SESSION, $granted);
+		} else {
+			Session::clear(self::GRANTS_SESSION);
+		}
 	}
 
 	public function canView($filename, $hash) {
 		$fileID = $this->getFileID($filename, $hash);
-		return $this->canViewFileID($fileID);
-	}
-
-	/**
-	 * Determine if the FileID is viewable
-	 *
-	 * @param string $fileID
-	 * @return bool
-	 */
-	protected function canViewFileID($fileID) {
 		if($this->getProtectedFilesystem()->has($fileID)) {
 			return $this->isGranted($fileID);
 		}
 		return true;
+	}
+
+	/**
+	 * Determine if a grant exists for the given FileID
+	 *
+	 * @param string $fileID
+	 * @return bool
+	 */
+	protected function isGranted($fileID) {
+		// Since permissions are applied to the non-variant only,
+		// map back to the original file before checking
+		$originalID = $this->removeVariant($fileID);
+		$granted = Session::get('AssetStore_Grants') ?: array();
+		return !empty($granted[$originalID]);
 	}
 
 	/**
@@ -774,19 +813,5 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	protected function createInvalidResponse($fileID) {
 		$response = new SS_HTTPResponse(null, 404);
 		return $response;
-	}
-
-	/**
-	 * Determine if a grant exists for the given FileID
-	 *
-	 * @param string $fileID
-	 * @return bool
-	 */
-	protected function isGranted($fileID) {
-		// Since permissions are applied to the non-variant only,
-		// map back to the original file before checking
-		$originalID = $this->removeVariant($fileID);
-		$granted = Session::get('AssetStore_Grants') ?: array();
-		return !empty($granted[$originalID]);
 	}
 }

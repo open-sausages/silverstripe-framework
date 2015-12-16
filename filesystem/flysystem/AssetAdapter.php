@@ -2,8 +2,6 @@
 
 namespace SilverStripe\Filesystem\Flysystem;
 
-use Controller;
-use Director;
 use League\Flysystem\Adapter\Local;
 
 /**
@@ -12,7 +10,7 @@ use League\Flysystem\Adapter\Local;
  * @package framework
  * @subpackage filesystem
  */
-class AssetAdapter extends Local implements URLAdapter {
+class AssetAdapter extends Local {
 
 	/**
 	 * Server specific configuration necessary to block http traffic to a local folder
@@ -20,14 +18,7 @@ class AssetAdapter extends Local implements URLAdapter {
 	 * @config
 	 * @var array Mapping of server configurations to configuration files necessary
 	 */
-	private static $server_configuration = array(
-		'apache' => array(
-			'.htaccess' => "Assets_HTAccess"
-		),
-		'microsoft-iis' => array(
-			'web.config' => "Assets_WebConfig"
-		)
-	);
+	private static $server_configuration = array();
 
 	/**
 	 * Config compatible permissions configuration
@@ -67,7 +58,7 @@ class AssetAdapter extends Local implements URLAdapter {
 	protected function findRoot($root) {
 		// Empty root will set the path to assets
 		if (!$root) {
-			return ASSETS_PATH;
+			throw new \InvalidArgumentException("Missing argument for root path");
 		}
 
 		// Substitute leading ./ with BASE_PATH
@@ -114,7 +105,10 @@ class AssetAdapter extends Local implements URLAdapter {
 			if ($forceOverwrite || !$this->has($file)) {
 				// Evaluate file
 				$content = $this->renderTemplate($template);
-				$this->write($file, $content, $config);
+				$success = $this->write($file, $content, $config);
+				if(!$success) {
+					throw new \Exception("Error writing server configuration file \"{$file}\"");
+				}
 			}
 		}
 	}
@@ -140,25 +134,6 @@ class AssetAdapter extends Local implements URLAdapter {
 		return (string)$viewer->process(new \ArrayData(array(
 			'AllowedExtensions' => $allowedExtensions
 		)));
-	}
-
-	/**
-	 * Provide downloadable url
-	 *
-	 * @param string $path
-	 * @return string|null
-	 */
-	public function getPublicUrl($path) {
-		$rootPath = realpath(BASE_PATH);
-		$filesPath = realpath($this->pathPrefix);
-
-		if(stripos($filesPath, $rootPath) === 0) {
-			$dir = substr($filesPath, strlen($rootPath));
-			return Controller::join_links(Director::baseURL(), $dir, $path);
-		}
-
-		// File outside of webroot can't be used
-		return null;
 	}
 
 }

@@ -222,7 +222,6 @@ interface AssetStore {
 	 *
 	 * @param string $filename Filename (not including assets)
 	 * @param string $hash sha1 hash of the file content.
-	 * @return bool True if the file is verified and made publicly available
 	 */
 	public function publish($filename, $hash);
 
@@ -234,7 +233,6 @@ interface AssetStore {
 	 *
 	 * @param string $filename Filename (not including assets)
 	 * @param string $hash sha1 hash of the file content.
-	 * @return bool True if the file is verified and protected
 	 */
 	public function protect($filename, $hash);
 
@@ -248,9 +246,17 @@ interface AssetStore {
 	 *
 	 * @param string $filename
 	 * @param string $hash
-	 * @return bool True if the file is verified and grants access to the current session / user.
 	 */
 	public function grant($filename, $hash);
+
+	/**
+	 * Revoke access to the given file for the current user.
+	 * Note: This will have no effect if the given file is public
+	 *
+	 * @param string $filename
+	 * @param string $hash
+	 */
+	public function revoke($filename, $hash);
 
 	/**
 	 * Check if the current user can view the given file.
