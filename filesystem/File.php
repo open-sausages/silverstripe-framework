@@ -1075,14 +1075,6 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		return implode('/', $parts);
 	}
 
-	public function onAfterDelete() {
-		parent::onAfterDelete();
-
-		// Remove the filesystem record
-		// @todo - Move to AssetControlExtension
-		$this->deleteFile();
-	}
-
 	public function deleteFile() {
 		return $this->File->deleteFile();
 	}

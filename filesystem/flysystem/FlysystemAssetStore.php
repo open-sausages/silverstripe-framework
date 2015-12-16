@@ -811,7 +811,13 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * @return SS_HTTPResponse
 	 */
 	protected function createInvalidResponse($fileID) {
-		$response = new SS_HTTPResponse(null, 404);
+		$response = new SS_HTTPResponse('', 404);
+
+		// Show message in dev
+		if(!\Director::isLive()) {
+			$response->setBody($response->getStatusDescription());
+		}
+
 		return $response;
 	}
 }
