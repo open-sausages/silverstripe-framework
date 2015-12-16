@@ -1,10 +1,13 @@
 <?php
 
 use Filesystem as SS_Filesystem;
+use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem;
 use SilverStripe\Filesystem\Flysystem\AssetAdapter;
 use SilverStripe\Filesystem\Flysystem\FlysystemAssetStore;
 use SilverStripe\Filesystem\Flysystem\FlysystemUrlPlugin;
+use SilverStripe\Filesystem\Flysystem\ProtectedAssetAdapter;
+use SilverStripe\Filesystem\Flysystem\PublicAssetAdapter;
 use SilverStripe\Filesystem\Storage\AssetContainer;
 use SilverStripe\Filesystem\Storage\AssetStore;
 use SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler;
@@ -471,16 +474,23 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 	 */
 	public static function activate($basedir) {
 		// Assign this as the new store
-		$adapter = new AssetAdapter(ASSETS_PATH . '/' . $basedir);
-		$filesystem = new Filesystem($adapter);
-		$filesystem->addPlugin(new FlysystemUrlPlugin());
+		$publicAdapter = new PublicAssetAdapter(ASSETS_PATH . '/' . $basedir);
+		$publicFilesystem = new Filesystem($publicAdapter, [
+			'visibility' => AdapterInterface::VISIBILITY_PUBLIC
+		]);
+		$protectedAdapter = new ProtectedAssetAdapter(ASSETS_PATH . '/' . $basedir . '/.protected');
+		$protectedFilesystem = new Filesystem($protectedAdapter, [
+			'visibility' => AdapterInterface::VISIBILITY_PRIVATE
+		]);
+
 		$backend = new AssetStoreTest_SpyStore();
-		$backend->setPublicFilesystem($filesystem);
+		$backend->setPublicFilesystem($publicFilesystem);
+		$backend->setProtectedFilesystem($protectedFilesystem);
 		Injector::inst()->registerService($backend, 'AssetStore');
 
 		// Assign flysystem backend to generated asset handler at the same time
 		$generated = new FlysystemGeneratedAssetHandler();
-		$generated->setFilesystem($filesystem);
+		$generated->setFilesystem($publicFilesystem);
 		Injector::inst()->registerService($generated, 'GeneratedAssetHandler');
 		Requirements::backend()->setAssetHandler($generated);
 
