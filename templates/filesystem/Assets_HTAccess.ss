@@ -8,6 +8,10 @@
     SetEnv HTTP_MOD_REWRITE On
     RewriteEngine On
 
+    # Disable PHP handler
+    RewriteCond %{REQUEST_URI} .(?i:php|phtml|php3|php4|php5|inc)$
+    RewriteRule .* - [F]
+
     # Allow error pages
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule error[^\\/]*\.html$ - [L]

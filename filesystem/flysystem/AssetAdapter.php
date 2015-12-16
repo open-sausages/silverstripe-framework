@@ -125,7 +125,7 @@ class AssetAdapter extends Local {
 		foreach(\File::config()->allowed_extensions as $extension) {
 			if($extension) {
 				$allowedExtensions->push(new \ArrayData(array(
-					'Extension' => $extension
+					'Extension' => preg_quote($extension)
 				)));
 			}
 		}
