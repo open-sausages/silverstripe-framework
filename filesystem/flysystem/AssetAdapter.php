@@ -5,7 +5,7 @@ namespace SilverStripe\Filesystem\Flysystem;
 use League\Flysystem\Adapter\Local;
 
 /**
- * Adaptor for local filesystem based on assets directory
+ * Adapter for local filesystem based on assets directory
  *
  * @package framework
  * @subpackage filesystem

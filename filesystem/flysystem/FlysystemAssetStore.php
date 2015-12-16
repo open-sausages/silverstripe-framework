@@ -78,7 +78,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 */
 	public function setPublicFilesystem(Filesystem $filesystem) {
 		if(!$filesystem->getAdapter() instanceof PublicAdapter) {
-			throw new \InvalidArgumentException("Configured adaptor must implement PublicAdapter");
+			throw new \InvalidArgumentException("Configured adapter must implement PublicAdapter");
 		}
 		$this->publicFilesystem = $filesystem;
 		return $this;
@@ -101,7 +101,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 */
 	public function setProtectedFilesystem(Filesystem $filesystem) {
 		if(!$filesystem->getAdapter() instanceof ProtectedAdapter) {
-			throw new \InvalidArgumentException("Configured adaptor must implement ProtectedAdapter");
+			throw new \InvalidArgumentException("Configured adapter must implement ProtectedAdapter");
 		}
 		$this->protectedFilesystem = $filesystem;
 		return $this;
@@ -629,7 +629,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	/**
 	 * Get an asset renamer for the given filename.
 	 *
-	 * @param string $fileID Adaptor specific identifier for this file/version
+	 * @param string $fileID Adapter specific identifier for this file/version
 	 * @return AssetNameGenerator
 	 */
 	protected function fileGeneratorFor($fileID){
@@ -652,7 +652,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	/**
 	 * Given a FileID, map this back to the original filename, trimming variant and hash
 	 *
-	 * @param string $fileID Adaptor specific identifier for this file/version
+	 * @param string $fileID Adapter specific identifier for this file/version
 	 * @return string Filename for this file, omitting hash and variant
 	 */
 	protected function getOriginalFilename($fileID) {
@@ -694,7 +694,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * @param string $filename Name of file
 	 * @param string $hash Hash of original file
 	 * @param string $variant (if given)
-	 * @return string Adaptor specific identifier for this file/version
+	 * @return string Adapter specific identifier for this file/version
 	 */
 	protected function getFileID($filename, $hash, $variant = null) {
 		// Since we use double underscore to delimit variants, eradicate them from filename
@@ -735,7 +735,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	}
 
 	/**
-	 * Ensure each adaptor re-generates its own server configuration files
+	 * Ensure each adapter re-generates its own server configuration files
 	 */
 	public static function flush() {
 		// Ensure that this instance is constructed on flush, thus forcing
