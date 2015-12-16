@@ -8,18 +8,6 @@ use SilverStripe\Filesystem\Storage\AssetStore;
 
 /**
  * Provides an interaction mechanism between objects and linked asset references.
- *
- * This will ensure that deleted objects remove their underlying assets, and will
- * work for both `DBFile`s defined via $db config, and shortcodes within `HTMLText` values.
- *
- * Replaced files will also delete any old asset on save.
- *
- * For versioned DataObjects the following additional behaviour is defined:
- *
- *  - Draft DataObjects protect any un-published assets
- *  - Archived objects (conditionally) delete or protect any linked assets
- *  - Published objects publish underlying assets
- *  - Deleting objects from live only remove assets from the public store
  */
 class AssetControlExtension extends \DataExtension {
 
@@ -67,15 +55,10 @@ class AssetControlExtension extends \DataExtension {
 
             // Extract assets from this database field
             $fieldAssets = array();
-            switch($dbClass) {
-                case 'DBFile': {
-                    $fieldAssets = array($record->dbObject($field)->getValue());
-                    break;
-                }
-                case 'HTMLText': {
-                    // @todo once we implement DBFile shortcodes
-                    break;
-                }
+            if(is_a($dbClass, 'DBFile', true)) {
+                $fieldAssets = array($record->dbObject($field)->getValue());
+            } elseif (is_a($dbClass, 'HTMLText', true)){
+                // @todo once we implement DBFile shortcodes
             }
 
             // Omit variant and merge with set
@@ -90,7 +73,6 @@ class AssetControlExtension extends \DataExtension {
         return array_unique($files);
     }
 
-
     /**
      * Determine if this record is a live version
      *
@@ -102,7 +84,8 @@ class AssetControlExtension extends \DataExtension {
         }
 		$mode = $this->owner->getSourceQueryParam("Versioned.mode");
 		$stage = $this->owner->getSourceQueryParam("Versioned.stage");
-		return $mode === 'stage' && $stage === \Versioned::get_live_stage();
+		return strcasecmp($mode, 'stage') === 0
+            && strcasecmp($stage, \Versioned::get_live_stage()) === 0;
     }
 
     /**
