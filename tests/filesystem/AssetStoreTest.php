@@ -462,6 +462,10 @@ class AssetStoreTest extends SapphireTest {
 			$backend->getAsURL($fishVariantTuple['Filename'], $fishVariantTuple['Hash'], $fishVariantTuple['Variant'])
 		);
 
+		// Test access rights to public files cannot be revoked
+		$backend->revoke($fishTuple['Filename'], $fishTuple['Hash']); // can't revoke public assets
+		$this->assertTrue($backend->canView($fishTuple['Filename'], $fishTuple['Hash']));
+
 		// Test protected file storage
 		$backend->protect($fishTuple['Filename'], $fishTuple['Hash']);
 		$this->assertFileNotExists(ASSETS_PATH . '/AssetStoreTest/parent/a870de278b/lovely-fish.jpg');
@@ -473,13 +477,19 @@ class AssetStoreTest extends SapphireTest {
 			$backend->getVisibility($fishTuple['Filename'], $fishTuple['Hash'])
 		);
 
-		// Protected URLS are unchanged
+		// Test access rights
+		$backend->revoke($fishTuple['Filename'], $fishTuple['Hash']);
+		$this->assertFalse($backend->canView($fishTuple['Filename'], $fishTuple['Hash']));
+		$backend->grant($fishTuple['Filename'], $fishTuple['Hash']);
+		$this->assertTrue($backend->canView($fishTuple['Filename'], $fishTuple['Hash']));
+
+		// Protected urls should go through asset routing mechanism
 		$this->assertEquals(
-			'/assets/AssetStoreTest/parent/a870de278b/lovely-fish.jpg',
+			'/assets/parent/a870de278b/lovely-fish.jpg',
 			$backend->getAsURL($fishTuple['Filename'], $fishTuple['Hash'])
 		);
 		$this->assertEquals(
-			'/assets/AssetStoreTest/parent/a870de278b/lovely-fish__copy.jpg',
+			'/assets/parent/a870de278b/lovely-fish__copy.jpg',
 			$backend->getAsURL($fishVariantTuple['Filename'], $fishVariantTuple['Hash'], $fishVariantTuple['Variant'])
 		);
 
