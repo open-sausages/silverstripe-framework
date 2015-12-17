@@ -51,26 +51,22 @@ class AssetControlExtension extends \DataExtension {
         // Search for dbfile instances
         $files = array();
         foreach($record->db() as $field => $db) {
-            list($dbClass) = explode('(', $db);
-
             // Extract assets from this database field
-            $fieldAssets = array();
-            if(is_a($dbClass, 'DBFile', true)) {
-                $fieldAssets = array($record->dbObject($field)->getValue());
-            } elseif (is_a($dbClass, 'HTMLText', true)){
-                // @todo once we implement DBFile shortcodes
+            list($dbClass) = explode('(', $db);
+            if(!is_a($dbClass, 'DBFile', true)) {
+                continue;
             }
 
             // Omit variant and merge with set
-            foreach($fieldAssets as $next) {
-                unset($next['Variant']);
-                if ($next) {
-                    $files[] = $next;
-                }
+            $next = $record->dbObject($field)->getValue();
+            unset($next['Variant']);
+            if ($next) {
+                $files[] = $next;
             }
         }
 
-        return array_unique($files);
+        // De-dupe
+        return array_map("unserialize", array_unique(array_map("serialize", $files)));
     }
 
     /**
