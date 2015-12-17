@@ -429,16 +429,16 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		// Get temporary file and name
 		$file = tempnam(sys_get_temp_dir(), 'ssflysystem');
 		$buffer = fopen($file, 'w');
-        if (!$buffer) {
-            throw new Exception("Could not create temporary file");
-        }
+		if (!$buffer) {
+			throw new Exception("Could not create temporary file");
+		}
 
 		// Transfer from given stream
 		Util::rewindStream($stream);
-        stream_copy_to_stream($stream, $buffer);
-        if (! fclose($buffer)) {
-            throw new Exception("Could not write stream to temporary file");
-        }
+		stream_copy_to_stream($stream, $buffer);
+		if (! fclose($buffer)) {
+			throw new Exception("Could not write stream to temporary file");
+		}
 
 		return $file;
 	}
