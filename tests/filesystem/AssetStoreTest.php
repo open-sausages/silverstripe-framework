@@ -225,44 +225,36 @@ class AssetStoreTest extends SapphireTest {
 		$store = new AssetStoreTest_SpyStore();
 		$this->assertEquals(
 			'directory/lovely-fish.jpg',
-			$store->getOriginalFilename('directory/a870de278b/lovely-fish.jpg', $variant)
+			$store->getOriginalFilename('directory/a870de278b/lovely-fish.jpg')
 		);
-		$this->assertEmpty($variant);
 		$this->assertEquals(
 			'directory/lovely-fish.jpg',
-			$store->getOriginalFilename('directory/a870de278b/lovely-fish__variant.jpg', $variant)
+			$store->getOriginalFilename('directory/a870de278b/lovely-fish__variant.jpg')
 		);
-		$this->assertEquals('variant', $variant);
 		$this->assertEquals(
 			'directory/lovely_fish.jpg',
-			$store->getOriginalFilename('directory/a870de278b/lovely_fish__vari_ant.jpg', $variant)
+			$store->getOriginalFilename('directory/a870de278b/lovely_fish__vari_ant.jpg')
 		);
-		$this->assertEquals('vari_ant', $variant);
 		$this->assertEquals(
 			'directory/lovely_fish.jpg',
-			$store->getOriginalFilename('directory/a870de278b/lovely_fish.jpg', $variant)
+			$store->getOriginalFilename('directory/a870de278b/lovely_fish.jpg')
 		);
-		$this->assertEmpty($variant);
 		$this->assertEquals(
 			'lovely-fish.jpg',
-			$store->getOriginalFilename('a870de278b/lovely-fish.jpg', $variant)
+			$store->getOriginalFilename('a870de278b/lovely-fish.jpg')
 		);
-		$this->assertEmpty($variant);
 		$this->assertEquals(
 			'lovely-fish.jpg',
-			$store->getOriginalFilename('a870de278b/lovely-fish__variant.jpg', $variant)
+			$store->getOriginalFilename('a870de278b/lovely-fish__variant.jpg')
 		);
-		$this->assertEquals('variant', $variant);
 		$this->assertEquals(
 			'lovely_fish.jpg',
-			$store->getOriginalFilename('a870de278b/lovely_fish__vari__ant.jpg', $variant)
+			$store->getOriginalFilename('a870de278b/lovely_fish__vari__ant.jpg')
 		);
-		$this->assertEquals('vari__ant', $variant);
 		$this->assertEquals(
 			'lovely_fish.jpg',
-			$store->getOriginalFilename('a870de278b/lovely_fish.jpg', $variant)
+			$store->getOriginalFilename('a870de278b/lovely_fish.jpg')
 		);
-		$this->assertEmpty($variant);
 	}
 
 	/**
@@ -559,8 +551,12 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 	}
 
 
-	public function getOriginalFilename($fileID, &$variant = '') {
-		return parent::getOriginalFilename($fileID, $variant);
+	public function getOriginalFilename($fileID) {
+		return parent::getOriginalFilename($fileID);
+	}
+
+	public function removeVariant($fileID) {
+		return parent::removeVariant($fileID);
 	}
 
 	public function getDefaultConflictResolution($variant) {

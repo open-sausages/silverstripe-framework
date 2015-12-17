@@ -183,20 +183,17 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		}
 		$fileID = $this->getFileID($filename, $hash, $variant);
 
-		// Enforce url visibility here
-		if($this->getPublicFilesystem()->has($fileID)) {
-			return $this
-				->getPublicFilesystem()
-				->getAdapter()
-				->getPublicUrl($fileID);
-		}
-
-		// Expose protected url
-		if($this->getProtectedFilesystem()->has($fileID)) {
-			return $this
-				->getProtectedFilesystem()
-				->getAdapter()
-				->getProtectedUrl($fileID);
+		// Check with filesystem this asset exists in
+		$public = $this->getPublicFilesystem();
+		$protected = $this->getProtectedFilesystem();
+		if($public->has($fileID) || !$protected->has($fileID)) {
+			/** @var PublicAdapter $publicAdapter */
+			$publicAdapter = $public->getAdapter();
+			return $publicAdapter->getPublicUrl($fileID);
+		} else {
+			/** @var ProtectedAdapter $protectedAdapter */
+			$protectedAdapter = $protected->getAdapter();
+			return $protectedAdapter->getProtectedUrl($fileID);
 		}
 	}
 
@@ -425,6 +422,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 *
 	 * @param resource $stream
 	 * @return string Filename of resulting stream content
+	 * @throws Exception
 	 */
 	protected function getStreamAsFile($stream) {
 		// Get temporary file and name
@@ -564,6 +562,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		if($filesystem) {
 			return $filesystem->getMetadata($fileID);
 		}
+		return null;
 	}
 
 	public function getMimeType($filename, $hash, $variant = null) {
@@ -572,6 +571,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		if($filesystem) {
 			return $filesystem->getMimetype($fileID);
 		}
+		return null;
 	}
 
 	public function exists($filename, $hash, $variant = null) {
@@ -742,15 +742,13 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		// bootstrapping of necessary .htaccess / web.config files
 		$instance = singleton('AssetStore');
 		if ($instance instanceof FlysystemAssetStore) {
-			$filesystems = array(
-				$instance->getPublicFilesystem(),
-				$instance->getProtectedFilesystem()
-			);
-			foreach($filesystems as $filesystem) {
-				$store = $filesystem->getAdapter();
-				if($store instanceof AssetAdapter) {
-					$store->flush();
-				}
+			$publicAdapter = $instance->getPublicFilesystem()->getAdapter();
+			if($publicAdapter instanceof AssetAdapter) {
+				$publicAdapter->flush();
+			}
+			$protectedAdapter = $instance->getProtectedFilesystem()->getAdapter();
+			if($protectedAdapter instanceof AssetAdapter) {
+				$protectedAdapter->flush();
 			}
 		}
 	}
@@ -759,12 +757,12 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		// Check if file exists
 		$filesystem = $this->getFilesystemFor($asset);
 		if(!$filesystem) {
-			return $this->createInvalidResponse($asset);
+			return $this->createInvalidResponse();
 		}
 
 		// Deny if file is protected and denied
 		if($filesystem === $this->getProtectedFilesystem() && !$this->isGranted($asset)) {
-			return $this->createDeniedResponse($asset);
+			return $this->createDeniedResponse();
 		}
 
 		// Serve up file response
@@ -796,10 +794,9 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	/**
 	 * Generate a 403 response for the given file
 	 *
-	 * @param string $fileID
 	 * @return SS_HTTPResponse
 	 */
-	protected function createDeniedResponse($fileID) {
+	protected function createDeniedResponse() {
 		$response = new SS_HTTPResponse(null, 403);
 		return $response;
 	}
@@ -807,10 +804,9 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	/**
 	 * Generate 404 response for missing file requests
 	 *
-	 * @param string $fileID
 	 * @return SS_HTTPResponse
 	 */
-	protected function createInvalidResponse($fileID) {
+	protected function createInvalidResponse() {
 		$response = new SS_HTTPResponse('', 404);
 
 		// Show message in dev
