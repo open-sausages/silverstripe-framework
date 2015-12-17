@@ -17,7 +17,7 @@ class AssetStoreTest extends SapphireTest {
 		parent::setUp();
 
 		// Set backend and base url
-		AssetStoreTest_SpyStore::activate('DBFileTest');
+		AssetStoreTest_SpyStore::activate('AssetStoreTest');
 	}
 
 	public function tearDown() {
@@ -101,7 +101,7 @@ class AssetStoreTest extends SapphireTest {
 			$fish1Tuple
 		);
 		$this->assertEquals(
-			'/assets/DBFileTest/directory/a870de278b/lovely-fish.jpg',
+			'/assets/AssetStoreTest/directory/a870de278b/lovely-fish.jpg',
 			$backend->getAsURL($fish1Tuple['Filename'], $fish1Tuple['Hash'])
 		);
 
@@ -127,7 +127,7 @@ class AssetStoreTest extends SapphireTest {
 			$fish2Tuple
 		);
 		$this->assertEquals(
-			'/assets/DBFileTest/directory/33be1b95cb/lovely-fish.jpg',
+			'/assets/AssetStoreTest/directory/33be1b95cb/lovely-fish.jpg',
 			$backend->getAsURL($fish2Tuple['Filename'], $fish2Tuple['Hash'])
 		);
 
@@ -149,7 +149,7 @@ class AssetStoreTest extends SapphireTest {
 			$fish3Tuple
 		);
 		$this->assertEquals(
-			'/assets/DBFileTest/directory/a870de278b/lovely-fish-v2.jpg',
+			'/assets/AssetStoreTest/directory/a870de278b/lovely-fish-v2.jpg',
 			$backend->getAsURL($fish3Tuple['Filename'], $fish3Tuple['Hash'])
 		);
 
@@ -170,7 +170,7 @@ class AssetStoreTest extends SapphireTest {
 			$fish4Tuple
 		);
 		$this->assertEquals(
-			'/assets/DBFileTest/directory/a870de278b/lovely-fish-v3.jpg',
+			'/assets/AssetStoreTest/directory/a870de278b/lovely-fish-v3.jpg',
 			$backend->getAsURL($fish4Tuple['Filename'], $fish4Tuple['Hash'])
 		);
 
@@ -191,7 +191,7 @@ class AssetStoreTest extends SapphireTest {
 			$fish5Tuple
 		);
 		$this->assertEquals(
-			'/assets/DBFileTest/directory/a870de278b/lovely-fish.jpg',
+			'/assets/AssetStoreTest/directory/a870de278b/lovely-fish.jpg',
 			$backend->getAsURL($fish5Tuple['Filename'], $fish5Tuple['Hash'])
 		);
 
@@ -212,7 +212,7 @@ class AssetStoreTest extends SapphireTest {
 			$fish6Tuple
 		);
 		$this->assertEquals(
-			'/assets/DBFileTest/directory/a870de278b/lovely-fish.jpg',
+			'/assets/AssetStoreTest/directory/a870de278b/lovely-fish.jpg',
 			$backend->getAsURL($fish6Tuple['Filename'], $fish6Tuple['Hash'])
 		);
 	}
@@ -302,7 +302,6 @@ class AssetStoreTest extends SapphireTest {
 		$this->assertEquals('file', $fishMeta['type']);
 		$this->assertNotEmpty($fishMeta['timestamp']);
 
-
 		// text
 		$puppies = 'puppies';
 		$puppiesTuple = $backend->setFromString($puppies, 'pets/my-puppy.txt');
@@ -337,7 +336,7 @@ class AssetStoreTest extends SapphireTest {
 			$fish1Tuple
 		);
 		$this->assertEquals(
-			'/assets/DBFileTest/directory/lovely-fish.jpg',
+			'/assets/AssetStoreTest/directory/lovely-fish.jpg',
 			$backend->getAsURL($fish1Tuple['Filename'], $fish1Tuple['Hash'])
 		);
 
@@ -374,7 +373,7 @@ class AssetStoreTest extends SapphireTest {
 			$fish3Tuple
 		);
 		$this->assertEquals(
-			'/assets/DBFileTest/directory/lovely-fish-v2.jpg',
+			'/assets/AssetStoreTest/directory/lovely-fish-v2.jpg',
 			$backend->getAsURL($fish3Tuple['Filename'], $fish3Tuple['Hash'])
 		);
 
@@ -395,7 +394,7 @@ class AssetStoreTest extends SapphireTest {
 			$fish4Tuple
 		);
 		$this->assertEquals(
-			'/assets/DBFileTest/directory/lovely-fish-v2.jpg',
+			'/assets/AssetStoreTest/directory/lovely-fish-v2.jpg',
 			$backend->getAsURL($fish4Tuple['Filename'], $fish4Tuple['Hash'])
 		);
 
@@ -416,7 +415,7 @@ class AssetStoreTest extends SapphireTest {
 			$fish5Tuple
 		);
 		$this->assertEquals(
-			'/assets/DBFileTest/directory/lovely-fish-v2.jpg',
+			'/assets/AssetStoreTest/directory/lovely-fish-v2.jpg',
 			$backend->getAsURL($fish5Tuple['Filename'], $fish5Tuple['Hash'])
 		);
 	}
@@ -436,6 +435,64 @@ class AssetStoreTest extends SapphireTest {
 		Config::inst()->update(get_class(new FlysystemAssetStore()), 'legacy_filenames', true);
 		$this->assertEquals(AssetStore::CONFLICT_RENAME, $store->getDefaultConflictResolution(null));
 		$this->assertEquals(AssetStore::CONFLICT_OVERWRITE, $store->getDefaultConflictResolution('somevariant'));
+	}
+
+	/**
+	 * Test protect / publish mechanisms
+	 */
+	public function testProtect() {
+		$backend = $this->getBackend();
+		$fish = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$fishTuple = $backend->setFromLocalFile($fish, 'parent/lovely-fish.jpg');
+		$fishVariantTuple = $backend->setFromLocalFile($fish, $fishTuple['Filename'], $fishTuple['Hash'], 'copy');
+
+		// Test public file storage
+		$this->assertFileExists(ASSETS_PATH . '/AssetStoreTest/parent/a870de278b/lovely-fish.jpg');
+		$this->assertFileExists(ASSETS_PATH . '/AssetStoreTest/parent/a870de278b/lovely-fish__copy.jpg');
+		$this->assertEquals(
+			AssetStore::VISIBILITY_PUBLIC,
+			$backend->getVisibility($fishTuple['Filename'], $fishTuple['Hash'])
+		);
+		$this->assertEquals(
+			'/assets/AssetStoreTest/parent/a870de278b/lovely-fish.jpg',
+			$backend->getAsURL($fishTuple['Filename'], $fishTuple['Hash'])
+		);
+		$this->assertEquals(
+			'/assets/AssetStoreTest/parent/a870de278b/lovely-fish__copy.jpg',
+			$backend->getAsURL($fishVariantTuple['Filename'], $fishVariantTuple['Hash'], $fishVariantTuple['Variant'])
+		);
+
+		// Test protected file storage
+		$backend->protect($fishTuple['Filename'], $fishTuple['Hash']);
+		$this->assertFileNotExists(ASSETS_PATH . '/AssetStoreTest/parent/a870de278b/lovely-fish.jpg');
+		$this->assertFileNotExists(ASSETS_PATH . '/AssetStoreTest/parent/a870de278b/lovely-fish__copy.jpg');
+		$this->assertFileExists(ASSETS_PATH . '/AssetStoreTest/.protected/parent/a870de278b/lovely-fish.jpg');
+		$this->assertFileExists(ASSETS_PATH . '/AssetStoreTest/.protected/parent/a870de278b/lovely-fish__copy.jpg');
+		$this->assertEquals(
+			AssetStore::VISIBILITY_PROTECTED,
+			$backend->getVisibility($fishTuple['Filename'], $fishTuple['Hash'])
+		);
+
+		// Protected URLS are unchanged
+		$this->assertEquals(
+			'/assets/AssetStoreTest/parent/a870de278b/lovely-fish.jpg',
+			$backend->getAsURL($fishTuple['Filename'], $fishTuple['Hash'])
+		);
+		$this->assertEquals(
+			'/assets/AssetStoreTest/parent/a870de278b/lovely-fish__copy.jpg',
+			$backend->getAsURL($fishVariantTuple['Filename'], $fishVariantTuple['Hash'], $fishVariantTuple['Variant'])
+		);
+
+		// Publish reverts visibility
+		$backend->publish($fishTuple['Filename'], $fishTuple['Hash']);
+		$this->assertFileExists(ASSETS_PATH . '/AssetStoreTest/parent/a870de278b/lovely-fish.jpg');
+		$this->assertFileExists(ASSETS_PATH . '/AssetStoreTest/parent/a870de278b/lovely-fish__copy.jpg');
+		$this->assertFileNotExists(ASSETS_PATH . '/AssetStoreTest/.protected/parent/a870de278b/lovely-fish.jpg');
+		$this->assertFileNotExists(ASSETS_PATH . '/AssetStoreTest/.protected/parent/a870de278b/lovely-fish__copy.jpg');
+		$this->assertEquals(
+			AssetStore::VISIBILITY_PUBLIC,
+			$backend->getVisibility($fishTuple['Filename'], $fishTuple['Hash'])
+		);
 	}
 }
 
