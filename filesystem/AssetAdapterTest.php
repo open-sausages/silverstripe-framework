@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\Filesystem\Flysystem\ProtectedAssetAdapter;
 use SilverStripe\Filesystem\Flysystem\PublicAssetAdapter;
 
 class AssetAdapterTest extends SapphireTest {
@@ -51,5 +52,18 @@ class AssetAdapterTest extends SapphireTest {
         $adapter->flush();
         $htaccess2 = $adapter->read('.htaccess');
         $this->assertEquals($content, $htaccess2['contents']);
+
+        // Test URL
+        $this->assertEquals('/assets/AssetAdapterTest/file.jpg', $adapter->getPublicUrl('file.jpg'));
+    }
+
+    public function testProtectedAdapter() {
+        $_SERVER['SERVER_SOFTWARE'] = 'Apache/2.2.22 (Win64) PHP/5.3.13';
+        $adapter = new ProtectedAssetAdapter($this->rootDir . '/.protected');
+        $this->assertFileExists($this->rootDir . '/.protected/.htaccess');
+        $this->assertFileNotExists($this->rootDir . '/.protected/web.config');
+
+        // Test url
+        $this->assertEquals('/assets/file.jpg', $adapter->getProtectedUrl('file.jpg'));
     }
 }
