@@ -1079,6 +1079,10 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		return $this->File->deleteFile();
 	}
 
+	public function getVisibility() {
+		return $this->File->getVisibility();
+	}
+
 	public function publishFile() {
 		$this->File->publishFile();
 	}

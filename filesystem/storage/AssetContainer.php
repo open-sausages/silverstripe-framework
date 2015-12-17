@@ -107,6 +107,14 @@ interface AssetContainer
 	public function getIsImage();
 
 	/**
+	 * Determine visibility of the given file
+	 *
+	 * @return string one of values defined by the constants VISIBILITY_PROTECTED or VISIBILITY_PUBLIC, or
+	 * null if the file does not exist
+	 */
+	public function getVisibility();
+
+	/**
 	 * Determine if this container has a valid value
 	 *
 	 * @return bool Flag as to whether the file exists

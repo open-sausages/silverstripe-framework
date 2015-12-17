@@ -293,6 +293,15 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		);
 	}
 
+	public function getVisibility() {
+		if(empty($this->Filename)) {
+			return null;
+		}
+		return $this
+			->getStore()
+			->getVisibility($this->Filename, $this->Hash);
+	}
+
 	public function exists() {
 		if(empty($this->Filename)) {
 			return false;
