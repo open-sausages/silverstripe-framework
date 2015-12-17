@@ -1,9 +1,8 @@
 <?php
 
-use Filesystem as SS_Filesystem;
+use League\Flysystem\Adapter\Local;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem;
-use SilverStripe\Filesystem\Flysystem\AssetAdapter;
 use SilverStripe\Filesystem\Flysystem\FlysystemAssetStore;
 use SilverStripe\Filesystem\Flysystem\FlysystemUrlPlugin;
 use SilverStripe\Filesystem\Flysystem\ProtectedAssetAdapter;
@@ -438,6 +437,13 @@ class AssetStoreTest extends SapphireTest {
 		$this->assertEquals(AssetStore::CONFLICT_RENAME, $store->getDefaultConflictResolution(null));
 		$this->assertEquals(AssetStore::CONFLICT_OVERWRITE, $store->getDefaultConflictResolution('somevariant'));
 	}
+
+	/**
+	 * Ensure that assets can be protected
+	 */
+	public function testSecureAssets() {
+
+	}
 }
 
 /**
@@ -495,7 +501,7 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 		self::$basedir = $basedir;
 
 		// Ensure basedir exists
-		SS_Filesystem::makeFolder(self::base_path());
+		\Filesystem::makeFolder(self::base_path());
 	}
 
 	/**
@@ -517,7 +523,7 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 		if(self::$basedir) {
 			$path = self::base_path();
 			if(file_exists($path)) {
-				SS_Filesystem::removeFolder($path);
+				\Filesystem::removeFolder($path);
 			}
 		}
 		self::$seekable_override = null;
@@ -536,10 +542,18 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 		if($asset instanceof File) {
 			$asset = $asset->File;
 		}
-		if($asset instanceof DBFile) {
-			return BASE_PATH . $asset->getSourceURL();
+		// Extract filesystem used to store this object
+		/** @var AssetStoreTest_SpyStore $assetStore */
+		$assetStore = Injector::inst()->get('AssetStore');
+		$fileID = $assetStore->getFileID($asset->Filename, $asset->Hash, $asset->Variant);
+		$filesystem = $assetStore->getProtectedFilesystem();
+		if(!$filesystem->has($fileID)) {
+			$filesystem = $assetStore->getPublicFilesystem();
 		}
-		return BASE_PATH . $asset->getUrl();
+		/** @var Local $adapter */
+		$adapter = $filesystem->getAdapter();
+		return $adapter->applyPathPrefix($fileID);
+
 	}
 
 	public function cleanFilename($filename) {

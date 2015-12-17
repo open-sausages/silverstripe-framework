@@ -5,6 +5,7 @@ namespace SilverStripe\Filesystem\Flysystem;
 use Config;
 use Generator;
 use Injector;
+use League\Flysystem\Directory;
 use Session;
 use Flushable;
 use InvalidArgumentException;
@@ -758,6 +759,11 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		$filesystem = $this->getFilesystemFor($asset);
 		if(!$filesystem) {
 			return $this->createInvalidResponse();
+		}
+
+		// Block directory access
+		if($filesystem->get($asset) instanceof Directory) {
+			return $this->createDeniedResponse();
 		}
 
 		// Deny if file is protected and denied
