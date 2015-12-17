@@ -437,13 +437,6 @@ class AssetStoreTest extends SapphireTest {
 		$this->assertEquals(AssetStore::CONFLICT_RENAME, $store->getDefaultConflictResolution(null));
 		$this->assertEquals(AssetStore::CONFLICT_OVERWRITE, $store->getDefaultConflictResolution('somevariant'));
 	}
-
-	/**
-	 * Ensure that assets can be protected
-	 */
-	public function testSecureAssets() {
-
-	}
 }
 
 /**
