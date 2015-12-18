@@ -667,22 +667,24 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 	 * Gets the URL of this file
 	 *
 	 * @uses Director::baseURL()
+	 * @param bool $grant Ensures that the url for any protected assets is granted for the current user.
 	 * @return string
 	 */
-	public function getURL() {
+	public function getURL($grant = true) {
 		if($this->File->exists()) {
-			return $this->File->getURL();
+			return $this->File->getURL($grant);
 		}
 	}
 
 	/**
 	 * Get URL, but without resampling.
 	 *
+	 * @param bool $grant Ensures that the url for any protected assets is granted for the current user.
 	 * @return string
 	 */
-	public function getSourceURL() {
+	public function getSourceURL($grant = true) {
 		if($this->File->exists()) {
-			return $this->File->getSourceURL();
+			return $this->File->getSourceURL($grant);
 		}
 	}
 
@@ -1097,5 +1099,9 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 
 	public function revokeFile() {
 		$this->File->revokeFile();
+	}
+
+	public function canViewFile() {
+		return $this->File->canViewFile();
 	}
 }

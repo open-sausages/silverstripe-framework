@@ -69,9 +69,14 @@ interface AssetContainer
 	public function getStream();
 
 	/**
+	 * @param bool $grant Ensures that the url for any protected assets is granted for the current user.
+	 * If set to true, and the file is currently in protected mode, the asset store will ensure the
+	 * returned URL is accessible for the duration of the current session / user.
+	 * This will have no effect if the file is in published mode.
+	 * This will not grant access to users other than the owner of the current session.
 	 * @return string public url to the asset in this container
 	 */
-	public function getURL();
+	public function getURL($grant = true);
 
 	/**
 	 * @return string The absolute URL to the asset in this container
@@ -177,4 +182,11 @@ interface AssetContainer
 	 * Note: This will have no effect if the given file is public
 	 */
 	public function revokeFile();
+
+	/**
+	 * Check if the current user can view the given file.
+	 *
+	 * @return bool True if the file is verified and grants access to the current session / user.
+	 */
+	public function canViewFile();
 }

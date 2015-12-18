@@ -230,11 +230,11 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 			->getAsString($this->Filename, $this->Hash, $this->Variant);
 	}
 
-	public function getURL() {
+	public function getURL($grant = true) {
 		if(!$this->exists()) {
 			return null;
 		}
-		$url = $this->getSourceURL();
+		$url = $this->getSourceURL($grant);
 		$this->updateURL($url);
 		$this->extend('updateURL', $url);
 		return $url;
@@ -244,12 +244,13 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 	 * Get URL, but without resampling.
 	 * Note that this will return the url even if the file does not exist.
 	 *
+	 * @param bool $grant Ensures that the url for any protected assets is granted for the current user.
 	 * @return string
 	 */
-	public function getSourceURL() {
+	public function getSourceURL($grant = true) {
 		return $this
 			->getStore()
-			->getAsURL($this->Filename, $this->Hash, $this->Variant);
+			->getAsURL($this->Filename, $this->Hash, $this->Variant, $grant);
 	}
 
 	/**
@@ -524,5 +525,12 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 				->getStore()
 				->revoke($this->Filename, $this->Hash);
 		}
+	}
+
+	public function canViewFile() {
+		return $this->Filename
+			&& $this
+				->getStore()
+				->canView($this->Filename, $this->Hash);
 	}
 }

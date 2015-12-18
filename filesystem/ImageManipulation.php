@@ -54,9 +54,10 @@ trait ImageManipulation {
 	abstract public function getStream();
 
 	/**
+	 * @param bool $grant Ensures that the url for any protected assets is granted for the current user.
 	 * @return string public url to the asset in this container
 	 */
-	abstract public function getURL();
+	abstract public function getURL($grant = true);
 
 	/**
 	 * @return string The absolute URL to the asset in this container
