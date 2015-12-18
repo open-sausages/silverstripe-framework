@@ -69,10 +69,10 @@ class AssetControlExtensionTest extends SapphireTest {
 
 		// Check live stage for versioned objects
 		$object1Live = Versioned::get_one_by_stage('AssetControlExtensionTest_VersionedObject', 'Live',
-			array("ID" => $object1->ID)
+			array('"ID"' => $object1->ID)
 		);
 		$object3Live = Versioned::get_one_by_stage('AssetControlExtensionTest_ArchivedObject', 'Live',
-			array("ID" => $object3->ID)
+			array('"ID"' => $object3->ID)
 		);
 		$this->assertTrue($object1Live->Download->exists());
 		$this->assertTrue($object1Live->Header->exists());
