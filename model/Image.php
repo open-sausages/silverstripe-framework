@@ -6,7 +6,8 @@
  * @package framework
  * @subpackage filesystem
  */
-class Image extends File {
+class Image extends File implements ShortcodeHandler {
+
 	public function __construct($record = null, $isSingleton = false, $model = null) {
 		parent::__construct($record, $isSingleton, $model);
 		$this->File->setAllowedCategories('image/supported');
@@ -23,6 +24,65 @@ class Image extends File {
 
 	public function getIsImage() {
 		return true;
+	}
+
+	/**
+	 * Replace"[image id=n]" shortcode with an image reference.
+	 *
+	 * @param array $args Arguments passed to the parser
+	 * @param string $content Raw shortcode
+	 * @param ShortcodeParser $parser Parser
+	 * @param string $shortcode Name of shortcode used to register this handler
+	 * @param array $extra Extra arguments
+	 * @return string Result of the handled shortcode
+	 */
+	public static function handle_shortcode($args, $content, $parser, $shortcode, $extra = array()) {
+		if(!isset($args['id']) || !is_numeric($args['id'])) {
+			return null;
+		}
+
+		/** @var Image $record */
+		$record = Image::get()->byID($args['id']);
+
+		// Check record for common errors
+		$errorCode = null;
+		if (!$record) {
+			$errorCode = 404;
+		} elseif(!$record->canView()) {
+			$errorCode = 403;
+		}
+		if($errorCode) {
+			$result = static::singleton()->invokeWithExtensions('getErrorRecordFor', $errorCode);
+			$result = array_filter($result);
+			if($result) {
+				$record = reset($result);
+			}
+		}
+
+		// There were no suitable matches at all.
+		if (!$record) {
+			return null;
+		}
+
+		// Build the HTML tag
+		$attrs = array_merge(
+			// Set overrideable defaults
+			['src' => '', 'alt' => $record->Title],
+			// Use all other shortcode arguments
+			$args,
+			// But enforce some values
+			['id' => '', 'src' => $record->Link()]
+		);
+
+		// Clean out any empty attributes
+		$attrs = array_filter($attrs, function($v) {return (bool)$v;});
+
+		// Condense to HTML attribute string
+		$attrsStr = join(' ', array_map(function($name) use ($attrs) {
+			return Convert::raw2att($name) . '="' . Convert::raw2att($attrs[$name]) . '"';
+		}, array_keys($attrs)));
+
+		return '<img ' . $attrsStr . ' />';
 	}
 
 	/**

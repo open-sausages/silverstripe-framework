@@ -68,14 +68,40 @@
 
 			ed.on('SaveContent', function(o) {
 				var content = jQuery(o.content);
+				var attrsFn = (attrs) => {
+					return Object.keys(attrs)
+						.map((name) => attrs[name] ? name + '="' + attrs[name] + '"' : null)
+						.filter((el) => el !== null)
+						.join(' ')
+				};
+
+				// Transform [embed] shortcodes
 				content.find('.ss-htmleditorfield-file.embed').each(function() {
 					var el = jQuery(this);
-					var shortCode = '[embed width="' + el.attr('width') + '"'
-										+ ' height="' + el.attr('height') + '"'
-										+ ' class="' + el.data('cssclass') + '"'
-										+ ' thumbnail="' + el.data('thumbnail') + '"'
-										+ ']' + el.data('url')
-										+ '[/embed]';
+					var attrs = {
+						width: el.attr('width'),
+						class: el.attr('cssclass'),
+						thumbnail: el.data('thumbnail')
+					};
+					var shortCode = '[embed ' + attrsFn(attrs) + ']' + el.data('url') + '[/embed]';
+					el.replaceWith(shortCode);
+				});
+
+				// Transform [image] shortcodes
+				content.find('img').each(function() {
+					var el = jQuery(this);
+					var attrs = {
+						// TODO Don't store 'src' since its more volatile than 'id'.
+						// Requires server-side preprocessing of HTML+shortcodes in HTMLValue
+						src: el.attr('src'),
+						id: el.data('id'),
+						width: el.attr('width'),
+						height: el.attr('height'),
+						class: el.attr('class'),
+						// don't save caption, since that's in the containing element
+						title: el.attr('title')
+					};
+					var shortCode = '[image ' + attrsFn(attrs) + ']';
 					el.replaceWith(shortCode);
 				});
 
@@ -89,52 +115,58 @@
 					}
 				});
 			});
-
-			var shortTagRegex = /(.?)\[embed(.*?)\](.+?)\[\/\s*embed\s*\](.?)/gi;
 			ed.on('BeforeSetContent', function(o) {
-				var matches = null, content = o.content;
-				var prefix, suffix, attributes, attributeString, url;
-				var attrs, attr;
-				var imgEl;
-				// Match various parts of the embed tag
+				var content = o.content;
+				var attrFromStrFn = (str) => {
+					return str
+						// Remove quotation marks and trim.
+						.replace(/['"]/g, '')
+						.replace(/(^\s+|\s+$)/g, '')
+						// Extract the attrs and values into a key-value array,
+						// or key-key if no value is set.
+						.split(/\s+/)
+						.reduce((coll, val) => {
+							var pair = val.split('=');
+							coll[pair[0]] = (pair.length == 1) ? pair[0] : pair[1];
+							return coll;
+						}, {});
+				};
+
+				// Transform [embed] tag
+				var shortTagRegex = /\[embed(.*?)\](.+?)\[\/\s*embed\s*\]/gi;
 				while((matches = shortTagRegex.exec(content))) {
-					prefix = matches[1];
-					suffix = matches[4];
-					if(prefix === '[' && suffix === ']') {
-						continue;
-					}
-					attributes = {};
-					// Remove quotation marks and trim.
-					attributeString = matches[2].replace(/['"]/g, '').replace(/(^\s+|\s+$)/g, '');
+					var attrs = attrFromStrFn(matches[1]);
+					var el;
 
-					// Extract the attributes and values into a key-value array (or key-key if no value is set)
-					attrs = attributeString.split(/\s+/);
-					for(attribute in attrs) {
-						attr = attrs[attribute].split('=');
-						if(attr.length == 1) {
-							attributes[attr[0]] = attr[0];
-						} else {
-							attributes[attr[0]] = attr[1];
-						}
-					}
-
-					// Build HTML element from embed attributes.
-					attributes.cssclass = attributes['class'];
-					url = matches[3];
-					imgEl = jQuery('<img/>').attr({
-						'src': attributes['thumbnail'],
-						'width': attributes['width'],
-						'height': attributes['height'],
-						'class': attributes['cssclass'],
-						'data-url': url
+					el = jQuery('<img/>').attr({
+						'src': attrs['thumbnail'],
+						'width': attrs['width'],
+						'height': attrs['height'],
+						'class': attrs['class'],
+						'data-url': matches[2]
 					}).addClass('ss-htmleditorfield-file embed');
+					attrs['cssclass'] = attrs['class'];
 
-					jQuery.each(attributes, function (key, value) {
-						imgEl.attr('data-' + key, value);
+					Object.keys(attrs).forEach((key) => el.attr('data-' + key, attrs[key]));
+					content = content.replace(matches[0], (jQuery('<div/>').append(el).html()));
+				}
+
+				// Transform [image] tag
+				var shortTagRegex = /\[image(.*?)\]/gi;
+				while((matches = shortTagRegex.exec(content))) {
+					var attrs = attrFromStrFn(matches[1]);
+					var el = jQuery('<img/>').attr({
+						'src': attrs['src'],
+						'width': attrs['width'],
+						'height': attrs['height'],
+						'class': attrs['class'],
+						'data-id': attrs['id']
 					});
 
-					content = content.replace(matches[0], prefix + (jQuery('<div/>').append(imgEl).html()) + suffix);
+					Object.keys(attrs).forEach((key) => el.attr('data-' + key, attrs[key]));
+					content = content.replace(matches[0], (jQuery('<div/>').append(el).html()));
 				}
+
 				o.content = content;
 			});
 		}
