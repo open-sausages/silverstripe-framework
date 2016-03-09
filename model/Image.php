@@ -37,29 +37,8 @@ class Image extends File implements ShortcodeHandler {
 	 * @return string Result of the handled shortcode
 	 */
 	public static function handle_shortcode($args, $content, $parser, $shortcode, $extra = array()) {
-		if(!isset($args['id']) || !is_numeric($args['id'])) {
-			return null;
-		}
-
-		/** @var Image $record */
-		$record = Image::get()->byID($args['id']);
-
-		// Check record for common errors
-		$errorCode = null;
-		if (!$record) {
-			$errorCode = 404;
-		} elseif(!$record->canView()) {
-			$errorCode = 403;
-		}
-		if($errorCode) {
-			$result = static::singleton()->invokeWithExtensions('getErrorRecordFor', $errorCode);
-			$result = array_filter($result);
-			if($result) {
-				$record = reset($result);
-			}
-		}
-
-		// There were no suitable matches at all.
+		// Check if there is a suitable record
+		$record = static::find_shortcode_record($args);
 		if (!$record) {
 			return null;
 		}
@@ -86,60 +65,76 @@ class Image extends File implements ShortcodeHandler {
 	}
 
 	/**
-	 * Helper method to regenerate all image links in the given HTML block, optionally resizing them if
-	 * the image native size differs to the width and height properties on the <img /> tag
+	 * Regenerates "[image id=n]" shortcode with new src attribute prior to being edited within the CMS.
+	 *
+	 * @param array $args Arguments passed to the parser
+	 * @param string $content Raw shortcode
+	 * @param ShortcodeParser $parser Parser
+	 * @param string $shortcode Name of shortcode used to register this handler
+	 * @param array $extra Extra arguments
+	 * @return string Result of the handled shortcode
+	 */
+	public static function regenerate_shortcode($args, $content, $parser, $shortcode, $extra = array()) {
+		// Check if there is a suitable record
+		$record = static::find_shortcode_record($args);
+		if($record) {
+			$args['src'] = $record->getURL();
+		}
+
+		// Rebuild shortcode
+		$parts = array();
+		foreach($args as $name => $value) {
+			$htmlValue = Convert::raw2att($value ?: $name);
+			$parts[] = sprintf('%s="%s"', $name, $htmlValue);
+		}
+		return sprintf("[%s %s]", $shortcode, implode(' ', $parts));
+	}
+
+	/**
+	 * Find the record to use for a given shortcode
+	 *
+	 * @param array $args
+	 * @return File
+	 */
+	protected static function find_shortcode_record($args) {
+		if(!isset($args['id']) || !is_numeric($args['id'])) {
+			return null;
+		}
+
+		/** @var Image $record */
+		$record = Image::get()->byID($args['id']);
+
+		// Check record for common errors
+		$errorCode = null;
+		if (!$record) {
+			$errorCode = 404;
+		} elseif(!$record->canView()) {
+			$errorCode = 403;
+		} else {
+			return $record;
+		}
+
+		// Search for record for use in case of error
+		$result = static::singleton()->invokeWithExtensions('getErrorRecordFor', $errorCode);
+		$result = array_filter($result);
+		if($result) {
+			// Return first found error record
+			return reset($result);
+		}
+
+		// Error conditon with no error handler
+		return null;
+	}
+
+	/**
+	 * Helper method to regenerate all shortcode links.
 	 *
 	 * @param string $value HTML value
 	 * @return string value with links resampled
 	 */
 	public static function regenerate_html_links($value) {
-		$htmlValue = Injector::inst()->create('HTMLValue', $value);
-
-		// Resample images and add default attributes
-		$imageElements = $htmlValue->getElementsByTagName('img');
-		if($imageElements) foreach($imageElements as $imageElement) {
-			$imageDO = null;
-			$src = $imageElement->getAttribute('src');
-
-			// Skip if this image has a shortcode 'src'
-			if(preg_match('/^\[.+\]$/', $src)) {
-				continue;
-			}
-
-			// strip any ?r=n data from the src attribute
-			$src = preg_replace('/([^\?]*)\?r=[0-9]+$/i', '$1', $src);
-
-			// Resample the images if the width & height have changed.
-			$fileID = $imageElement->getAttribute('data-fileid');
-			if($fileID && ($imageDO = File::get()->byID($fileID))) {
-				$width  = (int)$imageElement->getAttribute('width');
-				$height = (int)$imageElement->getAttribute('height');
-				if($imageDO instanceof Image && $width && $height
-					&& ($width != $imageDO->getWidth() || $height != $imageDO->getHeight())
-				) {
-					//Make sure that the resized image actually returns an image:
-					$resized = $imageDO->ResizedImage($width, $height);
-					if($resized) {
-						$imageDO = $resized;
-					}
-				}
-				$src = $imageDO->getURL();
-			}
-
-			// Update attributes, including intelligent defaults for alt and title
-			$imageElement->setAttribute('src', $src);
-			if(!$imageElement->getAttribute('alt')) {
-				$imageElement->setAttribute('alt', '');
-			}
-			if(!$imageElement->getAttribute('title')) {
-				$imageElement->setAttribute('title', '');
-			}
-
-			// Use this extension point to manipulate images inserted using TinyMCE,
-			// e.g. add a CSS class, change default title
-			self::singleton()
-				->extend('regenerateImageHTML', $imageDO, $imageElement);
-		}
-		return $htmlValue->getContent();
+		// Create a shortcode generator which only regenerates links
+		$regenerator = ShortcodeParser::get('regenerator');
+		return $regenerator->parse($value);
 	}
 }
