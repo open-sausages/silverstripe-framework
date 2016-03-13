@@ -99,7 +99,8 @@
 						height: el.attr('height'),
 						class: el.attr('class'),
 						// don't save caption, since that's in the containing element
-						title: el.attr('title')
+						title: el.attr('title'),
+						alt: el.attr('alt')
 					};
 					var shortCode = '[image ' + attrsFn(attrs) + ']';
 					el.replaceWith(shortCode);
@@ -160,6 +161,8 @@
 						'width': attrs['width'],
 						'height': attrs['height'],
 						'class': attrs['class'],
+						'alt': attrs['alt'],
+						'title': attrs['title'],
 						'data-id': attrs['id']
 					});
 
