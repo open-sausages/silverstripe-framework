@@ -284,4 +284,22 @@ class ImageTest extends SapphireTest {
 			))
 		);
 	}
+
+	public function testShortcodeHandlerAddsDefaultAttributes() {
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$parser = new ShortcodeParser();
+		$parser->register('image', array('Image', 'handle_shortcode'));
+
+		$this->assertEquals(
+			sprintf(
+				'<img src="%s" alt="%s">',
+				$image->Link(),
+				$image->Title
+			),
+			$parser->parse(sprintf(
+				'[image id="%d"]',
+				$image->ID
+			))
+		);
+	}
 }

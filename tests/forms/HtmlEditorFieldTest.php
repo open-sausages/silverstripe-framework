@@ -61,28 +61,6 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$this->assertEquals('', $obj->Content, "Doesn't choke on empty/null values.");
 	}
 
-	public function testImageInsertion() {
-		$obj = new HtmlEditorFieldTest_Object();
-		$editor = new HtmlEditorField('Content');
-
-		$editor->setValue('<img src="assets/HTMLEditorFieldTest_example.jpg" />');
-		$editor->saveInto($obj);
-
-		$parser = new CSSContentParser($obj->Content);
-		$xml = $parser->getByXpath('//img');
-		$this->assertEquals('', (string)$xml[0]['alt'], 'Alt tags are added by default.');
-		$this->assertEquals('', (string)$xml[0]['title'], 'Title tags are added by default.');
-
-		$editor->setValue('<img src="assets/HTMLEditorFieldTest_example.jpg" alt="foo" title="bar" />');
-		$editor->saveInto($obj);
-
-		$parser = new CSSContentParser($obj->Content);
-		$xml = $parser->getByXpath('//img');
-		$this->assertEquals('foo', (string)$xml[0]['alt'], 'Alt tags are preserved.');
-		$this->assertEquals('bar', (string)$xml[0]['title'], 'Title tags are preserved.');
-		$this->assertEquals(false, $obj->HasBrokenFile, 'Referenced image file exists.');
-	}
-
 	public function testResizedImageInsertion() {
 		$obj = new HtmlEditorFieldTest_Object();
 		$editor = new HtmlEditorField('Content');
