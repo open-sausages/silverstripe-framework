@@ -6,7 +6,7 @@
 		 * The current keys are longname, author, authorurl, infourl and version.
 		 *
 		 * @returns Name/value array containing information about the plugin.
-		 * @type Array 
+		 * @type Array
 		 */
 		getInfo : function() {
 			return {
@@ -39,7 +39,7 @@
 				text : 'Insert Media',
 				cmd : 'ssmedia'
 			});
-			
+
 
 			ed.addCommand('sslink', function(ed) {
 				// See HtmlEditorField.js
@@ -54,9 +54,9 @@
 			// Replace the mceAdvLink and mceLink commands with the sslink command, and
 			// the mceAdvImage and mceImage commands with the ssmedia command
 			ed.on('BeforeExecCommand', function(e){
-				cmd = e.command;
-				ui = e.ui;
-				val = e.value;
+				var cmd = e.command;
+				var ui = e.ui;
+				var val = e.value;
 				if (cmd == 'mceAdvLink' || cmd == 'mceLink'){
 					e.preventDefault();
 					ed.execCommand('sslink', ui, val);
@@ -117,6 +117,7 @@
 				});
 			});
 			ed.on('BeforeSetContent', function(o) {
+				var matches;
 				var content = o.content;
 				var attrFromStrFn = (str) => {
 					return str
