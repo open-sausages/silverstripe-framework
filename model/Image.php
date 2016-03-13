@@ -28,6 +28,7 @@ class Image extends File implements ShortcodeHandler {
 
 	/**
 	 * Replace"[image id=n]" shortcode with an image reference.
+	 * Permission checks will be enforced by the file routing itself.
 	 *
 	 * @param array $args Arguments passed to the parser
 	 * @param string $content Raw shortcode
@@ -94,36 +95,14 @@ class Image extends File implements ShortcodeHandler {
 	 * Find the record to use for a given shortcode
 	 *
 	 * @param array $args
-	 * @return File
+	 * @return Image|null
 	 */
 	protected static function find_shortcode_record($args) {
 		if(!isset($args['id']) || !is_numeric($args['id'])) {
 			return null;
 		}
 
-		/** @var Image $record */
-		$record = Image::get()->byID($args['id']);
-
-		// Check record for common errors
-		$errorCode = null;
-		if (!$record) {
-			$errorCode = 404;
-		} elseif(!$record->canView()) {
-			$errorCode = 403;
-		} else {
-			return $record;
-		}
-
-		// Search for record for use in case of error
-		$result = static::singleton()->invokeWithExtensions('getErrorRecordFor', $errorCode);
-		$result = array_filter($result);
-		if($result) {
-			// Return first found error record
-			return reset($result);
-		}
-
-		// Error conditon with no error handler
-		return null;
+		return Image::get()->byID($args['id']);
 	}
 
 	/**
