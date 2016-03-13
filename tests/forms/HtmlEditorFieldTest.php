@@ -67,21 +67,25 @@ class HtmlEditorFieldTest extends FunctionalTest {
 
 		$fileID = $this->idFromFixture('Image', 'example_image');
 		$editor->setValue(sprintf(
-			'<img src="assets/HTMLEditorFieldTest_example.jpg" width="10" height="20" data-fileid="%d" />',
+			'[image src="assets/HTMLEditorFieldTest_example.jpg" width="10" height="20" id="%d"]',
 			$fileID
 		));
 		$editor->saveInto($obj);
 
-		$parser = new CSSContentParser($obj->Content);
+		$parser = new CSSContentParser($obj->dbObject('Content')->forTemplate());
 		$xml = $parser->getByXpath('//img');
-		$this->assertEquals('', (string)$xml[0]['alt'], 'Alt tags are added by default.');
+		$this->assertEquals(
+			'HTMLEditorFieldTest example',
+			(string)$xml[0]['alt'],
+			'Alt tags are added by default based on filename'
+		);
 		$this->assertEquals('', (string)$xml[0]['title'], 'Title tags are added by default.');
 		$this->assertEquals(10, (int)$xml[0]['width'], 'Width tag of resized image is set.');
 		$this->assertEquals(20, (int)$xml[0]['height'], 'Height tag of resized image is set.');
 
 		$neededFilename
-			= '/assets/HtmlEditorFieldTest/f5c7c2f814/HTMLEditorFieldTest-example__ResizedImageWzEwLDIwXQ.jpg';
-
+			= '/assets/HtmlEditorFieldTest/f5c7c2f814/HTMLEditorFieldTest-example__ResizedImageWyIxMCIsIjIwIl0.jpg';
+		
 		$this->assertEquals($neededFilename, (string)$xml[0]['src'], 'Correct URL of resized image is set.');
 		$this->assertTrue(file_exists(BASE_PATH.DIRECTORY_SEPARATOR.$neededFilename), 'File for resized image exists');
 		$this->assertEquals(false, $obj->HasBrokenFile, 'Referenced image file exists.');

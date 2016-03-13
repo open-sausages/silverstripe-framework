@@ -44,6 +44,19 @@ class Image extends File implements ShortcodeHandler {
 			return null;
 		}
 
+		// Check if a resize is required
+		$src = $record->Link();
+		$width = isset($args['width']) ? $args['width'] : null;
+		$height = isset($args['height']) ? $args['height'] : null;
+		$hasCustomDimensions = ($width && $height);
+		if($hasCustomDimensions && (($width != $record->getWidth()) || ($height != $record->getHeight()))) {
+			$resized = $record->ResizedImage($width, $height);
+			// Make sure that the resized image actually returns an image
+			if($resized) {
+				$src = $resized->getURL();
+			}
+		}
+
 		// Build the HTML tag
 		$attrs = array_merge(
 			// Set overrideable defaults
@@ -51,7 +64,7 @@ class Image extends File implements ShortcodeHandler {
 			// Use all other shortcode arguments
 			$args,
 			// But enforce some values
-			['id' => '', 'src' => $record->Link()]
+			['id' => '', 'src' => $src]
 		);
 
 		// Clean out any empty attributes
