@@ -38,22 +38,27 @@ class Image extends File implements ShortcodeHandler {
 	 * @return string Result of the handled shortcode
 	 */
 	public static function handle_shortcode($args, $content, $parser, $shortcode, $extra = array()) {
-		// Check if there is a suitable record
-		$record = static::find_shortcode_record($args);
+		// Find appropriate record, with fallback for error handlers
+		$record = static::find_shortcode_record($args, $errorCode);
+		if($errorCode) {
+			$record = static::find_error_record($errorCode);
+		}
 		if (!$record) {
-			return null;
+			return null; // There were no suitable matches at all.
 		}
 
 		// Check if a resize is required
 		$src = $record->Link();
-		$width = isset($args['width']) ? $args['width'] : null;
-		$height = isset($args['height']) ? $args['height'] : null;
-		$hasCustomDimensions = ($width && $height);
-		if($hasCustomDimensions && (($width != $record->getWidth()) || ($height != $record->getHeight()))) {
-			$resized = $record->ResizedImage($width, $height);
-			// Make sure that the resized image actually returns an image
-			if($resized) {
-				$src = $resized->getURL();
+		if($record instanceof Image) {
+			$width = isset($args['width']) ? $args['width'] : null;
+			$height = isset($args['height']) ? $args['height'] : null;
+			$hasCustomDimensions = ($width && $height);
+			if ($hasCustomDimensions && (($width != $record->getWidth()) || ($height != $record->getHeight()))) {
+				$resized = $record->ResizedImage($width, $height);
+				// Make sure that the resized image actually returns an image
+				if ($resized) {
+					$src = $resized->getURL();
+				}
 			}
 		}
 
@@ -102,20 +107,6 @@ class Image extends File implements ShortcodeHandler {
 			$parts[] = sprintf('%s="%s"', $name, $htmlValue);
 		}
 		return sprintf("[%s %s]", $shortcode, implode(' ', $parts));
-	}
-
-	/**
-	 * Find the record to use for a given shortcode
-	 *
-	 * @param array $args
-	 * @return Image|null
-	 */
-	protected static function find_shortcode_record($args) {
-		if(!isset($args['id']) || !is_numeric($args['id'])) {
-			return null;
-		}
-
-		return Image::get()->byID($args['id']);
 	}
 
 	/**
