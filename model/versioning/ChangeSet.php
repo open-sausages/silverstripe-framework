@@ -7,10 +7,18 @@
  * atomic action
  *
  * @method HasManyList Changes()
+ * @method Member Owner()
+ * @property string $Name
+ * @property string $Status
+ *
  * @package framework
  * @subpackage model
  */
 class ChangeSet extends DataObject {
+
+	private static $singular_name = 'Campaign';
+
+	private static $plural_name = 'Campaigns';
 
 	/** An active changeset */
 	const STATE_OPEN = 'open';
@@ -23,7 +31,7 @@ class ChangeSet extends DataObject {
 
 	private static $db = array(
 		'Name'  => 'Varchar',
-		'State' => "Enum('open,published,reverted')"
+		'State' => "Enum('open,published,reverted')",
 	);
 
 	private static $has_many = array(
@@ -31,7 +39,7 @@ class ChangeSet extends DataObject {
 	);
 
 	private static $has_one = array(
-		'Owner' => 'Member'
+		'Owner' => 'Member',
 	);
 
 	/**
@@ -55,9 +63,13 @@ class ChangeSet extends DataObject {
 		user_error('Not implemented', E_USER_ERROR);
 	}
 
-	/** Add a new change to this changeset. Will automatically include all owned changes as those are dependencies of this item. */
+	/**
+	 * Add a new change to this changeset. Will automatically include all owned
+	 * changes as those are dependencies of this item.
+	 *
+	 * @param DataObject $object
+	 */
 	public function addObject(DataObject $object) {
-
 		$references = [
 			'ObjectID'    => $object->ID,
 			'ObjectClass' => $object->ClassName,
@@ -73,7 +85,12 @@ class ChangeSet extends DataObject {
 		$this->sync();
 	}
 
-	/** Remove an item from this changeset. Will automatically remove all changes which own (and thus depend on) the removed item. */
+	/**
+	 * Remove an item from this changeset. Will automatically remove all changes
+	 * which own (and thus depend on) the removed item.
+	 *
+	 * @param DataObject $object
+	 */
 	public function removeObject(DataObject $object) {
 		$item = ChangeSetItem::get()->filter(['ObjectID' => $object->ID, 'ObjectClass' => $object->ClassName, 'ChangeSetID' => $this->ID])->first();
 
@@ -96,7 +113,7 @@ class ChangeSet extends DataObject {
 		foreach ($this->Changes()->filter(['Added' => ChangeSetItem::EXPLICITLY]) as $item) {
 			$explicit[$item->ObjectID . '.' . $item->ObjectClass] = true;
 
-			if ($item->Type() == ChangeSetItem::CHANGE_DELETED) {
+			if ($item->getChangeType() == ChangeSetItem::CHANGE_DELETED) {
 				$toadd = $item->findOwners(false);
 			} else {
 				$toadd = $item->findOwned()->filterByCallback(function ($object) {
@@ -162,8 +179,12 @@ class ChangeSet extends DataObject {
 		if (DB::get_conn()->supportsTransactions()) DB::get_conn()->transactionEnd();
 	}
 
-	/** Verify that any objects in this changeset include all owned changes */
-	public function validate() {
+	/**
+	 * Verify that any objects in this changeset include all owned changes
+	 *
+	 * @return bool
+	 */
+	public function checkChanges() {
 		$implicit = $this->calculateImplicit();
 
 		// Check the existing implicit ChangeSetItems for this ChangeSet
@@ -205,11 +226,6 @@ class ChangeSet extends DataObject {
 	 * @return bool
 	 */
 	public function canPublish($member = null) {
-		// Logical check on state
-		if($this->State !== static::STATE_OPEN) {
-			return false;
-		}
-
 		// All changes must be publishable
 		foreach($this->Changes() as $change) {
 			/** @var ChangeSetItem $change */
@@ -229,11 +245,6 @@ class ChangeSet extends DataObject {
 	 * @return bool
 	 */
 	public function canRevert($member = null) {
-		// Logical check on state
-		if($this->State !== static::STATE_PUBLISHED) {
-			return false;
-		}
-
 		// All changes must be publishable
 		foreach($this->Changes() as $change) {
 			/** @var ChangeSetItem $change */
