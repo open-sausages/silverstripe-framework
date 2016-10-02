@@ -21,7 +21,13 @@ import CampaignAdmin from 'containers/CampaignAdmin/controller';
 function appBoot() {
   const baseUrl = Config.get('absoluteBaseUrl');
   const apolloClient = new ApolloClient({
-    dataIdFromObject: o => `${o.__typename}:${o.id},`,
+    shouldBatch: true,
+    dataIdFromObject: (o) => {
+      if(o.id && o.__typename) {
+        return `${o.__typename}:${o.id}`;
+      }
+      return null;
+    },
     networkInterface: createNetworkInterface({
       uri: `${baseUrl}graphql/`,
       opts: {
