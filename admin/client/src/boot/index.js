@@ -23,7 +23,7 @@ function appBoot() {
   const apolloClient = new ApolloClient({
     shouldBatch: true,
     dataIdFromObject: (o) => {
-      if(o.id && o.__typename) {
+      if(o.id >= 0 && o.__typename) {
         return `${o.__typename}:${o.id}`;
       }
       return null;
