@@ -257,8 +257,9 @@ t?a[c]=n(a[c],f):a[c]=f}}return a}function r(e){return{}.toString.call(e).slice(
 o.recursive=function(e){return i(e===!0,!0,arguments)},o.clone=function(e){var t=e,n=r(e),i,a
 if("array"===n)for(t=[],a=e.length,i=0;i<a;++i)t[i]=o.clone(e[i])
 else if("object"===n){t={}
-for(i in e)t[i]=o.clone(e[i])}return t},t?e.exports=o:window[a]=o}("object"==typeof e&&e&&"object"==typeof e.exports&&e.exports)}).call(t,n(17)(e))},function(e,t){e.exports=function(e){return e.webpackPolyfill||(e.deprecate=function(){},
-e.paths=[],e.children=[],e.webpackPolyfill=1),e}},function(e,t,n){(function(t){e.exports=t.Form=n(19)}).call(t,function(){return this}())},function(e,t,n){"use strict"
+for(i in e)t[i]=o.clone(e[i])}return t},t?e.exports=o:window[a]=o}("object"==typeof e&&e&&"object"==typeof e.exports&&e.exports)}).call(t,n(17)(e))},,function(e,t,n){(function(t){e.exports=t.Form=n(19)
+
+}).call(t,function(){return this}())},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function o(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called")
 
 
@@ -1990,31 +1991,34 @@ return i.setState("GridFieldPaginator",{currentPage:n}),i.reload(),!1}}})})},fun
 function i(e){if(e&&e.__esModule)return e
 var t={}
 if(null!=e)for(var n in e)Object.prototype.hasOwnProperty.call(e,n)&&(t[n]=e[n])
-return t["default"]=e,t}function r(e){return e&&e.__esModule?e:{"default":e}}function o(){h["default"].add("config",y["default"]),h["default"].add("form",_["default"]),h["default"].add("schemas",C["default"]),
-h["default"].add("records",E["default"]),h["default"].add("campaign",O["default"]),h["default"].add("breadcrumbs",k["default"]),h["default"].add("routing",j.routerReducer),R["default"].start()
-var e={},t=(0,l.combineReducers)(h["default"].getAll()),n=[d["default"]],i=f["default"].get("environment"),r=f["default"].get("debugging"),o=l.applyMiddleware.apply(void 0,n),a=window.devToolsExtension
+return t["default"]=e,t}function r(e){return e&&e.__esModule?e:{"default":e}}function o(){var e=f["default"].get("absoluteBaseUrl"),t=new F["default"]({shouldBatch:!0,dataIdFromObject:function b(e){return e.id>=0&&e.__typename?e.__typename+":"+e.id:null
+
+},networkInterface:(0,I.createNetworkInterface)({uri:e+"graphql/",opts:{credentials:"same-origin"}})})
+h["default"].add("config",y["default"]),h["default"].add("form",_["default"]),h["default"].add("schemas",C["default"]),h["default"].add("records",E["default"]),h["default"].add("campaign",O["default"]),
+h["default"].add("breadcrumbs",k["default"]),h["default"].add("routing",j.routerReducer),h["default"].add("apollo",t.reducer()),R["default"].start()
+var n={},i=(0,l.combineReducers)(h["default"].getAll()),r=[d["default"],t.middleware()],o=f["default"].get("environment"),a=f["default"].get("debugging"),u=l.applyMiddleware.apply(void 0,r),c=window.devToolsExtension
 
 
-"dev"===i&&r&&"function"==typeof a&&(o=(0,l.compose)(l.applyMiddleware.apply(void 0,n),a()))
-var u=o(l.createStore),c=u(t,e)
-c.dispatch(g.setConfig(f["default"].getAll())),window.ss=window.ss||{},window.ss.store=c
-var p=new s["default"](c)
-p.start(window.location.pathname)}var a=n(125),s=r(a),l=n(28),u=n(147),d=r(u),c=n(69),f=r(c),p=n(148),h=r(p),m=n(149),g=i(m),v=n(151),y=r(v),b=n(153),_=r(b),w=n(154),C=r(w),T=n(155),E=r(T),P=n(156),O=r(P),S=n(158),k=r(S),j=n(146),x=n(159),R=r(x),I=n(175),F=r(I)
+"dev"===o&&a&&"function"==typeof c&&(u=(0,l.compose)(l.applyMiddleware.apply(void 0,r),c()))
+var p=u(l.createStore),m=p(i,n)
+m.dispatch(g.setConfig(f["default"].getAll())),window.ss=window.ss||{},window.ss.store=m
+var v=new s["default"](m,t)
+v.start(window.location.pathname)}var a=n(125),s=r(a),l=n(28),u=n(148),d=r(u),c=n(69),f=r(c),p=n(149),h=r(p),m=n(150),g=i(m),v=n(152),y=r(v),b=n(154),_=r(b),w=n(155),C=r(w),T=n(156),E=r(T),P=n(157),O=r(P),S=n(159),k=r(S),j=n(146),x=n(160),R=r(x),I=n(176),F=r(I),A=n(177),D=r(A)
 
 
 window.onload=o},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0})
 var o=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
-i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),a=n(1),s=i(a),l=n(4),u=i(l),d=n(102),c=i(d),f=n(27),p=n(64),h=n(126),m=i(h),g=n(69),v=i(g),y=n(143),b=i(y),_=n(144),w=i(_),C=n(145),T=i(C),E=n(146),P=function(){
-function e(t){r(this,e),this.store=t
-var n=v["default"].get("absoluteBaseUrl")
-b["default"].setAbsoluteBase(n)}return o(e,[{key:"start",value:function t(e){this.matchesLegacyRoute(e)?this.initLegacyRouter():this.initReactRouter()}},{key:"matchesLegacyRoute",value:function n(e){var t=v["default"].get("sections"),n=b["default"].resolveURLToBase(e).replace(/\/$/,"")
+i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),a=n(1),s=i(a),l=n(4),u=i(l),d=n(102),c=i(d),f=n(27),p=n(64),h=n(126),m=i(h),g=n(69),v=i(g),y=n(143),b=i(y),_=n(144),w=i(_),C=n(145),T=i(C),E=n(146),P=n(147),O=function(){
+function e(t,n){r(this,e),this.store=t,this.client=n
+var i=v["default"].get("absoluteBaseUrl")
+b["default"].setAbsoluteBase(i)}return o(e,[{key:"start",value:function t(e){this.matchesLegacyRoute(e)?this.initLegacyRouter():this.initReactRouter()}},{key:"matchesLegacyRoute",value:function n(e){var t=v["default"].get("sections"),n=b["default"].resolveURLToBase(e).replace(/\/$/,"")
 
 
 return!!Object.keys(t).find(function(e){var i=t[e],r=b["default"].resolveURLToBase(i.url).replace(/\/$/,"")
 return!i.reactRouter&&n.match(r)})}},{key:"initReactRouter",value:function i(){w["default"].updateRootRoute({component:T["default"]})
 var e=(0,E.syncHistoryWithStore)((0,p.useRouterHistory)(m["default"])({basename:v["default"].get("baseUrl")}),this.store)
-c["default"].render(u["default"].createElement(f.Provider,{store:this.store},u["default"].createElement(p.Router,{history:e,routes:w["default"].getRootRoute()})),document.getElementsByClassName("cms-content")[0])
+c["default"].render(u["default"].createElement(P.ApolloProvider,{store:this.store,client:this.client},u["default"].createElement(p.Router,{history:e,routes:w["default"].getRootRoute()})),document.getElementsByClassName("cms-content")[0])
 
 }},{key:"initLegacyRouter",value:function a(){var e=v["default"].get("sections"),t=this.store;(0,b["default"])("*",function(e,n){e.store=t,n()})
 var n=null
@@ -2022,7 +2026,7 @@ Object.keys(e).forEach(function(t){var i=b["default"].resolveURLToBase(e[t].url)
 i=i.replace(/\/$/,""),i+="(/*?)?",(0,b["default"])(i,function(e,t){if("complete"!==document.readyState||e.init)return void t()
 n||(n=window.location.pathname)
 var i=e.data&&e.data.__forceReload;(e.path!==n||i)&&(n=e.path.replace(/#.*$/,""),(0,s["default"])(".cms-container").entwine("ss").handleStateChange(null,e.state))})}),b["default"].start()}}]),e}()
-t["default"]=P},,,,,,,,,,,,,,,,,,function(e,t){e.exports=Router},function(e,t){e.exports=ReactRouteRegister},function(e,t,n){"use strict"
+t["default"]=O},,,,,,,,,,,,,,,,,,function(e,t){e.exports=Router},function(e,t){e.exports=ReactRouteRegister},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function o(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called")
 
 
@@ -2035,15 +2039,15 @@ function t(){return r(this,t),o(this,(t.__proto__||Object.getPrototypeOf(t)).app
 
 
 return e}}]),t}(c["default"])
-t["default"]=f},function(e,t){e.exports=ReactRouterRedux},function(e,t){e.exports=ReduxThunk},function(e,t){e.exports=ReducerRegister},function(e,t,n){"use strict"
+t["default"]=f},function(e,t){e.exports=ReactRouterRedux},function(e,t){e.exports=ReactApollo},function(e,t){e.exports=ReduxThunk},function(e,t){e.exports=ReducerRegister},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e){return{type:a["default"].SET_CONFIG,payload:{config:e}}}Object.defineProperty(t,"__esModule",{value:!0}),t.setConfig=r
-var o=n(150),a=i(o)},function(e,t){"use strict"
+var o=n(151),a=i(o)},function(e,t){"use strict"
 Object.defineProperty(t,"__esModule",{value:!0}),t["default"]={SET_CONFIG:"SET_CONFIG"}},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(){var e=arguments.length<=0||void 0===arguments[0]?{}:arguments[0],t=arguments[1]
 switch(t.type){case u["default"].SET_CONFIG:return(0,s["default"])(o({},e,t.payload.config))
 default:return e}}Object.defineProperty(t,"__esModule",{value:!0})
 var o=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
-for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},a=n(152),s=i(a),l=n(150),u=i(l)
+for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},a=n(153),s=i(a),l=n(151),u=i(l)
 t["default"]=r},function(e,t){e.exports=DeepFreezeStrict},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function o(){var e=arguments.length<=0||void 0===arguments[0]?d:arguments[0],t=arguments[1],n=function i(t,n){
 return a({},e,r({},t,a({},e[t],n)))}
@@ -2056,7 +2060,7 @@ case u.ACTION_TYPES.SUBMIT_FORM_FAILURE:return(0,l["default"])(n(t.payload.formI
 case u.ACTION_TYPES.SET_SUBMIT_ACTION:return(0,l["default"])(n(t.payload.formId,{submitAction:t.payload.submitAction}))
 default:return e}}Object.defineProperty(t,"__esModule",{value:!0})
 var a=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
-for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},s=n(152),l=i(s),u=n(30),d=(0,l["default"])({})
+for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},s=n(153),l=i(s),u=n(30),d=(0,l["default"])({})
 t["default"]=o},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function o(){var e=arguments.length<=0||void 0===arguments[0]?c:arguments[0],t=arguments.length<=1||void 0===arguments[1]?null:arguments[1]
 
@@ -2067,7 +2071,7 @@ default:return e}}Object.defineProperty(t,"__esModule",{value:!0})
 var a=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
 for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e}
 t["default"]=o
-var s=n(152),l=i(s),u=n(32),d=i(u),c=(0,l["default"])({})},function(e,t,n){"use strict"
+var s=n(153),l=i(s),u=n(32),d=i(u),c=(0,l["default"])({})},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function o(){var e=arguments.length<=0||void 0===arguments[0]?c:arguments[0],t=arguments[1],n=null,i=null,o=null
 
 
@@ -2089,7 +2093,7 @@ case d["default"].DELETE_RECORD_SUCCESS:return i=t.payload.recordType,n=e[i],n=O
 
 default:return e}}Object.defineProperty(t,"__esModule",{value:!0})
 var a=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
-for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},s=n(152),l=i(s),u=n(48),d=i(u),c={}
+for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},s=n(153),l=i(s),u=n(48),d=i(u),c={}
 t["default"]=o},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(){var e=arguments.length<=0||void 0===arguments[0]?d:arguments[0],t=arguments[1]
 switch(t.type){case u["default"].SET_CAMPAIGN_SELECTED_CHANGESETITEM:return(0,s["default"])(o({},e,{changeSetItemId:t.payload.changeSetItemId}))
@@ -2098,7 +2102,7 @@ case u["default"].PUBLISH_CAMPAIGN_REQUEST:return(0,s["default"])(o({},e,{isPubl
 case u["default"].PUBLISH_CAMPAIGN_SUCCESS:case u["default"].PUBLISH_CAMPAIGN_FAILURE:return(0,s["default"])(o({},e,{isPublishing:!1}))
 default:return e}}Object.defineProperty(t,"__esModule",{value:!0})
 var o=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
-for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},a=n(152),s=i(a),l=n(157),u=i(l),d=(0,s["default"])({campaignId:null,changeSetItemId:null,isPublishing:!1,view:null})
+for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},a=n(153),s=i(a),l=n(158),u=i(l),d=(0,s["default"])({campaignId:null,changeSetItemId:null,isPublishing:!1,view:null})
 t["default"]=r},function(e,t){"use strict"
 Object.defineProperty(t,"__esModule",{value:!0}),t["default"]={SET_CAMPAIGN_ACTIVE_CHANGESET:"SET_CAMPAIGN_ACTIVE_CHANGESET",SET_CAMPAIGN_SELECTED_CHANGESETITEM:"SET_CAMPAIGN_SELECTED_CHANGESETITEM",PUBLISH_CAMPAIGN_REQUEST:"PUBLISH_CAMPAIGN_REQUEST",
 PUBLISH_CAMPAIGN_SUCCESS:"PUBLISH_CAMPAIGN_SUCCESS",PUBLISH_CAMPAIGN_FAILURE:"PUBLISH_CAMPAIGN_FAILURE"}},function(e,t,n){"use strict"
@@ -2106,11 +2110,11 @@ function i(e){return e&&e.__esModule?e:{"default":e}}function r(){var e=argument
 switch(t.type){case u["default"].SET_BREADCRUMBS:return(0,s["default"])(o([],t.payload.breadcrumbs))
 default:return e}}Object.defineProperty(t,"__esModule",{value:!0})
 var o=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
-for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},a=n(152),s=i(a),l=n(67),u=i(l),d=(0,s["default"])([])
+for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},a=n(153),s=i(a),l=n(67),u=i(l),d=(0,s["default"])([])
 t["default"]=r},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0})
 var o=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
-i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),a=n(34),s=i(a),l=n(57),u=i(l),d=n(55),c=i(d),f=n(160),p=i(f),h=n(162),m=i(h),g=n(163),v=i(g),y=n(164),b=i(y),_=n(165),w=i(_),C=n(166),T=i(C),E=n(167),P=i(E),O=n(168),S=i(O),k=n(169),j=i(k),x=n(170),R=i(x),I=n(171),F=i(I),A=n(172),D=i(A),M=n(173),N=i(M),U=n(174),L=i(U),B=function(){
+i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),a=n(34),s=i(a),l=n(57),u=i(l),d=n(55),c=i(d),f=n(161),p=i(f),h=n(163),m=i(h),g=n(164),v=i(g),y=n(165),b=i(y),_=n(166),w=i(_),C=n(167),T=i(C),E=n(168),P=i(E),O=n(169),S=i(O),k=n(170),j=i(k),x=n(171),R=i(x),I=n(172),F=i(I),A=n(173),D=i(A),M=n(174),N=i(M),U=n(175),L=i(U),B=function(){
 function e(){r(this,e)}return o(e,[{key:"start",value:function t(){s["default"].register("TextField",u["default"]),s["default"].register("HiddenField",c["default"]),s["default"].register("CheckboxField",p["default"]),
 s["default"].register("CheckboxSetField",m["default"]),s["default"].register("OptionsetField",v["default"]),s["default"].register("GridField",b["default"]),s["default"].register("SingleSelectField",w["default"]),
 s["default"].register("PopoverField",T["default"]),s["default"].register("HeaderField",P["default"]),s["default"].register("LiteralField",S["default"]),s["default"].register("HtmlReadonlyField",j["default"]),
@@ -2126,7 +2130,7 @@ e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,wri
 value:!0})
 var s=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
 for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},l=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
-i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),u=n(4),d=i(u),c=n(161),f=i(c),p=n(58),h=i(p),m=n(20),g=i(m),v=function(e){
+i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),u=n(4),d=i(u),c=n(162),f=i(c),p=n(58),h=i(p),m=n(20),g=i(m),v=function(e){
 function t(){return r(this,t),o(this,(t.__proto__||Object.getPrototypeOf(t)).apply(this,arguments))}return a(t,e),l(t,[{key:"render",value:function n(){var e=(0,h["default"])(f["default"])
 return d["default"].createElement(e,s({},this.props,{type:"checkbox",hideLabels:!0}))}}]),t}(g["default"])
 t["default"]=v},function(e,t,n){"use strict"
@@ -2160,7 +2164,7 @@ return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function a(e,t){if("funct
 e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{
 value:!0}),t.CheckboxSetField=void 0
 var s=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
-i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),l=n(4),u=i(l),d=n(20),c=i(d),f=n(161),p=i(f),h=n(58),m=i(h),g=function(e){
+i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),l=n(4),u=i(l),d=n(20),c=i(d),f=n(162),p=i(f),h=n(58),m=i(h),g=function(e){
 function t(e){r(this,t)
 var n=o(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.getItemKey=n.getItemKey.bind(n),n.getOptionProps=n.getOptionProps.bind(n),n.handleChange=n.handleChange.bind(n),n.getValues=n.getValues.bind(n),n}return a(t,e),s(t,[{key:"getItemKey",value:function n(e,t){
@@ -2184,7 +2188,7 @@ return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function a(e,t){if("funct
 e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{
 value:!0}),t.OptionsetField=void 0
 var s=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
-i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),l=n(4),u=i(l),d=n(20),c=i(d),f=n(161),p=i(f),h=n(58),m=i(h),g=function(e){
+i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),l=n(4),u=i(l),d=n(20),c=i(d),f=n(162),p=i(f),h=n(58),m=i(h),g=function(e){
 function t(e){r(this,t)
 var n=o(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.getItemKey=n.getItemKey.bind(n),n.getOptionProps=n.getOptionProps.bind(n),n.handleChange=n.handleChange.bind(n),n}return a(t,e),s(t,[{key:"getItemKey",value:function n(e,t){return this.props.id+"-"+(e.value||"empty"+t)
@@ -2361,8 +2365,8 @@ return{eventKey:t,className:n+" "+i,disabled:r,bsClass:o,onEnter:a,onEntering:s,
 return u["default"].createElement(f.Tab.Pane,e,this.props.children)}}]),t}(c["default"])
 p.propTypes={name:u["default"].PropTypes.string.isRequired,extraClass:u["default"].PropTypes.string,tabClassName:u["default"].PropTypes.string},p.defaultProps={className:"",extraClass:""},t["default"]=p
 
-},function(e,t){e.exports=FormAction},function(e,t,n){"use strict"
-function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(64),o=n(69),a=i(o),s=n(144),l=i(s),u=n(176),d=i(u)
+},function(e,t){e.exports=FormAction},,function(e,t,n){"use strict"
+function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(64),o=n(69),a=i(o),s=n(144),l=i(s),u=n(178),d=i(u)
 document.addEventListener("DOMContentLoaded",function(){var e=a["default"].getSection("SilverStripe\\Admin\\CampaignAdmin")
 l["default"].add({path:e.url,component:(0,r.withRouter)(d["default"]),childRoutes:[{path:":type/:id/:view",component:d["default"]},{path:"set/:id/:view",component:d["default"]}]})})},function(e,t,n){"use strict"
 
@@ -2379,7 +2383,7 @@ campaignId:e.campaign.campaignId,view:e.campaign.view,breadcrumbs:e.breadcrumbs,
 breadcrumbsActions:(0,m.bindActionCreators)(_,e)}}Object.defineProperty(t,"__esModule",{value:!0})
 var d=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
 for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},c=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
-i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),f=n(4),p=r(f),h=n(27),m=n(28),g=n(64),v=n(33),y=r(v),b=n(177),_=i(b),w=n(178),C=r(w),T=n(20),E=r(T),P=n(174),O=r(P),S=n(94),k=r(S),j=n(179),x=r(j),R=n(38),I=r(R),F=n(180),A=r(F),D=function(e){
+i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),f=n(4),p=r(f),h=n(27),m=n(28),g=n(64),v=n(33),y=r(v),b=n(179),_=i(b),w=n(180),C=r(w),T=n(20),E=r(T),P=n(175),O=r(P),S=n(94),k=r(S),j=n(181),x=r(j),R=n(38),I=r(R),F=n(182),A=r(F),D=function(e){
 function t(e){o(this,t)
 var n=a(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.publishApi=y["default"].createEndpointFetcher({url:n.props.sectionConfig.publishEndpoint.url,method:n.props.sectionConfig.publishEndpoint.method,defaultData:{SecurityID:n.props.securityId},payloadSchema:{
@@ -2454,7 +2458,7 @@ var i=Object.getOwnPropertyDescriptor(e,t)
 if(void 0===i){var r=Object.getPrototypeOf(e)
 return null===r?void 0:q(r,t,n)}if("value"in i)return i.value
 var o=i.get
-if(void 0!==o)return o.call(n)},p=n(4),h=r(p),m=n(28),g=n(27),v=n(177),y=i(v),b=n(47),_=i(b),w=n(181),C=i(w),T=n(20),E=r(T),P=n(182),O=r(P),S=n(183),k=r(S),j=n(185),x=r(j),R=n(179),I=r(R),F=n(174),A=r(F),D=n(186),M=r(D),N=n(178),U=r(N),L=n(187),B=r(L),H=n(94),$=r(H),V=function(e){
+if(void 0!==o)return o.call(n)},p=n(4),h=r(p),m=n(28),g=n(27),v=n(179),y=i(v),b=n(47),_=i(b),w=n(183),C=i(w),T=n(20),E=r(T),P=n(184),O=r(P),S=n(185),k=r(S),j=n(187),x=r(j),R=n(181),I=r(R),F=n(175),A=r(F),D=n(188),M=r(D),N=n(180),U=r(N),L=n(189),B=r(L),H=n(94),$=r(H),V=function(e){
 function t(e){o(this,t)
 var n=a(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.handlePublish=n.handlePublish.bind(n),n.handleItemSelected=n.handleItemSelected.bind(n),n.setBreadcrumbs=n.setBreadcrumbs.bind(n),n}return s(t,e),c(t,[{key:"componentDidMount",value:function n(){
@@ -2496,7 +2500,7 @@ function i(e){return e&&e.__esModule?e:{"default":e}}function r(e){return{type:l
 payload:{campaignId:e,view:t}})}}function a(e,t,n){return function(i){i({type:l["default"].PUBLISH_CAMPAIGN_REQUEST,payload:{campaignId:n}}),e({id:n}).then(function(e){i({type:l["default"].PUBLISH_CAMPAIGN_SUCCESS,
 payload:{campaignId:n}}),i({type:d["default"].FETCH_RECORD_SUCCESS,payload:{recordType:t,data:e}})})["catch"](function(e){i({type:l["default"].PUBLISH_CAMPAIGN_FAILURE,payload:{error:e}})})}}Object.defineProperty(t,"__esModule",{
 value:!0}),t.selectChangeSetItem=r,t.showCampaignView=o,t.publishCampaign=a
-var s=n(157),l=i(s),u=n(48),d=i(u)},function(e,t,n){"use strict"
+var s=n(158),l=i(s),u=n(48),d=i(u)},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function o(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called")
 
 
@@ -2518,7 +2522,7 @@ var s=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
 i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),l=n(4),u=i(l),d=n(20),c=i(d)
 
 
-n(184)
+n(186)
 var f=function(e){function t(){return r(this,t),o(this,(t.__proto__||Object.getPrototypeOf(t)).apply(this,arguments))}return a(t,e),s(t,[{key:"render",value:function n(){var e=this.props.groupid+"_Header",t=this.props.groupid+"_Items",n="#"+t,i={
 id:t,"aria-expanded":!0,className:"list-group list-group-flush collapse in",role:"tabpanel","aria-labelledby":e}
 return u["default"].createElement("div",{className:"accordion__block"},u["default"].createElement("a",{className:"accordion__title","data-toggle":"collapse",href:n,"aria-expanded":"true","aria-controls":t,
