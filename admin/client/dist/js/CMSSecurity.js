@@ -1,4 +1,32 @@
-webpackJsonp([0],[function(t,n,e){"use strict"
-function s(t){return t&&t.__esModule?t:{"default":t}}var u=e(1),i=s(u)
-i["default"].noConflict(),i["default"].entwine.warningLevel=i["default"].entwine.WARN_LEVEL_BESTPRACTISE,i["default"].entwine("ss",function(t){t('.cms input[type="submit"], .cms button, .cms input[type="reset"], .cms .ss-ui-button').entwine({
-onadd:function n(){this.addClass("ss-ui-button"),this.data("button")||this.button(),this._super()},onremove:function e(){this.data("button")&&this.button("destroy"),this._super()}})})}])
+webpackJsonp([0],[
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _jQuery = __webpack_require__(1);
+	
+	var _jQuery2 = _interopRequireDefault(_jQuery);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	_jQuery2.default.noConflict();
+	
+	_jQuery2.default.entwine.warningLevel = _jQuery2.default.entwine.WARN_LEVEL_BESTPRACTISE;
+	_jQuery2.default.entwine('ss', function ($) {
+	  $('.cms input[type="submit"], .cms button, .cms input[type="reset"], .cms .ss-ui-button').entwine({
+	    onadd: function onadd() {
+	      this.addClass('ss-ui-button');
+	      if (!this.data('button')) this.button();
+	      this._super();
+	    },
+	    onremove: function onremove() {
+	      if (this.data('button')) this.button('destroy');
+	      this._super();
+	    }
+	  });
+	});
+
+/***/ }
+]);
+//# sourceMappingURL=CMSSecurity.js.map

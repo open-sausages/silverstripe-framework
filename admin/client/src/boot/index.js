@@ -12,30 +12,12 @@ import CampaignReducer from 'state/campaign/CampaignReducer';
 import BreadcrumbsReducer from 'state/breadcrumbs/BreadcrumbsReducer';
 import { routerReducer } from 'react-router-redux';
 import bootInjector from 'boot/BootInjector';
-import ApolloClient, { createNetworkInterface } from 'apollo-client';
 
 // Sections
 // eslint-disable-next-line no-unused-vars
 import CampaignAdmin from 'containers/CampaignAdmin/controller';
 
 function appBoot() {
-  const baseUrl = Config.get('absoluteBaseUrl');
-  const apolloClient = new ApolloClient({
-    shouldBatch: true,
-    dataIdFromObject: (o) => {
-      if(o.id >= 0 && o.__typename) {
-        return `${o.__typename}:${o.id}`;
-      }
-      return null;
-    },
-    networkInterface: createNetworkInterface({
-      uri: `${baseUrl}graphql/`,
-      opts: {
-        credentials: 'same-origin',
-      },
-    }),
-  });
-
   reducerRegister.add('config', ConfigReducer);
   reducerRegister.add('form', FormReducer);
   reducerRegister.add('schemas', SchemaReducer);
@@ -43,7 +25,6 @@ function appBoot() {
   reducerRegister.add('campaign', CampaignReducer);
   reducerRegister.add('breadcrumbs', BreadcrumbsReducer);
   reducerRegister.add('routing', routerReducer);
-  reducerRegister.add('apollo', apolloClient.reducer());
 
   bootInjector.start();
 
@@ -51,7 +32,6 @@ function appBoot() {
   const rootReducer = combineReducers(reducerRegister.getAll());
   const middleware = [
     thunkMiddleware,
-    apolloClient.middleware(),
   ];
 
   const env = Config.get('environment');
@@ -74,7 +54,7 @@ function appBoot() {
   window.ss.store = store;
 
   // Bootstrap routing
-  const routes = new BootRoutes(store, apolloClient);
+  const routes = new BootRoutes(store);
   routes.start(window.location.pathname);
 }
 

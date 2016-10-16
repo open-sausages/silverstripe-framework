@@ -2,14 +2,14 @@ import $ from 'jQuery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router as ReactRouter, useRouterHistory } from 'react-router';
+import { Router as ReactRouter, useRouterHistory, applyRouterMiddleware } from 'react-router';
+import Relay from 'react-relay';
+import useRelay from 'react-router-relay';
 import createHistory from 'history/lib/createBrowserHistory';
 import Config from 'lib/Config';
 import pageRouter from 'lib/Router';
 import reactRouteRegister from 'lib/ReactRouteRegister';
 import App from 'containers/App/App';
-import { syncHistoryWithStore } from 'react-router-redux';
-import { ApolloProvider } from 'react-apollo';
 
 /**
  * Bootstraps routes
@@ -79,19 +79,22 @@ class BootRoutes {
     reactRouteRegister.updateRootRoute({
       component: App,
     });
-    let history = syncHistoryWithStore(
-      useRouterHistory(createHistory)({
-        basename: Config.get('baseUrl'),
-      }),
-      this.store
+    let history = useRouterHistory(createHistory)({
+      basename: Config.get('baseUrl'),
+    });
+    // TODO Make dynamic
+    Relay.injectNetworkLayer(
+      new Relay.DefaultNetworkLayer('http://localhost/master/graphql')
     );
     ReactDOM.render(
-      <ApolloProvider store={this.store} client={this.client}>
+      <Provider store={this.store}>
         <ReactRouter
           history={history}
           routes={reactRouteRegister.getRootRoute()}
-        />
-      </ApolloProvider>,
+          render={applyRouterMiddleware(useRelay)}
+          environment={Relay.Store}
+        />,
+      </Provider>,
       document.getElementsByClassName('cms-content')[0]
     );
   }

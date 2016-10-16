@@ -60,7 +60,7 @@ const config = [
     // lib.js provies these globals and more. These references allow the framework bundle
     // to access them.
     externals: {
-      'apollo-client': 'ApolloClient',
+      'react-relay': 'ReactRelay',
       'bootstrap-collapse': 'BootstrapCollapse',
       'components/Breadcrumb/Breadcrumb': 'Breadcrumb',
       'state/breadcrumbs/BreadcrumbsActions': 'BreadcrumbsActions',
@@ -70,7 +70,6 @@ const config = [
       'components/GridField/GridField': 'GridField',
       'components/Toolbar/Toolbar': 'Toolbar',
       'deep-freeze-strict': 'DeepFreezeStrict',
-      'graphql-tag': 'GraphQLTag',
       i18n: 'i18n',
       jQuery: 'jQuery',
       'lib/Backend': 'Backend',
@@ -81,7 +80,6 @@ const config = [
       'react-addons-test-utils': 'ReactAddonsTestUtils',
       'react-dom': 'ReactDom',
       tether: 'Tether',
-      'react-apollo': 'ReactApollo',
       'react-bootstrap-ss': 'ReactBootstrap',
       'react-redux': 'ReactRedux',
       'react-router-redux': 'ReactRouterRedux',
@@ -100,8 +98,12 @@ const config = [
           exclude: /(node_modules|thirdparty)/,
           loader: 'babel',
           query: {
-            presets: ['es2015', 'react'],
-            plugins: ['transform-object-assign', 'transform-object-rest-spread'],
+            presets: ['es2015', 'react', 'stage-0'],
+            plugins: [
+              'transform-object-assign',
+              'transform-object-rest-spread',
+              path.resolve(__dirname, PATHS.ADMIN_JS_SRC, 'babelRelayPlugin.js'),
+            ],
             comments: false,
           },
         },

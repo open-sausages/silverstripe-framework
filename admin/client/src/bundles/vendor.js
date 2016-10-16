@@ -25,9 +25,7 @@ require('expose?ReactAddonsCssTransitionGroup!react-addons-css-transition-group'
 require('expose?ReactAddonsTestUtils!react-addons-test-utils');
 require('expose?Page!page.js');
 require('expose?BootstrapCollapse!bootstrap/dist/js/umd/collapse.js');
-require('expose?ApolloClient!apollo-client');
-require('expose?ReactApollo!react-apollo');
-require('expose?GraphQLTag!graphql-tag');
+require('expose?ReactRelay!react-relay');
 
 require('../../../thirdparty/jquery-ondemand/jquery.ondemand.js');
 require('../../../thirdparty/jquery-ui/jquery-ui.js');

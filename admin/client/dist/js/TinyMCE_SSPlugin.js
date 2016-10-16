@@ -1,18 +1,168 @@
-webpackJsonp([3],[function(t,e,n){(function(t){"use strict"
-!function(){var e={getInfo:function n(){return{longname:"Special buttons for SilverStripe CMS",author:"Sam Minnée",authorurl:"http://www.siverstripe.com/",infourl:"http://www.silverstripe.com/",version:"1.0"
-}},init:function i(e){e.addButton("sslink",{icon:"link",title:"Insert Link",cmd:"sslink"}),e.addMenuItem("sslink",{icon:"link",text:"Insert Link",cmd:"sslink"}),e.addButton("ssmedia",{icon:"image",title:"Insert Media",
-cmd:"ssmedia"}),e.addMenuItem("ssmedia",{icon:"image",text:"Insert Media",cmd:"ssmedia"}),e.addCommand("sslink",function(e){t("#"+this.id).entwine("ss").openLinkDialog()}),e.addCommand("ssmedia",function(e){
-t("#"+this.id).entwine("ss").openMediaDialog()}),e.on("BeforeExecCommand",function(t){var n=t.command,i=t.ui,a=t.value
-"mceAdvLink"==n||"mceLink"==n?(t.preventDefault(),e.execCommand("sslink",i,a)):"mceAdvImage"!=n&&"mceImage"!=n||(t.preventDefault(),e.execCommand("ssmedia",i,a))}),e.on("SaveContent",function(e){var n=t(e.content),i=function a(t){
-return Object.keys(t).map(function(e){return t[e]?e+'="'+t[e]+'"':null}).filter(function(t){return null!==t}).join(" ")}
-n.find(".ss-htmleditorfield-file.embed").each(function(){var e=t(this),n={width:e.attr("width"),"class":e.attr("cssclass"),thumbnail:e.data("thumbnail")},a="[embed "+i(n)+"]"+e.data("url")+"[/embed]"
-e.replaceWith(a)}),n.find("img").each(function(){var e=t(this),n={src:e.attr("src"),id:e.data("id"),width:e.attr("width"),height:e.attr("height"),"class":e.attr("class"),title:e.attr("title"),alt:e.attr("alt")
-},a="[image "+i(n)+"]"
-e.replaceWith(a)}),e.content="",n.each(function(){void 0!==this.outerHTML&&(e.content+=this.outerHTML)})}),e.on("BeforeSetContent",function(e){for(var n,i=e.content,a=function d(t){return t.match(/([^\s\/'"=,]+)\s*=\s*(('([^']+)')|("([^"]+)")|([^\s,\]]+))/g).reduce(function(t,e){
-var n=e.match(/^([^\s\/'"=,]+)\s*=\s*(?:(?:'([^']+)')|(?:"([^"]+)")|(?:[^\s,\]]+))$/),i=n[1],a=n[2]||n[3]||n[4]
-return t[i]=a,t},{})},s=/\[embed(.*?)\](.+?)\[\/\s*embed\s*\]/gi;n=s.exec(i);){var c=a(n[1]),r
-r=t("<img/>").attr({src:c.thumbnail,width:c.width,height:c.height,"class":c["class"],"data-url":n[2]}).addClass("ss-htmleditorfield-file embed"),c.cssclass=c["class"],Object.keys(c).forEach(function(t){
-return r.attr("data-"+t,c[t])}),i=i.replace(n[0],t("<div/>").append(r).html())}for(var s=/\[image(.*?)\]/gi;n=s.exec(i);){var c=a(n[1]),r=t("<img/>").attr({src:c.src,width:c.width,height:c.height,"class":c["class"],
-alt:c.alt,title:c.title,"data-id":c.id})
-i=i.replace(n[0],t("<div/>").append(r).html())}e.content=i})}}
-tinymce.PluginManager.add("ssbuttons",function(t){e.init(t)})}()}).call(e,n(1))}])
+webpackJsonp([3],[
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
+	
+	(function () {
+	
+		var ssbuttons = {
+			getInfo: function getInfo() {
+				return {
+					longname: 'Special buttons for SilverStripe CMS',
+					author: 'Sam Minnée',
+					authorurl: 'http://www.siverstripe.com/',
+					infourl: 'http://www.silverstripe.com/',
+					version: "1.0"
+				};
+			},
+	
+			init: function init(ed) {
+				ed.addButton('sslink', {
+					icon: 'link',
+					title: 'Insert Link',
+					cmd: 'sslink'
+				});
+				ed.addMenuItem('sslink', {
+					icon: 'link',
+					text: 'Insert Link',
+					cmd: 'sslink'
+				});
+				ed.addButton('ssmedia', {
+					icon: 'image',
+					title: 'Insert Media',
+					cmd: 'ssmedia'
+				});
+				ed.addMenuItem('ssmedia', {
+					icon: 'image',
+					text: 'Insert Media',
+					cmd: 'ssmedia'
+				});
+	
+				ed.addCommand('sslink', function (ed) {
+					jQuery('#' + this.id).entwine('ss').openLinkDialog();
+				});
+	
+				ed.addCommand('ssmedia', function (ed) {
+					jQuery('#' + this.id).entwine('ss').openMediaDialog();
+				});
+	
+				ed.on('BeforeExecCommand', function (e) {
+					var cmd = e.command;
+					var ui = e.ui;
+					var val = e.value;
+					if (cmd == 'mceAdvLink' || cmd == 'mceLink') {
+						e.preventDefault();
+						ed.execCommand('sslink', ui, val);
+					} else if (cmd == 'mceAdvImage' || cmd == 'mceImage') {
+						e.preventDefault();
+						ed.execCommand('ssmedia', ui, val);
+					}
+				});
+	
+				ed.on('SaveContent', function (o) {
+					var content = jQuery(o.content);
+					var attrsFn = function attrsFn(attrs) {
+						return Object.keys(attrs).map(function (name) {
+							return attrs[name] ? name + '="' + attrs[name] + '"' : null;
+						}).filter(function (el) {
+							return el !== null;
+						}).join(' ');
+					};
+	
+					content.find('.ss-htmleditorfield-file.embed').each(function () {
+						var el = jQuery(this);
+						var attrs = {
+							width: el.attr('width'),
+							class: el.attr('cssclass'),
+							thumbnail: el.data('thumbnail')
+						};
+						var shortCode = '[embed ' + attrsFn(attrs) + ']' + el.data('url') + '[/embed]';
+						el.replaceWith(shortCode);
+					});
+	
+					content.find('img').each(function () {
+						var el = jQuery(this);
+						var attrs = {
+							src: el.attr('src'),
+							id: el.data('id'),
+							width: el.attr('width'),
+							height: el.attr('height'),
+							class: el.attr('class'),
+	
+							title: el.attr('title'),
+							alt: el.attr('alt')
+						};
+						var shortCode = '[image ' + attrsFn(attrs) + ']';
+						el.replaceWith(shortCode);
+					});
+	
+					o.content = '';
+					content.each(function () {
+						if (this.outerHTML !== undefined) {
+							o.content += this.outerHTML;
+						}
+					});
+				});
+				ed.on('BeforeSetContent', function (o) {
+					var matches;
+					var content = o.content;
+					var attrFromStrFn = function attrFromStrFn(str) {
+						return str.match(/([^\s\/'"=,]+)\s*=\s*(('([^']+)')|("([^"]+)")|([^\s,\]]+))/g).reduce(function (coll, val) {
+							var match = val.match(/^([^\s\/'"=,]+)\s*=\s*(?:(?:'([^']+)')|(?:"([^"]+)")|(?:[^\s,\]]+))$/),
+							    key = match[1],
+							    value = match[2] || match[3] || match[4];
+							coll[key] = value;
+							return coll;
+						}, {});
+					};
+	
+					var shortTagRegex = /\[embed(.*?)\](.+?)\[\/\s*embed\s*\]/gi;
+					while (matches = shortTagRegex.exec(content)) {
+						var attrs = attrFromStrFn(matches[1]);
+						var el;
+	
+						el = jQuery('<img/>').attr({
+							'src': attrs['thumbnail'],
+							'width': attrs['width'],
+							'height': attrs['height'],
+							'class': attrs['class'],
+							'data-url': matches[2]
+						}).addClass('ss-htmleditorfield-file embed');
+						attrs['cssclass'] = attrs['class'];
+	
+						Object.keys(attrs).forEach(function (key) {
+							return el.attr('data-' + key, attrs[key]);
+						});
+						content = content.replace(matches[0], jQuery('<div/>').append(el).html());
+					}
+	
+					var shortTagRegex = /\[image(.*?)\]/gi;
+					while (matches = shortTagRegex.exec(content)) {
+						var attrs = attrFromStrFn(matches[1]);
+						var el = jQuery('<img/>').attr({
+							'src': attrs['src'],
+							'width': attrs['width'],
+							'height': attrs['height'],
+							'class': attrs['class'],
+							'alt': attrs['alt'],
+							'title': attrs['title'],
+							'data-id': attrs['id']
+						});
+						content = content.replace(matches[0], jQuery('<div/>').append(el).html());
+					}
+	
+					o.content = content;
+				});
+			}
+		};
+	
+		tinymce.PluginManager.add("ssbuttons", function (editor) {
+			ssbuttons.init(editor);
+		});
+	})();
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ }
+]);
+//# sourceMappingURL=TinyMCE_SSPlugin.js.map
