@@ -5,12 +5,44 @@
   "node-version": "v4.5.0",
   "dependencies": {
     "apollo-client": {
-      "version": "0.4.20",
-      "resolved": "https://registry.npmjs.org/apollo-client/-/apollo-client-0.4.20.tgz",
+      "version": "0.5.0",
+      "resolved": "https://registry.npmjs.org/apollo-client/-/apollo-client-0.5.0.tgz",
       "dependencies": {
+        "@types/async": {
+          "version": "2.0.32",
+          "resolved": "https://registry.npmjs.org/@types/async/-/async-2.0.32.tgz"
+        },
+        "@types/isomorphic-fetch": {
+          "version": "0.0.30",
+          "resolved": "https://registry.npmjs.org/@types/isomorphic-fetch/-/isomorphic-fetch-0.0.30.tgz"
+        },
+        "@types/lodash": {
+          "version": "4.14.37",
+          "resolved": "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.37.tgz"
+        },
+        "@types/node": {
+          "version": "6.0.45",
+          "resolved": "https://registry.npmjs.org/@types/node/-/node-6.0.45.tgz"
+        },
+        "@types/promises-a-plus": {
+          "version": "0.0.26",
+          "resolved": "https://registry.npmjs.org/@types/promises-a-plus/-/promises-a-plus-0.0.26.tgz"
+        },
+        "@types/redux": {
+          "version": "3.6.31",
+          "resolved": "https://registry.npmjs.org/@types/redux/-/redux-3.6.31.tgz"
+        },
+        "@types/sinon": {
+          "version": "1.16.31",
+          "resolved": "https://registry.npmjs.org/@types/sinon/-/sinon-1.16.31.tgz"
+        },
         "es6-promise": {
           "version": "4.0.5",
           "resolved": "https://registry.npmjs.org/es6-promise/-/es6-promise-4.0.5.tgz"
+        },
+        "graphql-anywhere": {
+          "version": "0.2.4",
+          "resolved": "https://registry.npmjs.org/graphql-anywhere/-/graphql-anywhere-0.2.4.tgz"
         },
         "lodash.assign": {
           "version": "4.2.0",
@@ -43,10 +75,6 @@
         "lodash.includes": {
           "version": "4.3.0",
           "resolved": "https://registry.npmjs.org/lodash.includes/-/lodash.includes-4.3.0.tgz"
-        },
-        "lodash.isarray": {
-          "version": "4.0.0",
-          "resolved": "https://registry.npmjs.org/lodash.isarray/-/lodash.isarray-4.0.0.tgz"
         },
         "lodash.isboolean": {
           "version": "3.0.3",
@@ -8309,8 +8337,8 @@
       "resolved": "https://registry.npmjs.org/react-addons-test-utils/-/react-addons-test-utils-15.3.1.tgz"
     },
     "react-apollo": {
-      "version": "0.5.9",
-      "resolved": "https://registry.npmjs.org/react-apollo/-/react-apollo-0.5.9.tgz",
+      "version": "0.5.13",
+      "resolved": "https://registry.npmjs.org/react-apollo/-/react-apollo-0.5.13.tgz",
       "dependencies": {
         "hoist-non-react-statics": {
           "version": "1.2.0",
