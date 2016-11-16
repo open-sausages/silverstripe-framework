@@ -71,6 +71,7 @@ const config = [
       'components/Toolbar/Toolbar': 'Toolbar',
       'containers/FormBuilderLoader/FormBuilderLoader': 'FormBuilderLoader',
       'deep-freeze-strict': 'DeepFreezeStrict',
+      'graphql-fragments': 'GraphQLFragments',
       'graphql-tag': 'GraphQLTag',
       i18n: 'i18n',
       jQuery: 'jQuery',
