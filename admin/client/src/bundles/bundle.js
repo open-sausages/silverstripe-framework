@@ -23,6 +23,7 @@ require('expose?ReducerRegister!lib/ReducerRegister');
 require('expose?ReactRouteRegister!lib/ReactRouteRegister');
 require('expose?Injector!lib/Injector');
 require('expose?Router!lib/Router');
+require('expose?GraphQLRegister!lib/GraphQLRegister');
 
 // Legacy CMS
 require('i18n.js');

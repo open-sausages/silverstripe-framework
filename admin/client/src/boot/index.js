@@ -5,6 +5,7 @@ import { reducer as ReduxFormReducer } from 'redux-form';
 import { routerReducer } from 'react-router-redux';
 import Config from 'lib/Config';
 import reducerRegister from 'lib/ReducerRegister';
+import graphQLRegister from 'lib/GraphQLRegister';
 import * as configActions from 'state/config/ConfigActions';
 import ConfigReducer from 'state/config/ConfigReducer';
 import SchemaReducer from 'state/schema/SchemaReducer';

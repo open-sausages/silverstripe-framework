@@ -76,6 +76,7 @@ const config = [
       i18n: 'i18n',
       jQuery: 'jQuery',
       'lib/Backend': 'Backend',
+      'lib/GraphQLRegister': 'GraphQLRegister',
       'lib/ReducerRegister': 'ReducerRegister',
       'lib/ReactRouteRegister': 'ReactRouteRegister',
       'lib/SilverStripeComponent': 'SilverStripeComponent',
