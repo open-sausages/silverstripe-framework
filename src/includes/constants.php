@@ -127,11 +127,16 @@ define('FRAMEWORK_DIR', trim(substr(FRAMEWORK_PATH, strlen(BASE_PATH)), DIRECTOR
 define('THIRDPARTY_DIR', FRAMEWORK_DIR ? (FRAMEWORK_DIR . '/thirdparty') : 'thirdparty');
 define('THIRDPARTY_PATH', FRAMEWORK_PATH . DIRECTORY_SEPARATOR . 'thirdparty');
 
+if (!defined('PUBLIC_DIR')) {
+    define('PUBLIC_DIR', getenv('SS_PUBLIC_DIR'));
+}
+
 if (!defined('ASSETS_DIR')) {
     define('ASSETS_DIR', 'assets');
 }
+
 if (!defined('ASSETS_PATH')) {
-    define('ASSETS_PATH', BASE_PATH . DIRECTORY_SEPARATOR . ASSETS_DIR);
+    define('ASSETS_PATH', implode(array_filter([BASE_PATH, PUBLIC_DIR, ASSETS_DIR]), DIRECTORY_SEPARATOR));
 }
 
 // Custom include path - deprecated
