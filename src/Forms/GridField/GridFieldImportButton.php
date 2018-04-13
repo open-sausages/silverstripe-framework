@@ -5,9 +5,9 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Forms\Form;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
-class GridFieldImportButton implements GridField_HTMLProvider
+class GridFieldImportButton implements GridFieldHTMLProvider
 {
     use Injectable;
 
@@ -58,7 +58,7 @@ class GridFieldImportButton implements GridField_HTMLProvider
         $hasMessage = $form && $form->getMessage();
 
         // Render modal
-        $template = SSViewer::get_templates_by_class(static::class, '_Modal');
+        $template = Viewer::get_templates_by_class(static::class, '_Modal');
         $viewer = new ArrayData([
             'ImportModalTitle' => $this->getModalTitle(),
             'ImportModalID' => $modalID,
@@ -68,7 +68,7 @@ class GridFieldImportButton implements GridField_HTMLProvider
         $modal = $viewer->renderWith($template)->forTemplate();
 
         // Build action button
-        $button = new GridField_FormAction(
+        $button = new GridFieldFormAction(
             $gridField,
             'import',
             _t('SilverStripe\\Forms\\GridField\\GridField.CSVIMPORT', 'Import CSV'),

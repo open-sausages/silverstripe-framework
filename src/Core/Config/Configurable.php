@@ -15,7 +15,7 @@ trait Configurable
 
     /**
      * Get a configuration accessor for this class. Short hand for Config::inst()->get($this->class, .....).
-     * @return Config_ForClass
+     * @return ClassConfig
      */
     public static function config()
     {

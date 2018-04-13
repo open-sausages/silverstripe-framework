@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use SilverStripe\ORM\Map;
 use ArrayAccess;
 
@@ -70,7 +70,7 @@ abstract class SelectField extends FormField
      *
      * These should be items that appear in the source list, not in addition to them.
      *
-     * @param array|SS_List $items Collection of values or items
+     * @param array|ListInterface $items Collection of values or items
      * @return $this
      */
     public function setDisabledItems($items)
@@ -166,7 +166,7 @@ abstract class SelectField extends FormField
     protected function getListMap($source)
     {
         // Extract source as an array
-        if ($source instanceof SS_List) {
+        if ($source instanceof ListInterface) {
             $source = $source->map();
         }
         if ($source instanceof Map) {
@@ -199,7 +199,7 @@ abstract class SelectField extends FormField
         }
 
         // Extract lists
-        if ($values instanceof SS_List) {
+        if ($values instanceof ListInterface) {
             return $values->column('ID');
         }
 

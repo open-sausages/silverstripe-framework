@@ -15,8 +15,8 @@ use SilverStripe\Core\Path;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\Requirements_Backend;
-use SilverStripe\View\TemplateGlobalProvider;
+use SilverStripe\View\RequirementsBackend;
+use SilverStripe\View\Templates\TemplateGlobalProvider;
 
 /**
  * Director is responsible for processing URLs, and providing environment information.
@@ -112,12 +112,12 @@ class Director implements TemplateGlobalProvider
      * postVars is set, GET otherwise. Overwritten by $postVars['_method'] if present.
      * @param string $body The HTTP body.
      * @param array $headers HTTP headers with key-value pairs.
-     * @param array|Cookie_Backend $cookies to populate $_COOKIE.
+     * @param array|CookieBackend $cookies to populate $_COOKIE.
      * @param HTTPRequest $request The {@see SS_HTTP_Request} object generated as a part of this request.
      *
      * @return HTTPResponse
      *
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     public static function test(
         $url,
@@ -157,7 +157,7 @@ class Director implements TemplateGlobalProvider
      * postVars is set, GET otherwise. Overwritten by $postVars['_method'] if present.
      * @param string $body The HTTP body.
      * @param array $headers HTTP headers with key-value pairs.
-     * @param array|Cookie_Backend $cookies to populate $_COOKIE.
+     * @param array|CookieBackend $cookies to populate $_COOKIE.
      * @param HTTPRequest $request The {@see SS_HTTP_Request} object generated as a part of this request.
      * @return mixed Result of callback
      */
@@ -224,16 +224,16 @@ class Director implements TemplateGlobalProvider
         }
 
         // Setup cookies
-        $cookieJar = $cookies instanceof Cookie_Backend
+        $cookieJar = $cookies instanceof CookieBackend
             ? $cookies
-            : Injector::inst()->createWithArgs(Cookie_Backend::class, array($cookies ?: []));
+            : Injector::inst()->createWithArgs(CookieBackend::class, array($cookies ?: []));
         $newVars['_COOKIE'] = $cookieJar->getAll(false);
         Cookie::config()->update('report_errors', false);
-        Injector::inst()->registerService($cookieJar, Cookie_Backend::class);
+        Injector::inst()->registerService($cookieJar, CookieBackend::class);
 
         // Backup requirements
         $existingRequirementsBackend = Requirements::backend();
-        Requirements::set_backend(Requirements_Backend::create());
+        Requirements::set_backend(RequirementsBackend::create());
         $finally[] = function () use ($existingRequirementsBackend) {
             Requirements::set_backend($existingRequirementsBackend);
         };
@@ -301,7 +301,7 @@ class Director implements TemplateGlobalProvider
      *
      * @param HTTPRequest $request
      * @return HTTPResponse
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     public function handleRequest(HTTPRequest $request)
     {
@@ -359,7 +359,7 @@ class Director implements TemplateGlobalProvider
             $handler = function (HTTPRequest $request) use ($controllerObj) {
                 try {
                     return $controllerObj->handleRequest($request);
-                } catch (HTTPResponse_Exception $responseException) {
+                } catch (HTTPResponseException $responseException) {
                     return $responseException->getResponse();
                 }
             };
@@ -899,7 +899,7 @@ class Director implements TemplateGlobalProvider
      * Skip any further processing and immediately respond with a redirect to the passed URL.
      *
      * @param string $destURL
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     protected static function force_redirect($destURL)
     {
@@ -907,7 +907,7 @@ class Director implements TemplateGlobalProvider
         $response = new HTTPResponse();
         $response->redirect($destURL, 301);
         HTTP::add_cache_headers($response);
-        throw new HTTPResponse_Exception($response);
+        throw new HTTPResponseException($response);
     }
 
     /**

@@ -8,14 +8,14 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\HTML;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * Adds a "level up" link to a GridField table, which is useful when viewing
  * hierarchical data. Requires the managed record to have a "getParent()"
  * method or has_one relationship called "Parent".
  */
-class GridFieldLevelup implements GridField_HTMLProvider
+class GridFieldLevelup implements GridFieldHTMLProvider
 {
     use Injectable;
 
@@ -85,7 +85,7 @@ class GridFieldLevelup implements GridField_HTMLProvider
             'UpLink' => DBField::create_field('HTMLFragment', $linkTag)
         ));
 
-        $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $template = Viewer::get_templates_by_class($this, '', __CLASS__);
             return array(
             'before' => $forTemplate->renderWith($template),
         );

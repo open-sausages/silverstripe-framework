@@ -5,12 +5,12 @@ namespace SilverStripe\Security;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\i18n\i18nEntityProvider;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Internationalisation\EntityProvider;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\View\TemplateGlobalProvider;
+use SilverStripe\ORM\ListInterface;
+use SilverStripe\View\Templates\TemplateGlobalProvider;
 
 /**
  * Represents a permission assigned to a group.
@@ -21,7 +21,7 @@ use SilverStripe\View\TemplateGlobalProvider;
  * @property int GroupID
  * @method Group Group()
  */
-class Permission extends DataObject implements TemplateGlobalProvider, Resettable, i18nEntityProvider
+class Permission extends DataObject implements TemplateGlobalProvider, Resettable, EntityProvider
 {
 
     // the (1) after Type specifies the DB default value which is needed for
@@ -459,14 +459,14 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * Returns all members for a specific permission.
      *
      * @param string|array $code Either a single permission code, or a list of permission codes
-     * @return SS_List Returns a set of member that have the specified
+     * @return ListInterface Returns a set of member that have the specified
      *                       permission.
      */
     public static function get_members_by_permission($code)
     {
         $toplevelGroups = self::get_groups_by_permission($code);
         if (!$toplevelGroups) {
-            return new ArrayList();
+            return new ArrayListInterface();
         }
 
         $groupIDs = array();
@@ -478,7 +478,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         }
 
         if (empty($groupIDs)) {
-            return new ArrayList();
+            return new ArrayListInterface();
         }
 
         $groupClause = DB::placeholders($groupIDs);
@@ -494,7 +494,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     /**
      * Return all of the groups that have one of the given permission codes
      * @param array|string $codes Either a single permission code, or an array of permission codes
-     * @return SS_List The matching group objects
+     * @return ListInterface The matching group objects
      */
     public static function get_groups_by_permission($codes)
     {
@@ -698,7 +698,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         }
 
         foreach ($declared as $perm => $value) {
-            if ($value instanceof Permission_Group) {
+            if ($value instanceof PermissionGroup) {
                 $list[] = $value->getName();
                 self::traverse_declared_permissions($value->getPermissions(), $list);
             } else {

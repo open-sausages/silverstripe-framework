@@ -3,9 +3,9 @@
 namespace SilverStripe\Forms\Tests\GridField\GridFieldConfigTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\Forms\GridField\GridField_URLHandler;
+use SilverStripe\Forms\GridField\GridFieldURLHandler;
 
-class MyOtherComponent implements GridField_URLHandler, TestOnly
+class MyOtherComponent implements GridFieldURLHandler, TestOnly
 {
     public function getURLHandlers($gridField)
     {

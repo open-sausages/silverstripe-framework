@@ -6,9 +6,9 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataList;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Encryptors\Member;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Controller;
@@ -23,7 +23,7 @@ class GridFieldEditButtonTest extends SapphireTest
 {
 
     /**
-     * @var ArrayList
+     * @var ArrayListInterface
      */
     protected $list;
 

@@ -5,7 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -16,7 +16,7 @@ use SilverStripe\View\Requirements;
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
  */
-class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
+class GridFieldPrintButton implements GridFieldHTMLProvider, GridFieldActionProvider, GridFieldURLHandler
 {
     use Extensible;
 
@@ -59,7 +59,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
      */
     public function getHTMLFragments($gridField)
     {
-        $button = new GridField_FormAction(
+        $button = new GridFieldFormAction(
             $gridField,
             'print',
             _t('SilverStripe\\Forms\\GridField\\GridField.Print', 'Print'),
@@ -208,7 +208,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
         $header = null;
 
         if ($this->printHasHeader) {
-            $header = new ArrayList();
+            $header = new ArrayListInterface();
 
             foreach ($printColumns as $field => $label) {
                 $header->push(new ArrayData(array(
@@ -218,11 +218,11 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
         }
 
         $items = $gridField->getManipulatedList();
-        $itemRows = new ArrayList();
+        $itemRows = new ArrayListInterface();
 
         /** @var DataObject $item */
         foreach ($items->limit(null) as $item) {
-            $itemRow = new ArrayList();
+            $itemRow = new ArrayListInterface();
 
             foreach ($printColumns as $field => $label) {
                 $value = $gridField->getDataFieldValue($item, $field);

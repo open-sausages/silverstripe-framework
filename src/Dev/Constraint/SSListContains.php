@@ -6,7 +6,7 @@ use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\Dev\SSListExporter;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use SilverStripe\View\ViewableData;
 
 if (!class_exists(Constraint::class)) {
@@ -49,7 +49,7 @@ class SSListContains extends Constraint implements TestOnly
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
-     * @param SS_List $other Value or object to evaluate.
+     * @param ListInterface $other Value or object to evaluate.
      * @param string $description Additional information about the test
      * @param bool $returnResult Whether to return a result or throw an exception
      *

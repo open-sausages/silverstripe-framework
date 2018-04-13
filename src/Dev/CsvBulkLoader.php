@@ -64,7 +64,7 @@ class CsvBulkLoader extends BulkLoader
      * @param string $filepath
      * @param boolean $preview
      *
-     * @return null|BulkLoader_Result
+     * @return null|BulkLoaderResult
      */
     protected function processAll($filepath, $preview = false)
     {
@@ -115,7 +115,7 @@ class CsvBulkLoader extends BulkLoader
                 $rows = $csvReader->getRecords($headerMap);
             }
 
-            $result = BulkLoader_Result::create();
+            $result = BulkLoaderResult::create();
 
             foreach ($rows as $row) {
                 $row = $remapper($row);
@@ -231,12 +231,12 @@ class CsvBulkLoader extends BulkLoader
      * @param string $filepath
      * @param boolean $preview
      *
-     * @return BulkLoader_Result
+     * @return BulkLoaderResult
      */
     protected function processChunk($filepath, $preview = false)
     {
         Deprecation::notice('5.0', 'processChunk is deprecated, please process rows individually');
-        $results = BulkLoader_Result::create();
+        $results = BulkLoaderResult::create();
 
         $csv = new CSVParser(
             $filepath,
@@ -278,7 +278,7 @@ class CsvBulkLoader extends BulkLoader
      *
      * @param array $record
      * @param array $columnMap
-     * @param BulkLoader_Result $results
+     * @param BulkLoaderResult $results
      * @param boolean $preview
      *
      * @return int

@@ -13,7 +13,7 @@ use IteratorIterator;
 /**
  * A decorator that wraps around a data list in order to provide pagination.
  */
-class PaginatedList extends ListDecorator
+class PaginatedList extends ListInterfaceDecorator
 {
 
     protected $request;
@@ -27,13 +27,13 @@ class PaginatedList extends ListDecorator
     /**
      * Constructs a new paginated list instance around a list.
      *
-     * @param SS_List $list The list to paginate. The getRange method will
+     * @param ListInterface $list The list to paginate. The getRange method will
      *        be used to get the subset of objects to show.
      * @param array|ArrayAccess Either a map of request parameters or
      *        request object that the pagination offset is read from.
      * @throws Exception
      */
-    public function __construct(SS_List $list, $request = array())
+    public function __construct(ListInterface $list, $request = array())
     {
         if (!is_array($request) && !$request instanceof ArrayAccess) {
             throw new Exception('The request must be readable as an array.');
@@ -248,11 +248,11 @@ class PaginatedList extends ListDecorator
      * around the current page.
      *
      * @param  int $max
-     * @return SS_List
+     * @return ListInterface
      */
     public function Pages($max = null)
     {
-        $result = new ArrayList();
+        $result = new ArrayListInterface();
 
         if ($max) {
             $start = ($this->CurrentPage() - floor($max / 2)) - 1;
@@ -320,11 +320,11 @@ class PaginatedList extends ListDecorator
      * @param  int $context The number of pages to display around the current
      *         page. The number should be event, as half the number of each pages
      *         are displayed on either side of the current one.
-     * @return SS_List
+     * @return ListInterface
      */
     public function PaginationSummary($context = 4)
     {
-        $result = new ArrayList();
+        $result = new ArrayListInterface();
         $current = $this->CurrentPage();
         $total = $this->TotalPages();
 

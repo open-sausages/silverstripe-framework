@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 
 /**
  * Locale database field, mainly used in {@link Translatable} extension.
@@ -34,7 +34,7 @@ class DBLocale extends DBVarchar
 
     public function RFC1766()
     {
-        return i18n::convert_rfc1766($this->value);
+        return Internationalisation::convert_rfc1766($this->value);
     }
 
     /**
@@ -45,7 +45,7 @@ class DBLocale extends DBVarchar
      */
     public function getShortName()
     {
-        return i18n::getData()->languageName($this->value);
+        return Internationalisation::getData()->languageName($this->value);
     }
 
     /**
@@ -53,7 +53,7 @@ class DBLocale extends DBVarchar
      */
     public function getLongName()
     {
-        return i18n::getData()->localeName($this->value);
+        return Internationalisation::getData()->localeName($this->value);
     }
 
     /**
@@ -65,7 +65,7 @@ class DBLocale extends DBVarchar
     public function getNativeName()
     {
         $locale = $this->value;
-        return i18n::with_locale($locale, function () use ($locale) {
+        return Internationalisation::with_locale($locale, function () use ($locale) {
             return $this->getShortName();
         });
     }

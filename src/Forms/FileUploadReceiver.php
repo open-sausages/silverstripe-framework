@@ -7,11 +7,11 @@ use InvalidArgumentException;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Storage\AssetContainer;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\RelationList;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\ORM\ValidationException;
 
@@ -53,7 +53,7 @@ trait FileUploadReceiver
     /**
      * Items loaded into this field. May be a RelationList, or any other SS_List
      *
-     * @var SS_List
+     * @var ListInterface
      */
     protected $items;
 
@@ -126,7 +126,7 @@ trait FileUploadReceiver
      * field value (list of file ID values).
      *
      * @param array $value Array of submitted form data, if submitting from a form
-     * @param array|DataObject|SS_List $record Full source record, either as a DataObject,
+     * @param array|DataObject|ListInterface $record Full source record, either as a DataObject,
      * SS_List of items, or an array of submitted form data
      * @return $this Self reference
      * @throws ValidationException
@@ -136,13 +136,13 @@ trait FileUploadReceiver
 
         // If we're not passed a value directly, we can attempt to infer the field
         // value from the second parameter by inspecting its relations
-        $items = new ArrayList();
+        $items = new ArrayListInterface();
 
         // Determine format of presented data
         if ($value instanceof File) {
-            $items = ArrayList::create([$value]);
+            $items = ArrayListInterface::create([$value]);
             $value = null;
-        } elseif ($value instanceof SS_List) {
+        } elseif ($value instanceof ListInterface) {
             $items = $value;
             $value = null;
         } elseif (empty($value) && $record) {
@@ -156,11 +156,11 @@ trait FileUploadReceiver
                 if ($data instanceof DataObject) {
                     // If has_one, add sole item to default list
                     $items->push($data);
-                } elseif ($data instanceof SS_List) {
+                } elseif ($data instanceof ListInterface) {
                     // For many_many and has_many relations we can use the relation list directly
                     $items = $data;
                 }
-            } elseif ($record instanceof SS_List) {
+            } elseif ($record instanceof ListInterface) {
                 // If directly passing a list then save the items directly
                 $items = $record;
             }
@@ -186,7 +186,7 @@ trait FileUploadReceiver
         }
 
         // Filter items by what's allowed to be viewed
-        $filteredItems = new ArrayList();
+        $filteredItems = new ArrayListInterface();
         $fileIDs = array();
         /** @var File $file */
         foreach ($items as $file) {
@@ -212,10 +212,10 @@ trait FileUploadReceiver
      * Calling setItems will also update the value of this field, as well as
      * updating the internal list of File items.
      *
-     * @param SS_List $items
+     * @param ListInterface $items
      * @return $this self reference
      */
-    public function setItems(SS_List $items)
+    public function setItems(ListInterface $items)
     {
         return $this->setValue(null, $items);
     }
@@ -223,11 +223,11 @@ trait FileUploadReceiver
     /**
      * Retrieves the current list of files
      *
-     * @return SS_List|File[]
+     * @return ListInterface|File[]
      */
     public function getItems()
     {
-        return $this->items ? $this->items : new ArrayList();
+        return $this->items ? $this->items : new ArrayListInterface();
     }
 
     /**

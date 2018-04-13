@@ -6,7 +6,7 @@ class Extending extends BaseObject
 {
 
     private static $extensions = array(
-        Extending_Extension::class,
+        ExtendingExtension::class,
     );
 
     public function getResults(&$first, &$second, &$third)

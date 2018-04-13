@@ -65,7 +65,7 @@ class HTTPApplication implements Application
                 $this->getKernel()->boot($flush);
                 return call_user_func($callback, $request);
             });
-        } catch (HTTPResponse_Exception $ex) {
+        } catch (HTTPResponseException $ex) {
             return $ex->getResponse();
         } finally {
             $this->getKernel()->shutdown();

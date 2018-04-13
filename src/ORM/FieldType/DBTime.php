@@ -5,7 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use IntlDateFormatter;
 use InvalidArgumentException;
 use SilverStripe\Forms\TimeField;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -79,7 +79,7 @@ class DBTime extends DBField
      */
     public function getFormatter($timeLength = IntlDateFormatter::MEDIUM)
     {
-        return IntlDateFormatter::create(i18n::get_locale(), IntlDateFormatter::NONE, $timeLength);
+        return IntlDateFormatter::create(Internationalisation::get_locale(), IntlDateFormatter::NONE, $timeLength);
     }
 
     /**

@@ -1,16 +1,16 @@
 <?php
 
-namespace SilverStripe\i18n\Tests\i18nTextCollectorTest;
+namespace SilverStripe\Internationalisation\Tests\i18nTextCollectorTest;
 
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\i18n\TextCollection\i18nTextCollector;
+use SilverStripe\Internationalisation\TextCollection\TextCollector;
 
 /**
  * Assist with testing of specific protected methods
  */
-class Collector extends i18nTextCollector implements TestOnly
+class Collector extends TextCollector implements TestOnly
 {
     public function resolveDuplicateConflicts_Test($entitiesByModule)
     {

@@ -8,8 +8,8 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridFieldConfig_Base;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\GridField\GridFieldConfigBase;
+use SilverStripe\Forms\GridField\GridFieldConfigRecordEditor;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
@@ -17,8 +17,8 @@ use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\GridField\GridState;
-use SilverStripe\Forms\GridField\GridState_Component;
-use SilverStripe\Forms\GridField\GridState_Data;
+use SilverStripe\Forms\GridField\GridStateComponent;
+use SilverStripe\Forms\GridField\GridStateData;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Component;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Component2;
@@ -26,7 +26,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\HTMLFragments;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
 use SilverStripe\Versioned\VersionedGridFieldStateExtension;
@@ -41,10 +41,10 @@ class GridFieldTest extends SapphireTest
     ];
 
     protected static $illegal_extensions = [
-        GridFieldConfig_RecordEditor::class => [
+        GridFieldConfigRecordEditor::class => [
             VersionedGridFieldStateExtension::class,
         ],
-        GridFieldConfig_Base::class => [
+        GridFieldConfigBase::class => [
             VersionedGridFieldStateExtension::class,
         ],
     ];
@@ -64,7 +64,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGridFieldSetList()
     {
-        $list = ArrayList::create(array(1 => 'hello', 2 => 'goodbye'));
+        $list = ArrayListInterface::create(array(1 => 'hello', 2 => 'goodbye'));
         $obj = new GridField('testfield', 'testfield', $list);
         $this->assertEquals($list, $obj->getList(), 'Testing getList');
     }
@@ -72,21 +72,21 @@ class GridFieldTest extends SapphireTest
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::__construct
      * @covers \SilverStripe\Forms\GridField\GridField::getConfig
-     * @covers \SilverStripe\Forms\GridField\GridFieldConfig_Base::__construct
+     * @covers \SilverStripe\Forms\GridField\GridFieldConfigBase::__construct
      * @covers \SilverStripe\Forms\GridField\GridFieldConfig::addComponent
      */
     public function testGridFieldDefaultConfig()
     {
         $obj = new GridField('testfield', 'testfield');
 
-        $expectedComponents = new ArrayList([
+        $expectedComponents = new ArrayListInterface([
             new GridFieldToolbarHeader(),
             $sort = new GridFieldSortableHeader(),
             $filter = new GridFieldFilterHeader(),
             new GridFieldDataColumns(),
             new GridFieldPageCount('toolbar-header-right'),
             $pagination = new GridFieldPaginator(),
-            new GridState_Component(),
+            new GridStateComponent(),
         ]);
         $sort->setThrowExceptionOnBadDataType(false);
         $filter->setThrowExceptionOnBadDataType(false);
@@ -106,13 +106,13 @@ class GridFieldTest extends SapphireTest
         $config->addComponent(new GridFieldSortableHeader());
         $config->addComponent(new GridFieldDataColumns());
 
-        $obj = new GridField('testfield', 'testfield', ArrayList::create(array()), $config);
+        $obj = new GridField('testfield', 'testfield', ArrayListInterface::create(array()), $config);
 
-        $expectedComponents = new ArrayList(
+        $expectedComponents = new ArrayListInterface(
             array(
             0 => new GridFieldSortableHeader,
             1 => new GridFieldDataColumns,
-            2 => new GridState_Component,
+            2 => new GridStateComponent,
             )
         );
 
@@ -138,7 +138,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGridFieldModelClassThrowsException()
     {
-        $obj = new GridField('testfield', 'testfield', ArrayList::create());
+        $obj = new GridField('testfield', 'testfield', ArrayListInterface::create());
         $obj->getModelClass();
     }
 
@@ -149,7 +149,7 @@ class GridFieldTest extends SapphireTest
     public function testSetAndGetList()
     {
         $list = Member::get();
-        $arrayList = ArrayList::create(array(1, 2, 3));
+        $arrayList = ArrayListInterface::create(array(1, 2, 3));
         $obj = new GridField('testfield', 'testfield', $list);
         $this->assertEquals($list, $obj->getList());
         $obj->setList($arrayList);
@@ -162,16 +162,16 @@ class GridFieldTest extends SapphireTest
     public function testGetState()
     {
         $obj = new GridField('testfield', 'testfield');
-        $this->assertTrue($obj->getState() instanceof GridState_Data);
+        $this->assertTrue($obj->getState() instanceof GridStateData);
         $this->assertTrue($obj->getState(false) instanceof GridState);
     }
 
     /**
      * Tests usage of nested GridState values
      *
-     * @covers \SilverStripe\Forms\GridField\GridState_Data::__get
-     * @covers \SilverStripe\Forms\GridField\GridState_Data::__call
-     * @covers \SilverStripe\Forms\GridField\GridState_Data::getData
+     * @covers \SilverStripe\Forms\GridField\GridStateData::__get
+     * @covers \SilverStripe\Forms\GridField\GridStateData::__call
+     * @covers \SilverStripe\Forms\GridField\GridStateData::getData
      */
     public function testGetStateData()
     {
@@ -210,8 +210,8 @@ class GridFieldTest extends SapphireTest
         $this->assertFalse($obj->State->Falsey2);
 
         // Check nested values
-        $this->assertInstanceOf('SilverStripe\\Forms\\GridField\\GridState_Data', $obj->State->Nested);
-        $this->assertInstanceOf('SilverStripe\\Forms\\GridField\\GridState_Data', $obj->State->Nested->DeeperNested());
+        $this->assertInstanceOf('SilverStripe\\Forms\\GridField\\GridStateData', $obj->State->Nested);
+        $this->assertInstanceOf('SilverStripe\\Forms\\GridField\\GridStateData', $obj->State->Nested->DeeperNested());
         $this->assertEquals(3, $obj->State->Nested->DataValue(3));
         $this->assertEquals(10, $obj->State->Nested->DeeperNested->DataValue(10));
     }
@@ -246,7 +246,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnContent()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -263,7 +263,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnContentBadArguments()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -278,7 +278,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnAttributesEmptyArray()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -293,7 +293,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnAttributes()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -310,7 +310,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnAttributesBadArguments()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -325,7 +325,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnAttributesBadResponseFromComponent()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -341,7 +341,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnMetadata()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -358,7 +358,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnMetadataBadResponseFromComponent()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -375,7 +375,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnMetadataBadArguments()
     {
-        $list = ArrayList::create();
+        $list = ArrayListInterface::create();
         $config = GridFieldConfig::create()->addComponent(new Component);
         $obj = new GridField('testfield', 'testfield', $list, $config);
         $obj->getColumnMetadata('non-exist-qweqweqwe');
@@ -398,7 +398,7 @@ class GridFieldTest extends SapphireTest
     public function testHandleAction()
     {
         $config = GridFieldConfig::create()->addComponent(new Component);
-        $obj = new GridField('testfield', 'testfield', ArrayList::create(), $config);
+        $obj = new GridField('testfield', 'testfield', ArrayListInterface::create(), $config);
         $this->assertEquals('handledAction is executed', $obj->handleAlterAction('jump', array(), array()));
     }
 
@@ -477,7 +477,7 @@ class GridFieldTest extends SapphireTest
                 )
             )
         );
-        $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
+        $field = new GridField('testfield', 'testfield', ArrayListInterface::create(), $config);
         $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
 
         $this->assertContains(
@@ -513,7 +513,7 @@ class GridFieldTest extends SapphireTest
                 )
             )
         );
-        $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
+        $field = new GridField('testfield', 'testfield', ArrayListInterface::create(), $config);
         $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
 
         $this->assertContains(
@@ -551,7 +551,7 @@ class GridFieldTest extends SapphireTest
                 )
             )
         );
-        $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
+        $field = new GridField('testfield', 'testfield', ArrayListInterface::create(), $config);
         $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
 
         $field->FieldHolder();
@@ -563,7 +563,7 @@ class GridFieldTest extends SapphireTest
     public function testCanViewOnlyOddIDs()
     {
         $this->logInWithPermission();
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             new Permissions(
                 array(
@@ -625,7 +625,7 @@ class GridFieldTest extends SapphireTest
     public function testChainedDataManipulators()
     {
         $config = new GridFieldConfig();
-        $data = new ArrayList(array(1, 2, 3, 4, 5, 6));
+        $data = new ArrayListInterface(array(1, 2, 3, 4, 5, 6));
         $gridField = new GridField('testfield', 'testfield', $data, $config);
         $endList = $gridField->getManipulatedList();
         $this->assertEquals($endList->count(), 6);

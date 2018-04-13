@@ -4,7 +4,7 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
 
@@ -59,7 +59,7 @@ class BasicAuthMiddleware implements HTTPMiddleware
                     // Null implies fall back to default behaviour
                     BasicAuth::protect_site_if_necessary($request);
                 }
-            } catch (HTTPResponse_Exception $ex) {
+            } catch (HTTPResponseException $ex) {
                 return $ex->getResponse();
             }
         }

@@ -113,10 +113,10 @@ abstract class Config
      * Config_ForClass instance asks the current_instance of Config for the actual result, so override that instead
      *
      * @param string $class
-     * @return Config_ForClass
+     * @return ClassConfig
      */
     public static function forClass($class)
     {
-        return new Config_ForClass($class);
+        return new ClassConfig($class);
     }
 }

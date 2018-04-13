@@ -9,7 +9,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
 use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 class TinyMCECombinedGeneratorTest extends SapphireTest
 {
@@ -21,7 +21,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         Director::config()->set('alternate_base_folder', __DIR__ . '/TinyMCECombinedGeneratorTest');
         Director::config()->set('alternate_base_url', 'http://www.mysite.com/basedir/');
         Director::config()->set('alternate_public_dir', ''); // Disable public dir
-        SSViewer::config()->set('themes', [SSViewer::DEFAULT_THEME]);
+        Viewer::config()->set('themes', [Viewer::DEFAULT_THEME]);
         TinyMCEConfig::config()
             ->set('base_dir', 'tinymce')
             ->set('editor_css', [ 'mycode/editor.css' ]);

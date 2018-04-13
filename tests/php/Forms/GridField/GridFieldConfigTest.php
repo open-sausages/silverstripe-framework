@@ -4,10 +4,10 @@ namespace SilverStripe\Forms\Tests\GridField;
 
 use SilverStripe\Forms\Tests\GridField\GridFieldConfigTest\MyOtherComponent;
 use SilverStripe\Forms\Tests\GridField\GridFieldConfigTest\MyComponent;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridField_URLHandler;
+use SilverStripe\Forms\GridField\GridFieldURLHandler;
 
 class GridFieldConfigTest extends SapphireTest
 {
@@ -15,7 +15,7 @@ class GridFieldConfigTest extends SapphireTest
     public function testGetComponents()
     {
         $config = GridFieldConfig::create();
-        $this->assertInstanceOf(ArrayList::class, $config->getComponents());
+        $this->assertInstanceOf(ArrayListInterface::class, $config->getComponents());
         $this->assertEquals($config->getComponents()->count(), 0);
 
         $config
@@ -24,7 +24,7 @@ class GridFieldConfigTest extends SapphireTest
             ->addComponent($c3 = new MyOtherComponent());
 
         $this->assertEquals(
-            new ArrayList(array($c1, $c2, $c3)),
+            new ArrayListInterface(array($c1, $c2, $c3)),
             $config->getComponents()
         );
     }
@@ -37,19 +37,19 @@ class GridFieldConfigTest extends SapphireTest
             ->addComponent($c3 = new MyOtherComponent());
 
         $this->assertEquals(
-            new ArrayList(array($c1)),
+            new ArrayListInterface(array($c1)),
             $config->getComponentsByType(MyComponent::class)
         );
         $this->assertEquals(
-            new ArrayList(array($c2, $c3)),
+            new ArrayListInterface(array($c2, $c3)),
             $config->getComponentsByType(MyOtherComponent::class)
         );
         $this->assertEquals(
-            new ArrayList(array($c1, $c2, $c3)),
-            $config->getComponentsByType(GridField_URLHandler::class)
+            new ArrayListInterface(array($c1, $c2, $c3)),
+            $config->getComponentsByType(GridFieldURLHandler::class)
         );
         $this->assertEquals(
-            new ArrayList(),
+            new ArrayListInterface(),
             $config->getComponentsByType('GridFieldConfigTest_UnknownComponent')
         );
     }

@@ -8,7 +8,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\SecurityToken;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use SimpleXMLElement;
 
 /**
@@ -93,7 +93,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
 
         // Disable theme, if necessary
         if (static::get_disable_themes()) {
-            SSViewer::config()->update('theme_enabled', false);
+            Viewer::config()->update('theme_enabled', false);
         }
 
         // Flush user

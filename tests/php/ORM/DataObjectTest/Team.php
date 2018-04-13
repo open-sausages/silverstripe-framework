@@ -68,7 +68,7 @@ class Team extends DataObject implements TestOnly
     private static $default_sort = '"Title"';
 
     private static $extensions = [
-        Team_Extension::class
+        TeamExtension::class
     ];
 
     public function MyTitle()

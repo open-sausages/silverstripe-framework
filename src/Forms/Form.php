@@ -20,7 +20,7 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\NullSecurityToken;
 use SilverStripe\Security\SecurityToken;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -1002,7 +1002,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function getTemplates()
     {
-        $templates = SSViewer::get_templates_by_class(static::class, '', __CLASS__);
+        $templates = Viewer::get_templates_by_class(static::class, '', __CLASS__);
         // Prefer any custom template
         if ($this->getTemplate()) {
             array_unshift($templates, $this->getTemplate());
@@ -1241,7 +1241,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function FieldMap()
     {
-        return new Form_FieldMap($this);
+        return new FormFieldMap($this);
     }
 
     /**
@@ -1582,7 +1582,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function forAjaxTemplate()
     {
-        $view = SSViewer::create($this->getTemplates());
+        $view = Viewer::create($this->getTemplates());
 
         $return = $view->dontRewriteHashlinks()->process($this);
 
@@ -1631,7 +1631,7 @@ class Form extends ViewableData implements HasRequestHandler
         ));
 
         if (is_string($template)) {
-            $template = SSViewer::create($template);
+            $template = Viewer::create($template);
         }
 
         return $template->process($custom);

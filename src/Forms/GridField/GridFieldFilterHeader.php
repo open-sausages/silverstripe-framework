@@ -5,10 +5,10 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\Filterable;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ListInterface;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use LogicException;
 
 /**
@@ -17,7 +17,7 @@ use LogicException;
  *
  * @see GridField
  */
-class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider
+class GridFieldFilterHeader implements GridFieldHTMLProvider, GridFieldDataManipulator, GridFieldActionProvider
 {
 
     /**
@@ -55,7 +55,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
      * Check that this dataList is of the right data type.
      * Returns false if it's a bad data type, and if appropriate, throws an exception.
      *
-     * @param SS_List $dataList
+     * @param ListInterface $dataList
      * @return bool
      */
     protected function checkDataType($dataList)
@@ -108,17 +108,17 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
     /**
      *
      * @param GridField $gridField
-     * @param SS_List $dataList
-     * @return SS_List
+     * @param ListInterface $dataList
+     * @return ListInterface
      */
-    public function getManipulatedData(GridField $gridField, SS_List $dataList)
+    public function getManipulatedData(GridField $gridField, ListInterface $dataList)
     {
         if (!$this->checkDataType($dataList)) {
             return $dataList;
         }
 
         /** @var Filterable $dataList */
-        /** @var GridState_Data $columns */
+        /** @var GridStateData $columns */
         $columns = $gridField->State->GridFieldFilterHeader->Columns(null);
         if (empty($columns)) {
             return $dataList;
@@ -170,7 +170,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 
         /** @var Filterable $list */
         $forTemplate = new ArrayData(array());
-        $forTemplate->Fields = new ArrayList();
+        $forTemplate->Fields = new ArrayListInterface();
 
         $columns = $gridField->getColumns();
         $filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();
@@ -202,7 +202,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 
                 $fields->push($field);
                 $fields->push(
-                    GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
+                    GridFieldFormAction::create($gridField, 'reset', false, 'reset', null)
                         ->addExtraClass('btn font-icon-cancel btn-secondary btn--no-text ss-gridfield-button-reset')
                         ->setAttribute('title', _t('SilverStripe\\Forms\\GridField\\GridField.ResetFilter', "Reset"))
                         ->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
@@ -211,7 +211,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 
             if ($currentColumn == count($columns)) {
                 $fields->push(
-                    GridField_FormAction::create($gridField, 'filter', false, 'filter', null)
+                    GridFieldFormAction::create($gridField, 'filter', false, 'filter', null)
                         ->addExtraClass(
                             'btn font-icon-search btn--no-text btn--icon-large grid-field__filter-submit'
                             . ' ss-gridfield-button-filter'
@@ -220,7 +220,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
                         ->setAttribute('id', 'action_filter_' . $gridField->getModelClass() . '_' . $columnField)
                 );
                 $fields->push(
-                    GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
+                    GridFieldFormAction::create($gridField, 'reset', false, 'reset', null)
                         ->addExtraClass(
                             'btn font-icon-cancel btn--no-text grid-field__filter-clear btn--icon-md'
                             . 'ss-gridfield-button-close'
@@ -239,7 +239,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
             return null;
         }
 
-        $templates = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
+        $templates = Viewer::get_templates_by_class($this, '_Row', __CLASS__);
         return array(
             'header' => $forTemplate->renderWith($templates),
         );

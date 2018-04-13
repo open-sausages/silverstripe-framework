@@ -2,7 +2,6 @@
 
 namespace SilverStripe\View\Tests;
 
-use Exception;
 use InvalidArgumentException;
 use PHPUnit_Framework_MockObject_MockObject;
 use Silverstripe\Assets\Dev\TestAssetStore;
@@ -13,8 +12,8 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\i18n\i18n;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Internationalisation\Internationalisation;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\PaginatedList;
@@ -23,11 +22,11 @@ use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\Requirements_Backend;
 use SilverStripe\View\Requirements_Minifier;
-use SilverStripe\View\SSTemplateParser;
-use SilverStripe\View\SSViewer;
-use SilverStripe\View\SSViewer_FromString;
+use SilverStripe\View\RequirementsBackend;
+use SilverStripe\View\Templates\TemplateParser;
+use SilverStripe\View\Templates\Viewer;
+use SilverStripe\View\Templates\ViewerFromString;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModel;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModelController;
 use SilverStripe\View\ViewableData;
@@ -52,8 +51,8 @@ class SSViewerTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
-        SSViewer::config()->update('source_file_comments', false);
-        SSViewer_FromString::config()->update('cache_template', false);
+        Viewer::config()->update('source_file_comments', false);
+        ViewerFromString::config()->update('cache_template', false);
         TestAssetStore::activate('SSViewerTest');
         $this->oldServer = $_SERVER;
     }
@@ -72,10 +71,10 @@ class SSViewerTest extends SapphireTest
      */
     public function testCurrentTheme()
     {
-        SSViewer::config()->update('theme', 'mytheme');
+        Viewer::config()->update('theme', 'mytheme');
         $this->assertEquals(
             'mytheme',
-            SSViewer::config()->uninherited('theme'),
+            Viewer::config()->uninherited('theme'),
             'Current theme is the default - user has not defined one'
         );
     }
@@ -87,16 +86,16 @@ class SSViewerTest extends SapphireTest
     public function testThemesHelpers()
     {
         // Test set_themes()
-        SSViewer::set_themes(['mytheme', '$default']);
-        $this->assertEquals(['mytheme', '$default'], SSViewer::get_themes());
+        Viewer::set_themes(['mytheme', '$default']);
+        $this->assertEquals(['mytheme', '$default'], Viewer::get_themes());
 
         // Ensure add_themes() prepends
-        SSViewer::add_themes(['my_more_important_theme']);
-        $this->assertEquals(['my_more_important_theme', 'mytheme', '$default'], SSViewer::get_themes());
+        Viewer::add_themes(['my_more_important_theme']);
+        $this->assertEquals(['my_more_important_theme', 'mytheme', '$default'], Viewer::get_themes());
 
         // Ensure add_themes() on theme already in cascade promotes it to the top
-        SSViewer::add_themes(['mytheme']);
-        $this->assertEquals(['mytheme', 'my_more_important_theme', '$default'], SSViewer::get_themes());
+        Viewer::add_themes(['mytheme']);
+        $this->assertEquals(['mytheme', 'my_more_important_theme', '$default'], Viewer::get_themes());
     }
 
     /**
@@ -142,7 +141,7 @@ class SSViewerTest extends SapphireTest
     {
         $data = new ArrayData([
             'Title' => 'TruthyTest',
-            'Items' => new ArrayList([
+            'Items' => new ArrayListInterface([
                 new ArrayData(['Title' => 'Item 1']),
                 new ArrayData(['Title' => '']),
                 new ArrayData(['Title' => true]),
@@ -171,7 +170,7 @@ class SSViewerTest extends SapphireTest
     {
         return new ArrayData([
             'Title' => 'TopTitleValue',
-            'Items' => new ArrayList([
+            'Items' => new ArrayListInterface([
                 new ArrayData(['Title' => 'Item 1']),
                 new ArrayData(['Title' => 'Item 2']),
                 new ArrayData(['Title' => 'Item 3']),
@@ -202,7 +201,7 @@ class SSViewerTest extends SapphireTest
      */
     public function render($templateString, $data = null, $cacheTemplate = false)
     {
-        $t = SSViewer::fromString($templateString, $cacheTemplate);
+        $t = Viewer::fromString($templateString, $cacheTemplate);
         if (!$data) {
             $data = new SSViewerTest\TestFixture();
         }
@@ -211,9 +210,9 @@ class SSViewerTest extends SapphireTest
 
     public function testRequirements()
     {
-        /** @var Requirements_Backend|PHPUnit_Framework_MockObject_MockObject $requirements */
+        /** @var RequirementsBackend|PHPUnit_Framework_MockObject_MockObject $requirements */
         $requirements = $this
-            ->getMockBuilder(Requirements_Backend::class)
+            ->getMockBuilder(RequirementsBackend::class)
             ->setMethods(array("javascript", "css"))
             ->getMock();
         $jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
@@ -235,8 +234,8 @@ class SSViewerTest extends SapphireTest
 
     public function testRequirementsCombine()
     {
-        /** @var Requirements_Backend $testBackend */
-        $testBackend = Injector::inst()->create(Requirements_Backend::class);
+        /** @var RequirementsBackend $testBackend */
+        $testBackend = Injector::inst()->create(RequirementsBackend::class);
         $testBackend->setSuffixRequirements(false);
         $testBackend->setCombinedFilesEnabled(true);
 
@@ -257,47 +256,6 @@ class SSViewerTest extends SapphireTest
         $combinedTestFileContents = file_get_contents($combinedTestFilePath);
         $this->assertContains($jsFileContents, $combinedTestFileContents);
     }
-
-    public function testRequirementsMinification()
-    {
-        /** @var Requirements_Backend $testBackend */
-        $testBackend = Injector::inst()->create(Requirements_Backend::class);
-        $testBackend->setSuffixRequirements(false);
-        $testBackend->setMinifyCombinedFiles(true);
-        $testBackend->setCombinedFilesEnabled(true);
-
-        $testFile = $this->getCurrentRelativePath() . '/SSViewerTest/javascript/RequirementsTest_a.js';
-        $testFileContent = file_get_contents($testFile);
-
-        $mockMinifier = $this->getMockBuilder(Requirements_Minifier::class)
-        ->setMethods(['minify'])
-        ->getMock();
-
-        $mockMinifier->expects($this->once())
-        ->method('minify')
-        ->with(
-            $testFileContent,
-            'js',
-            $testFile
-        );
-        $testBackend->setMinifier($mockMinifier);
-        $testBackend->combineFiles('testRequirementsMinified.js', array($testFile));
-        $testBackend->processCombinedFiles();
-
-        $testBackend->setMinifyCombinedFiles(false);
-        $mockMinifier->expects($this->never())
-        ->method('minify');
-        $testBackend->processCombinedFiles();
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageRegExp('/^Cannot minify files without a minification service defined./');
-
-        $testBackend->setMinifyCombinedFiles(true);
-        $testBackend->setMinifier(null);
-        $testBackend->processCombinedFiles();
-    }
-
-
 
     public function testComments()
     {
@@ -420,12 +378,12 @@ SS;
         );
 
         $this->assertEquals(
-            i18n::get_locale(),
+            Internationalisation::get_locale(),
             $this->render('{$i18nLocale}'),
             'i18n template functions result correct result'
         );
         $this->assertEquals(
-            i18n::get_locale(),
+            Internationalisation::get_locale(),
             $this->render('{$get_locale}'),
             'i18n template functions result correct result'
         );
@@ -525,7 +483,7 @@ SS;
     {
         // Data to run the loop tests on - one sequence of three items, each with a subitem
         $data = new ArrayData([
-            'Foo' => new ArrayList([
+            'Foo' => new ArrayListInterface([
                 'Subocean' => new ArrayData([
                     'Name' => 'Higher'
                 ]),
@@ -997,7 +955,7 @@ after'
             $this->render(
                 '<% include SSViewerTestIncludeScopeInheritanceWithArgsInLoop Title="SomeArg" %>',
                 new ArrayData(
-                    array('Items' => new ArrayList(
+                    array('Items' => new ArrayListInterface(
                         array(
                         new ArrayData(array('Title' => 'Foo')),
                         new ArrayData(array('Title' => 'Bar'))
@@ -1057,7 +1015,7 @@ after'
             )
         );
 
-        $tmpl = SSViewer::fromString('<% include SSViewerTestIncludeObjectArguments A=$Nested.Object, B=$Object %>');
+        $tmpl = Viewer::fromString('<% include SSViewerTestIncludeObjectArguments A=$Nested.Object, B=$Object %>');
         $res  = $tmpl->process($data);
         $this->assertEqualIgnoringWhitespace('A B', $res, 'Objects can be passed as named arguments');
     }
@@ -1113,17 +1071,17 @@ after'
 
     public function testRecursiveInclude()
     {
-        $view = new SSViewer(array('Includes/SSViewerTestRecursiveInclude'));
+        $view = new Viewer(array('Includes/SSViewerTestRecursiveInclude'));
 
         $data = new ArrayData(
             array(
             'Title' => 'A',
-            'Children' => new ArrayList(
+            'Children' => new ArrayListInterface(
                 array(
                 new ArrayData(
                     array(
                     'Title' => 'A1',
-                    'Children' => new ArrayList(
+                    'Children' => new ArrayListInterface(
                         array(
                         new ArrayData(array( 'Title' => 'A1 i', )),
                         new ArrayData(array( 'Title' => 'A1 ii', )),
@@ -1164,29 +1122,29 @@ after'
         // Value casted as "Text"
         $this->assertEquals(
             '&lt;b&gt;html&lt;/b&gt;',
-            $t = SSViewer::fromString('$TextValue')->process($vd)
+            $t = Viewer::fromString('$TextValue')->process($vd)
         );
         $this->assertEquals(
             '<b>html</b>',
-            $t = SSViewer::fromString('$TextValue.RAW')->process($vd)
+            $t = Viewer::fromString('$TextValue.RAW')->process($vd)
         );
         $this->assertEquals(
             '&lt;b&gt;html&lt;/b&gt;',
-            $t = SSViewer::fromString('$TextValue.XML')->process($vd)
+            $t = Viewer::fromString('$TextValue.XML')->process($vd)
         );
 
         // Value casted as "HTMLText"
         $this->assertEquals(
             '<b>html</b>',
-            $t = SSViewer::fromString('$HTMLValue')->process($vd)
+            $t = Viewer::fromString('$HTMLValue')->process($vd)
         );
         $this->assertEquals(
             '<b>html</b>',
-            $t = SSViewer::fromString('$HTMLValue.RAW')->process($vd)
+            $t = Viewer::fromString('$HTMLValue.RAW')->process($vd)
         );
         $this->assertEquals(
             '&lt;b&gt;html&lt;/b&gt;',
-            $t = SSViewer::fromString('$HTMLValue.XML')->process($vd)
+            $t = Viewer::fromString('$HTMLValue.XML')->process($vd)
         );
 
         // Uncasted value (falls back to ViewableData::$default_cast="Text")
@@ -1194,15 +1152,15 @@ after'
         $vd->UncastedValue = '<b>html</b>';
         $this->assertEquals(
             '&lt;b&gt;html&lt;/b&gt;',
-            $t = SSViewer::fromString('$UncastedValue')->process($vd)
+            $t = Viewer::fromString('$UncastedValue')->process($vd)
         );
         $this->assertEquals(
             '<b>html</b>',
-            $t = SSViewer::fromString('$UncastedValue.RAW')->process($vd)
+            $t = Viewer::fromString('$UncastedValue.RAW')->process($vd)
         );
         $this->assertEquals(
             '&lt;b&gt;html&lt;/b&gt;',
-            $t = SSViewer::fromString('$UncastedValue.XML')->process($vd)
+            $t = Viewer::fromString('$UncastedValue.XML')->process($vd)
         );
     }
 
@@ -1210,7 +1168,7 @@ after'
     {
         $data = new ArrayData(
             array(
-            'Set' => new ArrayList(
+            'Set' => new ArrayListInterface(
                 array(
                 new SSViewerTest\TestObject("1"),
                 new SSViewerTest\TestObject("2"),
@@ -1442,7 +1400,7 @@ after'
         $data = new ArrayData(
             array(
             'Name' => 'Top',
-            'Foo' => new ArrayList(
+            'Foo' => new ArrayListInterface(
                 array(
                 new ArrayData(
                     array(
@@ -1535,12 +1493,12 @@ after'
         // (of a different size to the main sequence)
         $data = new ArrayData(
             array(
-            'Foo' => new ArrayList(
+            'Foo' => new ArrayListInterface(
                 array(
                 new ArrayData(
                     array(
                     'Name' => '1',
-                    'Children' => new ArrayList(
+                    'Children' => new ArrayListInterface(
                         array(
                         new ArrayData(
                             array(
@@ -1559,13 +1517,13 @@ after'
                 new ArrayData(
                     array(
                     'Name' => '2',
-                    'Children' => new ArrayList(),
+                    'Children' => new ArrayListInterface(),
                     )
                 ),
                 new ArrayData(
                     array(
                     'Name' => '3',
-                    'Children' => new ArrayList(),
+                    'Children' => new ArrayListInterface(),
                     )
                 ),
                 )
@@ -1591,17 +1549,17 @@ after'
             __DIR__ . '/SSViewerTest',
             'layouttest',
             function () {
-                $template = new SSViewer(array('Page'));
+                $template = new Viewer(array('Page'));
                 $this->assertEquals("Foo\n\n", $template->process(new ArrayData(array())));
 
-                $template = new SSViewer(array('Shortcodes', 'Page'));
+                $template = new Viewer(array('Shortcodes', 'Page'));
                 $this->assertEquals("[file_link]\n\n", $template->process(new ArrayData(array())));
             }
         );
     }
 
     /**
-     * @covers \SilverStripe\View\SSViewer::get_templates_by_class()
+     * @covers \SilverStripe\View\Templates\Viewer::get_templates_by_class()
      */
     public function testGetTemplatesByClass()
     {
@@ -1610,7 +1568,7 @@ after'
             'layouttest',
             function () {
             // Test passing a string
-                $templates = SSViewer::get_templates_by_class(
+                $templates = Viewer::get_templates_by_class(
                     SSViewerTestModelController::class,
                     '',
                     Controller::class
@@ -1633,7 +1591,7 @@ after'
                 );
 
             // Test to ensure we're stopping at the base class.
-                $templates = SSViewer::get_templates_by_class(
+                $templates = Viewer::get_templates_by_class(
                     SSViewerTestModelController::class,
                     '',
                     SSViewerTestModelController::class
@@ -1651,7 +1609,7 @@ after'
                 );
 
             // Make sure we can search templates by suffix.
-                $templates = SSViewer::get_templates_by_class(
+                $templates = Viewer::get_templates_by_class(
                     SSViewerTestModel::class,
                     'Controller',
                     DataObject::class
@@ -1674,14 +1632,14 @@ after'
 
                 // Let's throw something random in there.
                 $this->expectException(InvalidArgumentException::class);
-                SSViewer::get_templates_by_class(null);
+                Viewer::get_templates_by_class(null);
             }
         );
     }
 
     public function testRewriteHashlinks()
     {
-        SSViewer::setRewriteHashLinksDefault(true);
+        Viewer::setRewriteHashLinksDefault(true);
 
         $_SERVER['HTTP_HOST'] = 'www.mysite.com';
         $_SERVER['REQUEST_URI'] = '//file.com?foo"onclick="alert(\'xss\')""';
@@ -1708,7 +1666,7 @@ after'
 				<body>
 			</html>'
         );
-        $tmpl = new SSViewer($tmplFile);
+        $tmpl = new Viewer($tmplFile);
         $obj = new ViewableData();
         $obj->InsertedLink = DBField::create_field(
             'HTMLFragment',
@@ -1746,7 +1704,7 @@ after'
 
     public function testRewriteHashlinksInPhpMode()
     {
-        SSViewer::setRewriteHashLinksDefault('php');
+        Viewer::setRewriteHashLinksDefault('php');
 
         $tmplFile = TEMP_PATH . DIRECTORY_SEPARATOR . 'SSViewerTest_testRewriteHashlinksInPhpMode_'
             . sha1(rand()) . '.ss';
@@ -1764,7 +1722,7 @@ after'
 				<body>
 			</html>'
         );
-        $tmpl = new SSViewer($tmplFile);
+        $tmpl = new Viewer($tmplFile);
         $obj = new ViewableData();
         $obj->InsertedLink = DBField::create_field(
             'HTMLFragment',
@@ -1791,7 +1749,7 @@ after'
 
     public function testRenderWithSourceFileComments()
     {
-        SSViewer::config()->update('source_file_comments', true);
+        Viewer::config()->update('source_file_comments', true);
         $i = __DIR__ . '/SSViewerTest/templates/Includes';
         $f = __DIR__ . '/SSViewerTest/templates/SSViewerTestComments';
         $templates = array(
@@ -1878,7 +1836,7 @@ after'
     }
     private function _renderWithSourceFileComments($name, $expected)
     {
-        $viewer = new SSViewer(array($name));
+        $viewer = new Viewer(array($name));
         $data = new ArrayData(array());
         $result = $viewer->process($data);
         $expected = str_replace(array("\r", "\n"), '', $expected);
@@ -1888,18 +1846,18 @@ after'
 
     public function testLoopIteratorIterator()
     {
-        $list = new PaginatedList(new ArrayList());
-        $viewer = new SSViewer_FromString('<% loop List %>$ID - $FirstName<br /><% end_loop %>');
+        $list = new PaginatedList(new ArrayListInterface());
+        $viewer = new ViewerFromString('<% loop List %>$ID - $FirstName<br /><% end_loop %>');
         $result = $viewer->process(new ArrayData(array('List' => $list)));
         $this->assertEquals($result, '');
     }
 
     public function testProcessOnlyIncludesRequirementsOnce()
     {
-        $template = new SSViewer(array('SSViewerTestProcess'));
+        $template = new Viewer(array('SSViewerTestProcess'));
         $basePath = $this->getCurrentRelativePath() . '/SSViewerTest';
 
-        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $backend = Injector::inst()->create(RequirementsBackend::class);
         $backend->setCombinedFilesEnabled(false);
         $backend->combineFiles(
             'RequirementsTest_ab.css',
@@ -1925,7 +1883,7 @@ after'
         //TODO undo skip test on the event that templates ever obtain the ability to reference
         //MODULE_DIR (or something to that effect)
         if (FRAMEWORK_DIR === 'framework') {
-            $template = new SSViewer(array('SSViewerTestProcess'));
+            $template = new Viewer(array('SSViewerTestProcess'));
 
             Requirements::set_suffix_requirements(false);
 
@@ -1948,7 +1906,7 @@ after'
     {
         $data = new ArrayData(
             array(
-            'Set' => new ArrayList(
+            'Set' => new ArrayListInterface(
                 array(
                 new SSViewerTest\TestObject("1"),
                 new SSViewerTest\TestObject("2"),
@@ -2026,7 +1984,7 @@ after'
     public function testClosedBlockExtension()
     {
         $count = 0;
-        $parser = new SSTemplateParser();
+        $parser = new TemplateParser();
         $parser->addClosedBlock(
             'test',
             function ($res) use (&$count) {
@@ -2034,7 +1992,7 @@ after'
             }
         );
 
-        $template = new SSViewer_FromString("<% test %><% end_test %>", $parser);
+        $template = new ViewerFromString("<% test %><% end_test %>", $parser);
         $template->process(new SSViewerTest\TestFixture());
 
         $this->assertEquals(1, $count);
@@ -2043,7 +2001,7 @@ after'
     public function testOpenBlockExtension()
     {
         $count = 0;
-        $parser = new SSTemplateParser();
+        $parser = new TemplateParser();
         $parser->addOpenBlock(
             'test',
             function ($res) use (&$count) {
@@ -2051,7 +2009,7 @@ after'
             }
         );
 
-        $template = new SSViewer_FromString("<% test %>", $parser);
+        $template = new ViewerFromString("<% test %>", $parser);
         $template->process(new SSViewerTest\TestFixture());
 
         $this->assertEquals(1, $count);
@@ -2072,7 +2030,7 @@ after'
         $this->render($content, null, null);
         $this->assertFalse(file_exists($cacheFile), 'Cache file was created when caching was off');
 
-        SSViewer_FromString::config()->update('cache_template', true);
+        ViewerFromString::config()->update('cache_template', true);
         $this->render($content, null, null);
         $this->assertTrue(file_exists($cacheFile), 'Cache file wasn\'t created when it was meant to');
         unlink($cacheFile);

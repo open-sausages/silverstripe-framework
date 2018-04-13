@@ -16,8 +16,8 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
-use SilverStripe\i18n\i18n;
-use SilverStripe\i18n\i18nEntityProvider;
+use SilverStripe\Internationalisation\Internationalisation;
+use SilverStripe\Internationalisation\EntityProvider;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\ORM\FieldType\DBComposite;
@@ -30,7 +30,7 @@ use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use SilverStripe\View\ViewableData;
 use stdClass;
 
@@ -106,7 +106,7 @@ use stdClass;
  * @property string $Created Date and time of DataObject creation.
  * @property string $ObsoleteClassName If ClassName no longer exists this will be set to the legacy value
  */
-class DataObject extends ViewableData implements DataObjectInterface, i18nEntityProvider, Resettable
+class DataObject extends ViewableData implements DataObjectInterface, EntityProvider, Resettable
 {
 
     /**
@@ -777,7 +777,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function i18n_pluralise($count)
     {
         $default = 'one ' . $this->i18n_singular_name() . '|{count} ' . $this->i18n_plural_name();
-        return i18n::_t(
+        return Internationalisation::_t(
             static::class . '.PLURALS',
             $default,
             ['count' => $count]
@@ -1203,8 +1203,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *   - This will only be useful prior to deletion, as post-deletion this record will no longer exist.
      *
      * @param bool $recursive True if recursive
-     * @param ArrayList $list Optional list to add items to
-     * @return ArrayList list of objects
+     * @param ArrayListInterface $list Optional list to add items to
+     * @return ArrayListInterface list of objects
      */
     public function findCascadeDeletes($recursive = true, $list = null)
     {
@@ -2345,7 +2345,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     public function getViewerTemplates($suffix = '')
     {
-        return SSViewer::get_templates_by_class(static::class, $suffix, $this->baseClass());
+        return Viewer::get_templates_by_class(static::class, $suffix, $this->baseClass());
     }
 
     /**
@@ -3978,14 +3978,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param string $source Config property to extract relationships from
      * @param bool $recursive True if recursive
-     * @param ArrayList $list If specified, items will be added to this list. If not, a new
+     * @param ArrayListInterface $list If specified, items will be added to this list. If not, a new
      * instance of ArrayList will be constructed and returned
-     * @return ArrayList The list of related objects
+     * @return ArrayListInterface The list of related objects
      */
     public function findRelatedObjects($source, $recursive = true, $list = null)
     {
         if (!$list) {
-            $list = new ArrayList();
+            $list = new ArrayListInterface();
         }
 
         // Skip search for unsaved records
@@ -4027,13 +4027,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Helper method to merge owned/owning items into a list.
      * Items already present in the list will be skipped.
      *
-     * @param ArrayList $list Items to merge into
+     * @param ArrayListInterface $list Items to merge into
      * @param mixed $items List of new items to merge
-     * @return ArrayList List of all newly added items that did not already exist in $list
+     * @return ArrayListInterface List of all newly added items that did not already exist in $list
      */
     public function mergeRelatedObjects($list, $items)
     {
-        $added = new ArrayList();
+        $added = new ArrayListInterface();
         if (!$items) {
             return $added;
         }
@@ -4052,8 +4052,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Merge single object into a list, but ensures that existing objects are not
      * re-added.
      *
-     * @param ArrayList $list Global list
-     * @param ArrayList $added Additional list to insert into
+     * @param ArrayListInterface $list Global list
+     * @param ArrayListInterface $added Additional list to insert into
      * @param DataObject $item Item to add
      */
     protected function mergeRelatedObject($list, $added, $item)

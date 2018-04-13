@@ -23,8 +23,8 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
-use SilverStripe\i18n\i18n;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Internationalisation\Internationalisation;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -32,9 +32,11 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Map;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\Encryptors\PasswordEncryptor;
+use SilverStripe\Security\Encryptors\NotFoundException;
 
 /**
  * The member class which represents the users of the system
@@ -268,7 +270,7 @@ class Member extends DataObject
     public function populateDefaults()
     {
         parent::populateDefaults();
-        $this->Locale = i18n::get_locale();
+        $this->Locale = Internationalisation::get_locale();
     }
 
     public function requireDefaultRecords()
@@ -572,7 +574,7 @@ class Member extends DataObject
      *
      * @param string $string
      * @return string
-     * @throws PasswordEncryptor_NotFoundException
+     * @throws NotFoundException
      */
     public function encryptWithUserSettings($string)
     {
@@ -707,7 +709,7 @@ class Member extends DataObject
         $fields->replaceField('Locale', new DropdownField(
             'Locale',
             $this->fieldLabel('Locale'),
-            i18n::getSources()->getKnownLocales()
+            Internationalisation::getSources()->getKnownLocales()
         ));
 
         $fields->removeByName(static::config()->get('hidden_fields'));
@@ -759,11 +761,11 @@ class Member extends DataObject
      * To customize the required fields, add a {@link DataExtension} to member
      * calling the `updateValidator()` method.
      *
-     * @return Member_Validator
+     * @return MemberValidator
      */
     public function getValidator()
     {
-        $validator = Member_Validator::create();
+        $validator = MemberValidator::create();
         $validator->setForMember($this);
         $this->extend('updateValidator', $validator);
 
@@ -932,7 +934,7 @@ class Member extends DataObject
 
         // save locale
         if (!$this->Locale) {
-            $this->Locale = i18n::get_locale();
+            $this->Locale = Internationalisation::get_locale();
         }
 
         parent::onBeforeWrite();
@@ -998,7 +1000,7 @@ class Member extends DataObject
     /**
      * Check if the member is in one of the given groups.
      *
-     * @param array|SS_List $groups Collection of {@link Group} DataObjects to check
+     * @param array|ListInterface $groups Collection of {@link Group} DataObjects to check
      * @param boolean $strict Only determine direct group membership if set to true (Default: false)
      * @return bool Returns TRUE if the member is in one of the given groups, otherwise FALSE.
      */
@@ -1250,7 +1252,7 @@ class Member extends DataObject
             return $locale;
         }
 
-        return i18n::get_locale();
+        return Internationalisation::get_locale();
     }
 
     /**
@@ -1282,11 +1284,11 @@ class Member extends DataObject
      * Use {@link DirectGroups()} to only retrieve the group relations without inheritance.
      *
      * @todo Push all this logic into Member_GroupSet's getIterator()?
-     * @return Member_Groupset
+     * @return MemberGroupSet
      */
     public function Groups()
     {
-        $groups = Member_GroupSet::create(Group::class, 'Group_Members', 'GroupID', 'MemberID');
+        $groups = MemberGroupSet::create(Group::class, 'Group_Members', 'GroupID', 'MemberID');
         $groups = $groups->forForeignID($this->ID);
 
         $this->extend('updateGroups', $groups);
@@ -1314,7 +1316,7 @@ class Member extends DataObject
     {
         $groupIDList = array();
 
-        if ($groups instanceof SS_List) {
+        if ($groups instanceof ListInterface) {
             foreach ($groups as $group) {
                 $groupIDList[] = $group->ID;
             }
@@ -1329,7 +1331,7 @@ class Member extends DataObject
             return static::get()->sort(array('Surname' => 'ASC', 'FirstName' => 'ASC'))->map();
         }
 
-        $membersList = new ArrayList();
+        $membersList = new ArrayListInterface();
         // This is a bit ineffective, but follow the ORM style
         /** @var Group $group */
         foreach (Group::get()->byIDs($groupIDList) as $group) {
@@ -1356,7 +1358,7 @@ class Member extends DataObject
     {
         // Check CMS module exists
         if (!class_exists(LeftAndMain::class)) {
-            return ArrayList::create()->map();
+            return ArrayListInterface::create()->map();
         }
 
         if (count($groups) == 0) {
@@ -1383,7 +1385,7 @@ class Member extends DataObject
 
         $groupIDList = array();
 
-        if ($groups instanceof SS_List) {
+        if ($groups instanceof ListInterface) {
             foreach ($groups as $group) {
                 $groupIDList[] = $group->ID;
             }
@@ -1458,7 +1460,7 @@ class Member extends DataObject
             $mainFields->replaceField('Locale', new DropdownField(
                 "Locale",
                 _t(__CLASS__ . '.INTERFACELANG', "Interface Language", 'Language of the CMS'),
-                i18n::getSources()->getKnownLocales()
+                Internationalisation::getSources()->getKnownLocales()
             ));
             $mainFields->removeByName(static::config()->get('hidden_fields'));
 
@@ -1497,7 +1499,7 @@ class Member extends DataObject
                 // This should only be available for existing records, as new records start
                 // with no permissions until they have a group assignment anyway.
                 if ($this->ID) {
-                    $permissionsField = new PermissionCheckboxSetField_Readonly(
+                    $permissionsField = new PermissionCheckboxSetFieldReadonly(
                         'Permissions',
                         false,
                         Permission::class,

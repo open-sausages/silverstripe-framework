@@ -27,7 +27,7 @@ use SilverStripe\ORM\Filterable;
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>/edit
  */
-class GridFieldDetailForm implements GridField_URLHandler
+class GridFieldDetailForm implements GridFieldURLHandler
 {
 
     use Extensible;
@@ -124,13 +124,13 @@ class GridFieldDetailForm implements GridField_URLHandler
      * @param GridField $gridField
      * @param DataObject $record
      * @param RequestHandler $requestHandler
-     * @return GridFieldDetailForm_ItemRequest
+     * @return GridFieldDetailFormItemRequest
      */
     protected function getItemRequestHandler($gridField, $record, $requestHandler)
     {
         $class = $this->getItemRequestClass();
         $this->extend('updateItemRequestClass', $class, $gridField, $record, $requestHandler);
-        /** @var GridFieldDetailForm_ItemRequest $handler */
+        /** @var GridFieldDetailFormItemRequest $handler */
         $handler = Injector::inst()->createWithArgs(
             $class,
             array($gridField, $this, $record, $requestHandler, $this->name)

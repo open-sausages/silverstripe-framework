@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * Adding this class to a {@link GridFieldConfig} of a {@link GridField} adds
@@ -18,7 +18,7 @@ use SilverStripe\View\SSViewer;
  * The purpose of this class is to have a footer that can round off
  * {@link GridField} without having to use pagination.
  */
-class GridFieldFooter implements GridField_HTMLProvider
+class GridFieldFooter implements GridFieldHTMLProvider
 {
 
     /**
@@ -61,7 +61,7 @@ class GridFieldFooter implements GridField_HTMLProvider
             'NumRecords' => $count
         ));
 
-        $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $template = Viewer::get_templates_by_class($this, '', __CLASS__);
         return array(
             'footer' => $forTemplate->renderWith(
                 $template,

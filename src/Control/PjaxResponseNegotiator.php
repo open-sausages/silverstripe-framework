@@ -69,7 +69,7 @@ class PjaxResponseNegotiator
      * or HTTPResponse, keyed by their fragment identifier. The 'default' key can
      * be used as a fallback for non-ajax responses.
      * @return HTTPResponse
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     public function respond(HTTPRequest $request, $extraCallbacks = array())
     {
@@ -85,9 +85,9 @@ class PjaxResponseNegotiator
             $fragments = explode(',', $fragmentStr);
         } else {
             if ($request->isAjax()) {
-                throw new HTTPResponse_Exception("Ajax requests to this URL require an X-Pjax header.", 400);
+                throw new HTTPResponseException("Ajax requests to this URL require an X-Pjax header.", 400);
             } elseif (empty($callbacks['default'])) {
-                throw new HTTPResponse_Exception("Missing default response handler for this URL", 400);
+                throw new HTTPResponseException("Missing default response handler for this URL", 400);
             }
             $response->setBody(call_user_func($callbacks['default']));
             return $response;
@@ -99,7 +99,7 @@ class PjaxResponseNegotiator
                 $res = call_user_func($callbacks[$fragment]);
                 $responseParts[$fragment] = $res ? (string) $res : $res;
             } else {
-                throw new HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
+                throw new HTTPResponseException("X-Pjax = '$fragment' not supported for this URL.", 400);
             }
         }
         $response->setBody(Convert::raw2json($responseParts));

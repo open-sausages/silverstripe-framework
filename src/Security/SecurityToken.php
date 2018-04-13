@@ -11,7 +11,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
-use SilverStripe\View\TemplateGlobalProvider;
+use SilverStripe\View\Templates\TemplateGlobalProvider;
 
 /**
  * Cross Site Request Forgery (CSRF) protection for the {@link Form} class and other GET links.

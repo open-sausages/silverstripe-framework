@@ -12,7 +12,7 @@ use SilverStripe\ORM\DataObject;
 /**
  * Adds an "Export list" button to the bottom of a {@link GridField}.
  */
-class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
+class GridFieldExportButton implements GridFieldHTMLProvider, GridFieldActionProvider, GridFieldURLHandler
 {
     /**
      * @var array Map of a property name on the exported objects, with values being the column title in the CSV file.
@@ -68,7 +68,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      */
     public function getHTMLFragments($gridField)
     {
-        $button = new GridField_FormAction(
+        $button = new GridFieldFormAction(
             $gridField,
             'export',
             _t('SilverStripe\\Forms\\GridField\\GridField.CSVEXPORT', 'Export to CSV'),

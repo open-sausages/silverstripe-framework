@@ -5,7 +5,7 @@ namespace SilverStripe\View\Tests;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -210,9 +210,9 @@ class ViewableDataTest extends SapphireTest
     {
         $themes = [
             "silverstripe/framework:/tests/php/View/ViewableDataTest/testtheme",
-            SSViewer::DEFAULT_THEME
+            Viewer::DEFAULT_THEME
         ];
-        SSViewer::set_themes($themes);
+        Viewer::set_themes($themes);
 
         $data = new ViewableData();
         $this->assertContains(

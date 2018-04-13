@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * Adding this class to a {@link GridFieldConfig} of a {@link GridField} adds
@@ -14,7 +14,7 @@ use SilverStripe\View\SSViewer;
  * This row provides two new HTML fragment spaces: 'toolbar-header-left' and
  * 'toolbar-header-right'.
  */
-class GridFieldButtonRow implements GridField_HTMLProvider
+class GridFieldButtonRow implements GridFieldHTMLProvider
 {
 
     protected $targetFragment;
@@ -32,7 +32,7 @@ class GridFieldButtonRow implements GridField_HTMLProvider
             "RightFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-right)",
         ));
 
-        $templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $templates = Viewer::get_templates_by_class($this, '', __CLASS__);
         return array(
             $this->targetFragment => $data->renderWith($templates)
         );

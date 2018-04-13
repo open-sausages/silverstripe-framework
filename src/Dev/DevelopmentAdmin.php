@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Director;
@@ -119,7 +119,7 @@ class DevelopmentAdmin extends Controller
      * @param HTTPRequest $request
      * @return Controller
      * @throws Exception
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     public function runRegisteredController(HTTPRequest $request)
     {

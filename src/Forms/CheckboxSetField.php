@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\ArrayData;
@@ -66,7 +66,7 @@ class CheckboxSetField extends MultiSelectField
     /**
      * Gets the list of options to render in this formfield
      *
-     * @return ArrayList
+     * @return ArrayListInterface
      */
     public function getOptions()
     {
@@ -76,7 +76,7 @@ class CheckboxSetField extends MultiSelectField
         // Generate list of options to display
         $odd = false;
         $formID = $this->ID();
-        $options = new ArrayList();
+        $options = new ArrayListInterface();
         foreach ($this->getSource() as $itemValue => $title) {
             $itemID = Convert::raw2htmlid("{$formID}_{$itemValue}");
             $odd = !$odd;

@@ -10,7 +10,7 @@ use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\PasswordEncryptor;
+use SilverStripe\Security\Encryptors\PasswordEncryptor;
 use SilverStripe\Security\Security;
 
 /**

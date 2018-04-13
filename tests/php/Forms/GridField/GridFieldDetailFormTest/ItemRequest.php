@@ -3,8 +3,8 @@
 namespace SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
+use SilverStripe\Forms\GridField\GridFieldDetailFormItemRequest;
 
-class ItemRequest extends GridFieldDetailForm_ItemRequest implements TestOnly
+class ItemRequest extends GridFieldDetailFormItemRequest implements TestOnly
 {
 }

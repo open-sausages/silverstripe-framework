@@ -4,7 +4,7 @@ namespace SilverStripe\Dev;
 
 use SebastianBergmann\Exporter\Exporter;
 use SebastianBergmann\RecursionContext\Context;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use SilverStripe\View\ViewableData;
 
 if (!class_exists(Exporter::class)) {
@@ -31,7 +31,7 @@ class SSListExporter extends Exporter implements TestOnly
 
         $whitespace = str_repeat(' ', 4 * $indentation);
 
-        if ($value instanceof SS_List) {
+        if ($value instanceof ListInterface) {
             $className = get_class($value);
             if (($key = $processed->contains($value)) !== false) {
                 return $className . ' &' . $key;

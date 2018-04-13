@@ -12,7 +12,7 @@ use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * Provides a security interface functionality within the cms
@@ -37,7 +37,7 @@ class CMSSecurity extends Security
         parent::init();
 
         // Assign default cms theme and replace user-specified themes
-        SSViewer::set_themes(LeftAndMain::config()->uninherited('admin_themes'));
+        Viewer::set_themes(LeftAndMain::config()->uninherited('admin_themes'));
 
         // Core styles / vendor scripts
         Requirements::javascript('silverstripe/admin: client/dist/js/vendor.js');

@@ -6,7 +6,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
@@ -76,7 +76,7 @@ class BasicAuth
      * @param boolean $tryUsingSessionLogin If true, then the method with authenticate against the
      *  session log-in if those credentials are disabled.
      * @return bool|Member
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     public static function requireLogin(
         HTTPRequest $request,
@@ -136,7 +136,7 @@ class BasicAuth
             }
 
             // Exception is caught by RequestHandler->handleRequest() and will halt further execution
-            $e = new HTTPResponse_Exception(null, 401);
+            $e = new HTTPResponseException(null, 401);
             $e->setResponse($response);
             throw $e;
         }
@@ -155,7 +155,7 @@ class BasicAuth
             }
 
             // Exception is caught by RequestHandler->handleRequest() and will halt further execution
-            $e = new HTTPResponse_Exception(null, 401);
+            $e = new HTTPResponseException(null, 401);
             $e->setResponse($response);
             throw $e;
         }
@@ -199,7 +199,7 @@ class BasicAuth
      * please use {@link protect_entire_site()}.
      *
      * @param HTTPRequest|null $request
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     public static function protect_site_if_necessary(HTTPRequest $request = null)
     {

@@ -16,7 +16,7 @@ class CookieTest extends SapphireTest
     {
         parent::setUp();
         Injector::nest();
-        Injector::inst()->registerService(new CookieJar($_COOKIE), 'SilverStripe\\Control\\Cookie_Backend');
+        Injector::inst()->registerService(new CookieJar($_COOKIE), 'SilverStripe\\Control\\CookieBackend');
     }
 
     protected function tearDown()
@@ -42,7 +42,7 @@ class CookieTest extends SapphireTest
             'cookie_4' => 'value',
         );
 
-        Injector::inst()->unregisterNamedObject('SilverStripe\\Control\\Cookie_Backend');
+        Injector::inst()->unregisterNamedObject('SilverStripe\\Control\\CookieBackend');
 
         $this->assertEquals($_COOKIE['cookie1'], Cookie::get('cookie1'));
         $this->assertEquals($_COOKIE['cookie2'], Cookie::get('cookie2'));
@@ -86,7 +86,7 @@ class CookieTest extends SapphireTest
 
         $this->assertEquals('testvalue', Cookie::get('test'));
 
-        Injector::inst()->registerService(new CookieJar(array()), 'SilverStripe\\Control\\Cookie_Backend');
+        Injector::inst()->registerService(new CookieJar(array()), 'SilverStripe\\Control\\CookieBackend');
 
         $this->assertEmpty(Cookie::get('test'));
     }
@@ -99,7 +99,7 @@ class CookieTest extends SapphireTest
 
         $inst = new CookieJar(array('test' => 'testvalue'));
 
-        Injector::inst()->registerService($inst, 'SilverStripe\\Control\\Cookie_Backend');
+        Injector::inst()->registerService($inst, 'SilverStripe\\Control\\CookieBackend');
 
         $this->assertEquals($inst, Cookie::get_inst());
 
@@ -135,7 +135,7 @@ class CookieTest extends SapphireTest
             'cookieExisting' => 'i woz here',
             )
         );
-        Injector::inst()->registerService($cookieJar, 'SilverStripe\\Control\\Cookie_Backend');
+        Injector::inst()->registerService($cookieJar, 'SilverStripe\\Control\\CookieBackend');
 
         //set a new cookie
         Cookie::set('cookieNew', 'i am new');
@@ -182,7 +182,7 @@ class CookieTest extends SapphireTest
             'cookieExisting' => 'i woz here',
             )
         );
-        Injector::inst()->registerService($cookieJar, 'SilverStripe\\Control\\Cookie_Backend');
+        Injector::inst()->registerService($cookieJar, 'SilverStripe\\Control\\CookieBackend');
 
         //make sure it's available
         $this->assertEquals('i woz here', Cookie::get('cookieExisting'));

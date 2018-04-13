@@ -10,7 +10,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldConfigRelationEditor;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
@@ -25,7 +25,7 @@ use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\HasManyList;
@@ -94,7 +94,7 @@ class Group extends DataObject
 
     public function getAllChildren()
     {
-        $doSet = new ArrayList();
+        $doSet = new ArrayListInterface();
 
         $children = Group::get()->filter("ParentID", $this->ID);
         /** @var Group $child */
@@ -149,7 +149,7 @@ class Group extends DataObject
 
         if ($this->ID) {
             $group = $this;
-            $config = GridFieldConfig_RelationEditor::create();
+            $config = GridFieldConfigRelationEditor::create();
             $config->addComponent(new GridFieldButtonRow('after'));
             $config->addComponents(new GridFieldExportButton('buttons-after-left'));
             $config->addComponents(new GridFieldPrintButton('buttons-after-left'));
@@ -165,7 +165,7 @@ class Group extends DataObject
             /** @var GridFieldDetailForm $detailForm */
             $detailForm = $config->getComponentByType(GridFieldDetailForm::class);
             $detailForm
-                ->setValidator(Member_Validator::create())
+                ->setValidator(MemberValidator::create())
                 ->setItemEditFormCallback(function ($form) use ($group) {
                     /** @var Form $form */
                     $record = $form->getRecord();
@@ -246,7 +246,7 @@ class Group extends DataObject
             }
             if ($this->ID) {
                 $groupRoles = $this->Roles();
-                $inheritedRoles = new ArrayList();
+                $inheritedRoles = new ArrayListInterface();
                 $ancestors = $this->getAncestors();
                 foreach ($ancestors as $ancestor) {
                     $ancestorRoles = $ancestor->Roles();
@@ -625,13 +625,13 @@ class Group extends DataObject
      * Returns all of the children for the CMS Tree.
      * Filters to only those groups that the current user can edit
      *
-     * @return ArrayList
+     * @return ArrayListInterface
      */
     public function AllChildrenIncludingDeleted()
     {
         $children = parent::AllChildrenIncludingDeleted();
 
-        $filteredChildren = new ArrayList();
+        $filteredChildren = new ArrayListInterface();
 
         if ($children) {
             foreach ($children as $child) {

@@ -2,11 +2,11 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use stdClass;
 
 class ArrayListTest extends SapphireTest
@@ -14,7 +14,7 @@ class ArrayListTest extends SapphireTest
 
     public function testPushOperator()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Num' => 1)
             )
@@ -31,7 +31,7 @@ class ArrayListTest extends SapphireTest
 
     public function testArrayAccessExists()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             $one = new DataObject(array('Title' => 'one')),
             $two = new DataObject(array('Title' => 'two')),
@@ -45,7 +45,7 @@ class ArrayListTest extends SapphireTest
 
     public function testArrayAccessUnset()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             $one = new DataObject(array('Title' => 'one')),
             $two = new DataObject(array('Title' => 'two')),
@@ -58,7 +58,7 @@ class ArrayListTest extends SapphireTest
 
     public function testArrayAccessSet()
     {
-        $list = new ArrayList();
+        $list = new ArrayListInterface();
         $this->assertEquals(0, count($list));
         $list['testing!'] = $test = new DataObject(array('Title' => 'I\'m testing!'));
         $this->assertEquals($test, $list['testing!'], 'Set item is accessible by the key we set it as');
@@ -66,23 +66,23 @@ class ArrayListTest extends SapphireTest
 
     public function testCount()
     {
-        $list = new ArrayList();
+        $list = new ArrayListInterface();
         $this->assertEquals(0, $list->count());
-        $list = new ArrayList(array(1, 2, 3));
+        $list = new ArrayListInterface(array(1, 2, 3));
         $this->assertEquals(3, $list->count());
     }
 
     public function testExists()
     {
-        $list = new ArrayList();
+        $list = new ArrayListInterface();
         $this->assertFalse($list->exists());
-        $list = new ArrayList(array(1, 2, 3));
+        $list = new ArrayListInterface(array(1, 2, 3));
         $this->assertTrue($list->exists());
     }
 
     public function testToNestedArray()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('First' => 'FirstFirst', 'Second' => 'FirstSecond'),
             (object) array('First' => 'SecondFirst', 'Second' => 'SecondSecond'),
@@ -102,7 +102,7 @@ class ArrayListTest extends SapphireTest
 
     public function testEach()
     {
-        $list = new ArrayList(array(1, 2, 3));
+        $list = new ArrayListInterface(array(1, 2, 3));
 
         $count = 0;
         $test = $this;
@@ -120,7 +120,7 @@ class ArrayListTest extends SapphireTest
 
     public function testLimit()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Key' => 1), array('Key' => 2), array('Key' => 3)
             )
@@ -135,7 +135,7 @@ class ArrayListTest extends SapphireTest
 
     public function testAddRemove()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Key' => 1), array('Key' => 2)
             )
@@ -160,7 +160,7 @@ class ArrayListTest extends SapphireTest
 
     public function testReplace()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Key' => 1),
             $two = (object) array('Key' => 2),
@@ -181,7 +181,7 @@ class ArrayListTest extends SapphireTest
 
     public function testMerge()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Num' => 1), array('Num' => 2)
             )
@@ -203,7 +203,7 @@ class ArrayListTest extends SapphireTest
 
     public function testRemoveDuplicates()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('ID' => 1, 'Field' => 1),
             array('ID' => 2, 'Field' => 2),
@@ -225,7 +225,7 @@ class ArrayListTest extends SapphireTest
 
     public function testPushPop()
     {
-        $list = new ArrayList(array('Num' => 1));
+        $list = new ArrayListInterface(array('Num' => 1));
         $this->assertEquals(1, count($list));
 
         $list->push(array('Num' => 2));
@@ -243,7 +243,7 @@ class ArrayListTest extends SapphireTest
 
     public function testShiftUnshift()
     {
-        $list = new ArrayList(array('Num' => 1));
+        $list = new ArrayListInterface(array('Num' => 1));
         $this->assertEquals(1, count($list));
 
         $list->unshift(array('Num' => 2));
@@ -261,7 +261,7 @@ class ArrayListTest extends SapphireTest
 
     public function testFirstLast()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Key' => 1), array('Key' => 2), array('Key' => 3)
             )
@@ -272,7 +272,7 @@ class ArrayListTest extends SapphireTest
 
     public function testMap()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('ID' => 1, 'Name' => 'Steve',),
             (object) array('ID' => 3, 'Name' => 'Bob'),
@@ -295,7 +295,7 @@ class ArrayListTest extends SapphireTest
 
     public function testFind()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve'),
             (object) array('Name' => 'Bob'),
@@ -312,7 +312,7 @@ class ArrayListTest extends SapphireTest
 
     public function testColumn()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve'),
             (object) array('Name' => 'Bob'),
@@ -329,7 +329,7 @@ class ArrayListTest extends SapphireTest
 
     public function testSortSimpleDefaultIsSortedASC()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve'),
             (object) array('Name' => 'Bob'),
@@ -437,7 +437,7 @@ class ArrayListTest extends SapphireTest
             array('Name' => 'bonny2'),
         );
 
-        $list = new ArrayList($original);
+        $list = new ArrayListInterface($original);
 
         $expected = array(
             (object) array('Name' => 'Bob'),
@@ -467,7 +467,7 @@ class ArrayListTest extends SapphireTest
 
     public function testSortSimpleASCOrder()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve'),
             (object) array('Name' => 'Bob'),
@@ -532,7 +532,7 @@ class ArrayListTest extends SapphireTest
 
     public function testSortSimpleDESCOrder()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve'),
             (object) array('Name' => 'Bob'),
@@ -597,7 +597,7 @@ class ArrayListTest extends SapphireTest
 
     public function testSortNumeric()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Sort' => 0),
             array('Sort' => -1),
@@ -642,7 +642,7 @@ class ArrayListTest extends SapphireTest
 
     public function testReverse()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'John'),
             array('Name' => 'Bob'),
@@ -665,7 +665,7 @@ class ArrayListTest extends SapphireTest
 
     public function testSimpleMultiSort()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             (object) array('Name'=>'Object1', 'F1'=>1, 'F2'=>2, 'F3'=>3),
             (object) array('Name'=>'Object2', 'F1'=>2, 'F2'=>1, 'F3'=>4),
@@ -684,7 +684,7 @@ class ArrayListTest extends SapphireTest
 
     public function testMultiSort()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             (object) array('ID'=>3, 'Name'=>'Bert', 'Importance'=>1),
             (object) array('ID'=>1, 'Name'=>'Aron', 'Importance'=>2),
@@ -718,19 +718,19 @@ class ArrayListTest extends SapphireTest
         $childB->parent = $itemB;
         $itemB->Sort = 1;
 
-        $items = new ArrayList;
+        $items = new ArrayListInterface;
         $items->add($itemA);
         $items->add($itemB);
 
         // This call will trigger a fatal error if there are issues with circular dependencies
-        $this->assertInstanceOf(SS_List::class, $items->sort('Sort'));
+        $this->assertInstanceOf(ListInterface::class, $items->sort('Sort'));
     }
     /**
      * $list->filter('Name', 'bob'); // only bob in the list
      */
     public function testSimpleFilter()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve'),
             (object) array('Name' => 'Bob'),
@@ -746,7 +746,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testSimpleFilterWithMultiple()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve'),
             (object) array('Name' => 'Bob'),
@@ -767,7 +767,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testSimpleFilterWithMultipleNoMatch()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve', 'ID' => 1),
             (object) array('Name' => 'Steve', 'ID' => 2),
@@ -783,7 +783,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testMultipleFilter()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve', 'ID' => 1),
             (object) array('Name' => 'Steve', 'ID' => 2),
@@ -803,7 +803,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testMultipleFilterNoMatch()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve', 'ID' => 1),
             (object) array('Name' => 'Steve', 'ID' => 2),
@@ -819,7 +819,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testMultipleWithArrayFilter()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve', 'ID' => 1, 'Age'=>21),
             array('Name' => 'Steve', 'ID' => 2, 'Age'=>18),
@@ -843,7 +843,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testMultipleWithArrayFilterAdvanced()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve', 'ID' => 1, 'Age'=>21),
             array('Name' => 'Steve', 'ID' => 2, 'Age'=>18),
@@ -868,7 +868,7 @@ class ArrayListTest extends SapphireTest
     public function testFilterAny()
     {
 
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             $steve = array('Name' => 'Steve', 'ID' => 1, 'Age' => 21),
             $bob = array('Name' => 'Bob', 'ID' => 2, 'Age' => 18),
@@ -939,7 +939,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testFilterByCallback()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             $steve = array('Name' => 'Steve', 'ID' => 1, 'Age' => 21),
             array('Name' => 'Bob', 'ID' => 2, 'Age' => 18),
@@ -966,7 +966,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testSimpleExclude()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve'),
             array('Name' => 'Bob'),
@@ -988,7 +988,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testSimpleExcludeNoMatch()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve'),
             array('Name' => 'Bob'),
@@ -1010,7 +1010,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testSimpleExcludeWithArray()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve'),
             array('Name' => 'Bob'),
@@ -1028,7 +1028,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testExcludeWithTwoArrays()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Bob' , 'Age' => 21),
             array('Name' => 'Bob' , 'Age' => 32),
@@ -1052,7 +1052,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testMultipleExclude()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'bob', 'Age' => 10),
             array('Name' => 'phil', 'Age' => 11),
@@ -1081,7 +1081,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testMultipleExcludeNoMatch()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'bob', 'Age' => 10),
             array('Name' => 'phil', 'Age' => 11),
@@ -1113,7 +1113,7 @@ class ArrayListTest extends SapphireTest
      */
     public function testMultipleExcludeThreeArguments()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'bob', 'Age' => 10, 'HasBananas'=>false),
             array('Name' => 'phil','Age' => 11, 'HasBananas'=>true),
@@ -1145,7 +1145,7 @@ class ArrayListTest extends SapphireTest
 
     public function testCanFilterBy()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('Name' => 'Steve'),
             array('Name' => 'Bob'),
@@ -1159,7 +1159,7 @@ class ArrayListTest extends SapphireTest
 
     public function testCanFilterByEmpty()
     {
-        $list = new ArrayList();
+        $list = new ArrayListInterface();
 
         $this->assertFalse($list->canFilterBy('Name'));
         $this->assertFalse($list->canFilterBy('Age'));
@@ -1167,7 +1167,7 @@ class ArrayListTest extends SapphireTest
 
     public function testByID()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('ID' => 1, 'Name' => 'Steve'),
             array('ID' => 2, 'Name' => 'Bob'),
@@ -1187,7 +1187,7 @@ class ArrayListTest extends SapphireTest
 
     public function testByIDs()
     {
-        $list = new ArrayList(
+        $list = new ArrayListInterface(
             array(
             array('ID' => 1, 'Name' => 'Steve'),
             array('ID' => 2, 'Name' => 'Bob'),
@@ -1205,7 +1205,7 @@ class ArrayListTest extends SapphireTest
 
     public function testByIDEmpty()
     {
-        $list = new ArrayList();
+        $list = new ArrayListInterface();
 
         $element = $list->byID(1);
         $this->assertNull($element);

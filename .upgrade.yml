@@ -9,7 +9,8 @@ mappings:
   DataObjectInterface: SilverStripe\ORM\DataObjectInterface
   DataObjectSchema: SilverStripe\ORM\DataObjectSchema
   DataQuery: SilverStripe\ORM\DataQuery
-  DataQuery_SubGroup: SilverStripe\ORM\DataQuery_SubGroup
+  DataQuery_SubGroup: SilverStripe\ORM\DataQuerySubGroup
+  SilverStripe\ORM\DataQuery_SubGroup: SilverStripe\ORM\DataQuerySubGroup
   DB: SilverStripe\ORM\DB
   SS_Filterable: SilverStripe\ORM\Filterable
   SilverStripe\ORM\SS_Filterable: SilverStripe\ORM\Filterable
@@ -18,14 +19,13 @@ mappings:
   HiddenClass: SilverStripe\ORM\HiddenClass
   SS_Limitable: SilverStripe\ORM\Limitable
   SilverStripe\ORM\SS_Limitable: SilverStripe\ORM\Limitable
-  SS_List: SilverStripe\ORM\SS_List
+  SS_List: SilverStripe\ORM\ListInterface
+  SilverStripe\ORM\SS_List: SilverStripe\ORM\ListInterface
   SS_ListDecorator: SilverStripe\ORM\ListDecorator
   SilverStripe\ORM\SS_ListDecorator: SilverStripe\ORM\ListDecorator
   ManyManyList: SilverStripe\ORM\ManyManyList
   SS_Map: SilverStripe\ORM\Map
   SilverStripe\ORM\SS_Map: SilverStripe\ORM\Map
-  SS_Map_Iterator: SilverStripe\ORM\Map_Iterator
-  SilverStripe\ORM\SS_Map_Iterator: SilverStripe\ORM\Map_Iterator
   PolymorphicHasManyList: SilverStripe\ORM\PolymorphicHasManyList
   SilverStripe\Model\Relation: SilverStripe\ORM\Relation
   RelationList: SilverStripe\ORM\RelationList
@@ -125,26 +125,38 @@ mappings:
   LoginAttempt: SilverStripe\Security\LoginAttempt
   LoginForm: SilverStripe\Security\LoginForm
   Member: SilverStripe\Security\Member
-  Member_GroupSet: SilverStripe\Security\Member_GroupSet
-  Member_Validator: SilverStripe\Security\Member_Validator
+  Member_GroupSet: SilverStripe\Security\MemberGroupSet
+  SilverStripe\Security\Member_GroupSet: SilverStripe\Security\MemberGroupSet
+  Member_Validator: SilverStripe\Security\MemberValidator
+  SilverStripe\Security\Member_Validator: SilverStripe\Security\MemberValidator
   MemberAuthenticator: SilverStripe\Security\MemberAuthenticator\MemberAuthenticator
   MemberCsvBulkLoader: SilverStripe\Security\MemberCsvBulkLoader
   MemberLoginForm: SilverStripe\Security\MemberAuthenticator\MemberLoginForm
   MemberPassword: SilverStripe\Security\MemberPassword
-  PasswordEncryptor: SilverStripe\Security\PasswordEncryptor
-  PasswordEncryptor_Blowfish: SilverStripe\Security\PasswordEncryptor_Blowfish
-  PasswordEncryptor_PHPHash: SilverStripe\Security\PasswordEncryptor_PHPHash
-  PasswordEncryptor_LegacyPHPHash: SilverStripe\Security\PasswordEncryptor_LegacyPHPHash
-  PasswordEncryptor_MySQLPassword: SilverStripe\Security\PasswordEncryptor_MySQLPassword
-  PasswordEncryptor_MySQLOldPassword: SilverStripe\Security\PasswordEncryptor_MySQLOldPassword
-  PasswordEncryptor_None: SilverStripe\Security\PasswordEncryptor_None
-  PasswordEncryptor_NotFoundException: SilverStripe\Security\PasswordEncryptor_NotFoundException
-  PasswordEncryptor_EncryptionFailed: SilverStripe\Security\PasswordEncryptor_EncryptionFailed
+  PasswordEncryptor: SilverStripe\Security\Encryptors\PasswordEncryptor
+  PasswordEncryptor_Blowfish: SilverStripe\Security\Encryptors\BlowfishEncryptor
+  SilverStripe\Security\PasswordEncryptor_Blowfish: SilverStripe\Security\Encryptors\BlowfishEncryptor
+  PasswordEncryptor_PHPHash: SilverStripe\Security\Encryptors\PHPHashEncryptor
+  SilverStripe\Security\PasswordEncryptor_PHPHash: SilverStripe\Security\Encryptors\PHPHashEncryptor
+  PasswordEncryptor_LegacyPHPHash: SilverStripe\Security\Encryptors\LegacyPHPHashEncryptor
+  SilverStripe\Security\PasswordEncryptor_LegacyPHPHash: SilverStripe\Security\Encryptors\LegacyPHPHashEncryptor
+  PasswordEncryptor_MySQLPassword: SilverStripe\Security\Encryptors\MySQLPasswordEncryptor
+  SilverStripe\Security\PasswordEncryptor_MySQLPassword: SilverStripe\Security\Encryptors\MySQLPasswordEncryptor
+  PasswordEncryptor_MySQLOldPassword: SilverStripe\Security\Encryptors\MySQLOldPasswordEncryptor
+  SilverStripe\Security\PasswordEncryptor_MySQLOldPassword: SilverStripe\Security\Encryptors\MySQLOldPasswordEncryptor
+  PasswordEncryptor_None: SilverStripe\Security\Encryptors\NoneEncryptor
+  SilverStripe\Security\PasswordEncryptor_None: SilverStripe\Security\Encryptors\NoneEncryptor
+  PasswordEncryptor_NotFoundException: SilverStripe\Security\Encryptors\NotFoundException
+  SilverStripe\Security\PasswordEncryptor_NotFoundException: SilverStripe\Security\Encryptors\NotFoundException
+  PasswordEncryptor_EncryptionFailed: SilverStripe\Security\Encryptors\EncryptionFailedException
+  SilverStripe\Security\PasswordEncryptor_EncryptionFailed: SilverStripe\Security\Encryptors\EncryptionFailedException
   PasswordValidator: SilverStripe\Security\PasswordValidator
   Permission: SilverStripe\Security\Permission
-  Permission_Group: SilverStripe\Security\Permission_Group
+  Permission_Group: SilverStripe\Security\PermissionGroup
+  SilverStripe\Security\Permission_Group: SilverStripe\Security\PermissionGroup
   PermissionCheckboxSetField: SilverStripe\Security\PermissionCheckboxSetField
-  PermissionCheckboxSetField_Readonly: SilverStripe\Security\PermissionCheckboxSetField_Readonly
+  PermissionCheckboxSetField_Readonly: SilverStripe\Security\PermissionCheckboxSetFieldReadonly
+  SilverStripe\Security\PermissionCheckboxSetField_Readonly: SilverStripe\Security\PermissionCheckboxSetFieldReadonly
   PermissionFailureException: SilverStripe\Security\PermissionFailureException
   PermissionProvider: SilverStripe\Security\PermissionProvider
   PermissionRole: SilverStripe\Security\PermissionRole
@@ -165,7 +177,8 @@ mappings:
   Extension: SilverStripe\Core\Extension
   Flushable: SilverStripe\Core\Flushable
   Config: SilverStripe\Core\Config\Config
-  Config_ForClass: SilverStripe\Core\Config\Config_ForClass
+  Config_ForClass: SilverStripe\Core\Config\ClassConfig
+  SilverStripe\Core\Config\Config_ForClass: SilverStripe\Core\Config\ClassConfig
   AfterCallAspect: SilverStripe\Core\Injector\AfterCallAspect
   AopProxyService: SilverStripe\Core\Injector\AopProxyService
   BeforeCallAspect: SilverStripe\Core\Injector\BeforeCallAspect
@@ -188,7 +201,8 @@ mappings:
   BehatFixtureFactory: SilverStripe\Dev\BehatFixtureFactory
   BuildTask: SilverStripe\Dev\BuildTask
   BulkLoader: SilverStripe\Dev\BulkLoader
-  BulkLoader_Result: SilverStripe\Dev\BulkLoader_Result
+  BulkLoader_Result: SilverStripe\Dev\BulkLoaderResult
+  SilverStripe\Dev\BulkLoader_Result: SilverStripe\Dev\BulkLoaderResult
   SS_Cli: SilverStripe\Dev\CLI
   SilverStripe\Dev\SS_Cli: SilverStripe\Dev\CLI
   CliDebugView: SilverStripe\Dev\CliDebugView
@@ -212,23 +226,26 @@ mappings:
   TestMailer: SilverStripe\Dev\TestMailer
   TestOnly: SilverStripe\Dev\TestOnly
   TestSession: SilverStripe\Dev\TestSession
-  TestSession_STResponseWrapper: SilverStripe\Dev\TestSession_STResponseWrapper
+  TestSession_STResponseWrapper: SilverStripe\Dev\TestSessionSTResponseWrapper
+  SilverStripe\Dev\TestSession_STResponseWrapper: SilverStripe\Dev\TestSessionSTResponseWrapper
   YamlFixture: SilverStripe\Dev\YamlFixture
   CliController: SilverStripe\Control\CliController
   ContentNegotiator: SilverStripe\Control\ContentNegotiator
   Controller: SilverStripe\Control\Controller
   Cookie: SilverStripe\Control\Cookie
-  Cookie_Backend: SilverStripe\Control\Cookie_Backend
+  Cookie_Backend: SilverStripe\Control\CookieBackend
+  SilverStripe\Control\Cookie_Backend: SilverStripe\Control\CookieBackend
   CookieJar: SilverStripe\Control\CookieJar
   Director: SilverStripe\Control\Director
   FlushRequestFilter: SilverStripe\Control\Middleware\FlushMiddleware
   HTTP: SilverStripe\Control\HTTP
   SS_HTTPRequest: SilverStripe\Control\HTTPRequest
   SS_HTTPResponse: SilverStripe\Control\HTTPResponse
-  SS_HTTPResponse_Exception: SilverStripe\Control\HTTPResponse_Exception
+  SS_HTTPResponse_Exception: SilverStripe\Control\HTTPResponseException
   SilverStripe\Control\SS_HTTPRequest: SilverStripe\Control\HTTPRequest
   SilverStripe\Control\SS_HTTPResponse: SilverStripe\Control\HTTPResponse
-  SilverStripe\Control\SS_HTTPResponse_Exception: SilverStripe\Control\HTTPResponse_Exception
+  SilverStripe\Control\SS_HTTPResponse_Exception: SilverStripe\Control\HTTPResponseException
+  SilverStripe\Control\HTTPResponse_Exception: SilverStripe\Control\HTTPResponseException
   NestedController: SilverStripe\Control\NestedController
   NullHTTPRequest: SilverStripe\Control\NullHTTPRequest
   PjaxResponseNegotiator: SilverStripe\Control\PjaxResponseNegotiator
@@ -239,21 +256,27 @@ mappings:
   Email: SilverStripe\Control\Email\Email
   Mailer: SilverStripe\Control\Email\Mailer
   RSSFeed: SilverStripe\Control\RSS\RSSFeed
-  RSSFeed_Entry: SilverStripe\Control\RSS\RSSFeed_Entry
+  RSSFeed_Entry: SilverStripe\Control\RSS\RSSFeedEntry
+  SilverStripe\Control\RSS\RSSFeed_Entry: SilverStripe\Control\RSS\RSSFeedEntry
   CleanupTestDatabasesTask: SilverStripe\Dev\Tasks\CleanupTestDatabasesTask
-  i18nTextCollectorTask: SilverStripe\Dev\Tasks\i18nTextCollectorTask
+  InternationalisationTextCollectorTask: SilverStripe\Dev\Tasks\InternationalisationTextCollectorTask
+  SilverStripe\Dev\Tasks\InternationalisationTextCollectorTask: SilverStripe\Dev\Tasks\InternationalisationTextCollectorTask
   MigrateFileTask: SilverStripe\Dev\Tasks\MigrateFileTask
   CheckboxField: SilverStripe\Forms\CheckboxField
-  CheckboxField_Readonly: SilverStripe\Forms\CheckboxField_Readonly
+  CheckboxField_Readonly: SilverStripe\Forms\CheckboxFieldReadonly
+  SilverStripe\Forms\CheckboxField_Readonly: SilverStripe\Forms\CheckboxFieldReadonly
   CheckboxSetField: SilverStripe\Forms\CheckboxSetField
   CompositeField: SilverStripe\Forms\CompositeField
   ConfirmedPasswordField: SilverStripe\Forms\ConfirmedPasswordField
   CurrencyField: SilverStripe\Forms\CurrencyField
-  CurrencyField_Readonly: SilverStripe\Forms\CurrencyField_Readonly
-  CurrencyField_Disabled: SilverStripe\Forms\CurrencyField_Disabled
+  CurrencyField_Readonly: SilverStripe\Forms\CurrencyFieldReadonly
+  SilverStripe\Forms\CurrencyField_Readonly: SilverStripe\Forms\CurrencyFieldReadonly
+  CurrencyField_Disabled: SilverStripe\Forms\CurrencyFieldDisabled
+  SilverStripe\Forms\CurrencyField_Disabled: SilverStripe\Forms\CurrencyFieldDisabled
   DatalessField: SilverStripe\Forms\DatalessField
   DateField: SilverStripe\Forms\DateField
-  DateField_Disabled: SilverStripe\Forms\DateField_Disabled
+  DateField_Disabled: SilverStripe\Forms\DateFieldDisabled
+  SilverStripe\Forms\DateField_Disabled: SilverStripe\Forms\DateFieldDisabled
   DatetimeField: SilverStripe\Forms\DatetimeField
   DisabledTransformation: SilverStripe\Forms\DisabledTransformation
   DropdownField: SilverStripe\Forms\DropdownField
@@ -262,7 +285,8 @@ mappings:
   FieldList: SilverStripe\Forms\FieldList
   FileField: SilverStripe\Forms\FileField
   Form: SilverStripe\Forms\Form
-  Form_FieldMap: SilverStripe\Forms\Form_FieldMap
+  Form_FieldMap: SilverStripe\Forms\FormFieldMap
+  SilverStripe\Forms\Form_FieldMap: SilverStripe\Forms\FormFieldMap
   FormAction: SilverStripe\Forms\FormAction
   FormField: SilverStripe\Forms\FormField
   FormScaffolder: SilverStripe\Forms\FormScaffolder
@@ -284,53 +308,71 @@ mappings:
   PasswordField: SilverStripe\Forms\PasswordField
   PopoverField: SilverStripe\Forms\PopoverField
   PrintableTransformation: SilverStripe\Forms\PrintableTransformation
-  PrintableTransformation_TabSet: SilverStripe\Forms\PrintableTransformation_TabSet
+  PrintableTransformation_TabSet: SilverStripe\Forms\PrintableTransformationTabSet
+  SilverStripe\Forms\PrintableTransformation_TabSet: SilverStripe\Forms\PrintableTransformationTabSet
   ReadonlyField: SilverStripe\Forms\ReadonlyField
   ReadonlyTransformation: SilverStripe\Forms\ReadonlyTransformation
   RequiredFields: SilverStripe\Forms\RequiredFields
   SelectField: SilverStripe\Forms\SelectField
   SelectionGroup: SilverStripe\Forms\SelectionGroup
-  SelectionGroup_Item: SilverStripe\Forms\SelectionGroup_Item
+  SelectionGroup_Item: SilverStripe\Forms\SelectionGroupItem
+  SilverStripe\Forms\SelectionGroup_Item: SilverStripe\Forms\SelectionGroupItem
   SingleSelectField: SilverStripe\Forms\SingleSelectField
   Tab: SilverStripe\Forms\Tab
   TabSet: SilverStripe\Forms\TabSet
   TextareaField: SilverStripe\Forms\TextareaField
   TextField: SilverStripe\Forms\TextField
   TimeField: SilverStripe\Forms\TimeField
-  TimeField_Readonly: SilverStripe\Forms\TimeField_Readonly
+  TimeField_Readonly: SilverStripe\Forms\TimeFieldReadonly
+  SilverStripe\Forms\TimeField_Readonly: SilverStripe\Forms\TimeFieldReadonly
   ToggleCompositeField: SilverStripe\Forms\ToggleCompositeField
   TreeDropdownField: SilverStripe\Forms\TreeDropdownField
-  TreeDropdownField_Readonly: SilverStripe\Forms\TreeDropdownField_Readonly
+  TreeDropdownField_Readonly: SilverStripe\Forms\TreeDropdownFieldReadonly
+  SilverStripe\Forms\TreeDropdownField_Readonly: SilverStripe\Forms\TreeDropdownFieldReadonly
   TreeMultiselectField: SilverStripe\Forms\TreeMultiselectField
-  TreeMultiselectField_Readonly: SilverStripe\Forms\TreeMultiselectField_Readonly
+  TreeMultiselectField_Readonly: SilverStripe\Forms\TreeMultiselectFieldReadonly
+  SilverStripe\Forms\TreeMultiselectField_Readonly: SilverStripe\Forms\TreeMultiselectFieldReadonly
   Validator: SilverStripe\Forms\Validator
   HTMLEditorConfig: SilverStripe\Forms\HTMLEditor\HTMLEditorConfig
   HTMLEditorField: SilverStripe\Forms\HTMLEditor\HTMLEditorField
-  HTMLEditorField_Readonly: SilverStripe\Forms\HTMLEditor\HTMLEditorField_Readonly
+  HTMLEditorField_Readonly: SilverStripe\Forms\HTMLEditor\HTMLEditorFieldReadonly
+  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Readonly: SilverStripe\Forms\HTMLEditor\HTMLEditorFieldReadonly
   HTMLEditorSanitiser: SilverStripe\Forms\HTMLEditor\HTMLEditorSanitiser
   HTMLReadonlyField: SilverStripe\Forms\HTMLReadonlyField
   TinyMCEConfig: SilverStripe\Forms\HTMLEditor\TinyMCEConfig
   GridField: SilverStripe\Forms\GridField\GridField
-  GridField_FormAction: SilverStripe\Forms\GridField\GridField_FormAction
+  GridField_FormAction: SilverStripe\Forms\GridField\GridFieldFormAction
+  SilverStripe\Forms\GridField\GridField_FormAction: SilverStripe\Forms\GridField\GridFieldFormAction
   GridFieldAddExistingAutocompleter: SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter
   GridFieldAddNewButton: SilverStripe\Forms\GridField\GridFieldAddNewButton
   GridFieldButtonRow: SilverStripe\Forms\GridField\GridFieldButtonRow
   GridFieldComponent: SilverStripe\Forms\GridField\GridFieldComponent
-  GridField_HTMLProvider: SilverStripe\Forms\GridField\GridField_HTMLProvider
-  GridField_ColumnProvider: SilverStripe\Forms\GridField\GridField_ColumnProvider
-  GridField_ActionProvider: SilverStripe\Forms\GridField\GridField_ActionProvider
-  GridField_DataManipulator: SilverStripe\Forms\GridField\GridField_DataManipulator
-  GridField_URLHandler: SilverStripe\Forms\GridField\GridField_URLHandler
-  GridField_SaveHandler: SilverStripe\Forms\GridField\GridField_SaveHandler
+  GridField_HTMLProvider: SilverStripe\Forms\GridField\GridFieldHTMLProvider
+  SilverStripe\Forms\GridField\GridField_HTMLProvider: SilverStripe\Forms\GridField\GridFieldHTMLProvider
+  GridField_ColumnProvider: SilverStripe\Forms\GridField\GridFieldColumnProvider
+  SilverStripe\Forms\GridField\GridField_ColumnProvider: SilverStripe\Forms\GridField\GridFieldColumnProvider
+  GridField_ActionProvider: SilverStripe\Forms\GridField\GridFieldActionProvider
+  SilverStripe\Forms\GridField\GridField_ActionProvider: SilverStripe\Forms\GridField\GridFieldActionProvider
+  GridField_DataManipulator: SilverStripe\Forms\GridField\GridFieldDataManipulator
+  SilverStripe\Forms\GridField\GridField_DataManipulator: SilverStripe\Forms\GridField\GridFieldDataManipulator
+  GridField_URLHandler: SilverStripe\Forms\GridField\GridFieldURLHandler
+  SilverStripe\Forms\GridField\GridField_URLHandler: SilverStripe\Forms\GridField\GridFieldURLHandler
+  GridField_SaveHandler: SilverStripe\Forms\GridField\GridFieldSaveHandler
+  SilverStripe\Forms\GridField\GridField_SaveHandler: SilverStripe\Forms\GridField\GridFieldSaveHandler
   GridFieldConfig: SilverStripe\Forms\GridField\GridFieldConfig
-  GridFieldConfig_Base: SilverStripe\Forms\GridField\GridFieldConfig_Base
-  GridFieldConfig_RecordViewer: SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer
-  GridFieldConfig_RecordEditor: SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor
-  GridFieldConfig_RelationEditor: SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor
+  GridFieldConfig_Base: SilverStripe\Forms\GridField\GridFieldConfigBase
+  SilverStripe\Forms\GridField\GridFieldConfig_Base: SilverStripe\Forms\GridField\GridFieldConfigBase
+  GridFieldConfig_RecordViewer: SilverStripe\Forms\GridField\GridFieldConfigRecordViewer
+  SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer: SilverStripe\Forms\GridField\GridFieldConfigRecordViewer
+  GridFieldConfig_RecordEditor: SilverStripe\Forms\GridField\GridFieldConfigRecordEditor
+  SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor: SilverStripe\Forms\GridField\GridFieldConfigRecordEditor
+  GridFieldConfig_RelationEditor: SilverStripe\Forms\GridField\GridFieldConfigRelationEditor
+  SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor: SilverStripe\Forms\GridField\GridFieldConfigRelationEditor
   GridFieldDataColumns: SilverStripe\Forms\GridField\GridFieldDataColumns
   GridFieldDeleteAction: SilverStripe\Forms\GridField\GridFieldDeleteAction
   GridFieldDetailForm: SilverStripe\Forms\GridField\GridFieldDetailForm
-  GridFieldDetailForm_ItemRequest: SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest
+  GridFieldDetailForm_ItemRequest: SilverStripe\Forms\GridField\GridFieldDetailFormItemRequest
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest: SilverStripe\Forms\GridField\GridFieldDetailFormItemRequest
   GridFieldEditButton: SilverStripe\Forms\GridField\GridFieldEditButton
   GridFieldExportButton: SilverStripe\Forms\GridField\GridFieldExportButton
   GridFieldFilterHeader: SilverStripe\Forms\GridField\GridFieldFilterHeader
@@ -343,14 +385,36 @@ mappings:
   GridFieldToolbarHeader: SilverStripe\Forms\GridField\GridFieldToolbarHeader
   GridFieldViewButton: SilverStripe\Forms\GridField\GridFieldViewButton
   GridState: SilverStripe\Forms\GridField\GridState
-  GridState_Data: SilverStripe\Forms\GridField\GridState_Data
-  GridState_Component: SilverStripe\Forms\GridField\GridState_Component
-  i18n: SilverStripe\i18n\i18n
-  i18nEntityProvider: SilverStripe\i18n\i18nEntityProvider
-  i18nTextCollector: SilverStripe\i18n\TextCollection\i18nTextCollector
-  i18nTextCollector_Writer: SilverStripe\i18n\Messages\Writer
-  i18nTextCollector_Writer_RailsYaml: SilverStripe\i18n\Messages\YamlWriter
-  i18nTextCollector_Parser: SilverStripe\i18n\TextCollection\Parser
+  GridState_Data: SilverStripe\Forms\GridField\GridStateData
+  SilverStripe\Forms\GridField\GridState_Data: SilverStripe\Forms\GridField\GridStateData
+  GridState_Component: SilverStripe\Forms\GridField\GridStateComponent
+  SilverStripe\Forms\GridField\GridState_Component: SilverStripe\Forms\GridField\GridStateComponent
+  i18n: SilverStripe\Internationalisation\Internationalisation
+  SilverStripe\i18n\i18n: SilverStripe\Internationalisation\Internationalisation
+  i18nEntityProvider: SilverStripe\Internationalisation\EntityProvider
+  i18nTextCollector: SilverStripe\Internationalisation\TextCollection\TextCollector
+  i18nTextCollector_Writer: SilverStripe\Internationalisation\Messages\Writer
+  i18nTextCollector_Writer_RailsYaml: SilverStripe\Internationalisation\Messages\YamlWriter
+  i18nTextCollector_Parser: SilverStripe\Internationalisation\TextCollection\Parser
+
+  SilverStripe\i18n\Data\Intl\IntlLocales: SilverStripe\Internationalisation\Data\IntlLocales
+  SilverStripe\i18n\Data\Locales: SilverStripe\Internationalisation\Locales
+  SilverStripe\i18n\Data\Sources: SilverStripe\Internationalisation\Sources
+  SilverStripe\i18n\Messages\Symfony\FlushInvalidatedResource: SilverStripe\Internationalisation\Messages\Symfony\FlushInvalidatedResource
+  SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader: SilverStripe\Internationalisation\Messages\Symfony\ModuleYamlLoader
+  SilverStripe\i18n\Messages\Symfony\SymfonyMessageProvider: SilverStripe\Internationalisation\Messages\Symfony\SymfonyMessageProvider
+
+  SilverStripe\i18n\Messages\MessageProvider: SilverStripe\Internationalisation\Messages\MessageProvider
+  SilverStripe\i18n\Messages\Reader: SilverStripe\Internationalisation\Messages\Reader
+  SilverStripe\i18n\Messages\Writer: SilverStripe\Internationalisation\Messages\Writer
+  SilverStripe\i18n\Messages\YamlReader: SilverStripe\Internationalisation\Messages\YamlReader
+  SilverStripe\i18n\Messages\YamlWriter: SilverStripe\Internationalisation\Messages\YamlWriter
+
+  SilverStripe\i18n\TextCollection\Parser: SilverStripe\Internationalisation\TextCollection\Parser
+  SilverStripe\i18n\TextCollection\i18nTextCollector: SilverStripe\Internationalisation\TextCollection\TextCollector
+  SilverStripe\i18n\i18n: SilverStripe\Internationalisation\Internationalisation
+  SilverStripe\i18n\i18nEntityProvider: SilverStripe\Internationalisation\EntityProvider
+
   SilverStripe\Framework\Logging\DebugViewFriendlyErrorFormatter: SilverStripe\Logging\DebugViewFriendlyErrorFormatter
   SilverStripe\Framework\Logging\DetailedErrorFormatter: SilverStripe\Logging\DetailedErrorFormatter
   SilverStripe\Framework\Logging\HTTPOutputHandler: SilverStripe\Logging\HTTPOutputHandler
@@ -372,23 +436,36 @@ mappings:
   FulltextSearchable: SilverStripe\ORM\Search\FulltextSearchable
   SearchContext: SilverStripe\ORM\Search\SearchContext
   ArrayData: SilverStripe\View\ArrayData
-  GenericTemplateGlobalProvider: SilverStripe\View\GenericTemplateGlobalProvider
+  GenericTemplateGlobalProvider: SilverStripe\View\Templates\GenericTemplateGlobalProvider
   Requirements: SilverStripe\View\Requirements
-  Requirements_Backend: SilverStripe\View\Requirements_Backend
-  Requirements_Minifier: SilverStripe\View\Requirements_Minifier
-  SSTemplateParseException: SilverStripe\View\SSTemplateParseException
-  SSTemplateParser: SilverStripe\View\SSTemplateParser
-  SSViewer_Scope: SilverStripe\View\SSViewer_Scope
-  SSViewer_BasicIteratorSupport: SilverStripe\View\SSViewer_BasicIteratorSupport
-  SSViewer_DataPresenter: SilverStripe\View\SSViewer_DataPresenter
-  SSViewer: SilverStripe\View\SSViewer
-  SSViewer_FromString: SilverStripe\View\SSViewer_FromString
-  TemplateGlobalProvider: SilverStripe\View\TemplateGlobalProvider
-  TemplateIteratorProvider: SilverStripe\View\TemplateIteratorProvider
-  TemplateParser: SilverStripe\View\TemplateParser
+  Requirements_Backend: SilverStripe\View\RequirementsBackend
+  SilverStripe\View\Requirements_Backend: SilverStripe\View\RequirementsBackend
+  SSTemplateParseException: SilverStripe\View\Templates\TemplateParserException
+  SilverStripe\View\SSTemplateParseException: SilverStripe\View\Templates\TemplateParserException
+  SSTemplateParser: SilverStripe\View\Templates\TemplateParserInterface
+  SilverStripe\View\TemplateParser: SilverStripe\View\Templates\TemplateParserInterface
+  SSViewer_Scope: SilverStripe\View\Templates\ViewerScope
+  SilverStripe\View\SSViewer_Scope: SilverStripe\View\Templates\ViewerScope
+  SSViewer_BasicIteratorSupport: SilverStripe\View\Templates\BasicIteratorSupport
+  SilverStripe\View\BasicIteratorSupport: SilverStripe\View\Templates\BasicIteratorSupport
+  SilverStripe\View\SSViewer_BasicIteratorSupport: SilverStripe\View\Templates\BasicIteratorSupport
+  SSViewer_DataPresenter: SilverStripe\View\Templates\ViewerDataPresenter
+  SilverStripe\View\SSViewer_DataPresenter: SilverStripe\View\Templates\ViewerDataPresenter
+  SSViewer: SilverStripe\View\Templates\Viewer
+  SilverStripe\View\SSViewer: SilverStripe\View\Templates\Viewer
+  SSViewer_FromString: SilverStripe\View\Templates\ViewerFromString
+  SilverStripe\View\SSViewer_FromString: SilverStripe\View\Templates\ViewerFromString
+  TemplateGlobalProvider: SilverStripe\View\Templates\TemplateGlobalProvider
+  SilverStripe\View\TemplateGlobalProvider: SilverStripe\View\Templates\TemplateGlobalProvider
+  TemplateIteratorProvider: SilverStripe\View\Templates\TemplateIteratorProvider
+  ilverStripe\View\TemplateIteratorProvider: ilverStripe\View\Templates\TemplateIteratorProvider
+  SSTemplateParser: SilverStripe\View\Templates\TemplateParser
+  SilverStripe\View\SSTemplateParser: SilverStripe\View\Templates\TemplateParser
   ViewableData: SilverStripe\View\ViewableData
-  ViewableData_Customised: SilverStripe\View\ViewableData_Customised
-  ViewableData_Debugger: SilverStripe\View\ViewableData_Debugger
+  ViewableData_Customised: SilverStripe\View\ViewableDataCustomised
+  SilverStripe\View\ViewableData_Customised: SilverStripe\View\ViewableDataCustomised
+  ViewableData_Debugger: SilverStripe\View\ViewableDataDebugger
+  SilverStripe\View\ViewableData_Debugger: SilverStripe\View\ViewableDataDebugger
   HTMLCleaner: SilverStripe\View\Parsers\HTMLCleaner
   SS_HTMLValue: SilverStripe\View\Parsers\HTMLValue
   SS_HTML4Value: SilverStripe\View\Parsers\HTML4Value
@@ -411,10 +488,12 @@ mappings:
   ControllerTest_IndexSecuredController: SilverStripe\Control\Tests\ControllerTest\IndexSecuredController
   ControllerTest_AccessBaseControllerExtension: SilverStripe\Control\Tests\ControllerTest\AccessBaseControllerExtension
   ControllerTest_HasAction: SilverStripe\Control\Tests\ControllerTest\HasAction
-  ControllerTest_HasAction_Unsecured: SilverStripe\Control\Tests\ControllerTest\HasAction_Unsecured
+  ControllerTest_HasAction_Unsecured: SilverStripe\Control\Tests\ControllerTest\HasActionUnsecured
+  SilverStripe\Control\Tests\ControllerTest\HasAction_Unsecured: SilverStripe\Control\Tests\ControllerTest\HasActionUnsecured
   ControllerTest_ContainerController: SilverStripe\Control\Tests\ControllerTest\ContainerController
   ControllerTest_SubController: SilverStripe\Control\Tests\ControllerTest\SubController
-  ControllerTest_SubController_Exception: SilverStripe\Control\Tests\ControllerTest\SubController_Exception
+  ControllerTest_SubController_Exception: SilverStripe\Control\Tests\ControllerTest\SubControllerException
+  SilverStripe\Control\Tests\ControllerTest\SubController_Exception: SilverStripe\Control\Tests\ControllerTest\SubControllerException
   CookieJarTest: SilverStripe\Control\Tests\CookieJarTest
   CookieTest: SilverStripe\Control\Tests\CookieTest
   DirectorTest: SilverStripe\Control\Tests\DirectorTest
@@ -479,7 +558,8 @@ mappings:
   ObjectTest_ExtendTest3: SilverStripe\Core\Tests\ObjectTest\ExtendTest3
   ObjectTest_ExtendTest4: SilverStripe\Core\Tests\ObjectTest\ExtendTest4
   ObjectTest_Extending: SilverStripe\Core\Tests\ObjectTest\Extending
-  ObjectTest_Extending_Extension: SilverStripe\Core\Tests\ObjectTest\Extending_Extension
+  ObjectTest_Extending_Extension: SilverStripe\Core\Tests\ObjectTest\ExtendingExtension
+  SilverStripe\Core\Tests\ObjectTest\Extending_Extension: SilverStripe\Core\Tests\ObjectTest\ExtendingExtension
   PhpSyntaxTest: SilverStripe\Core\Tests\PhpSyntaxTest
   BacktraceTest: SilverStripe\Dev\Tests\BacktraceTest
   BulkLoaderResultTest: SilverStripe\Dev\Tests\BulkLoaderResultTest
@@ -576,11 +656,11 @@ mappings:
   TextFieldTest: SilverStripe\Forms\Tests\TextFieldTest
   TimeFieldTest: SilverStripe\Forms\Tests\TimeFieldTest
   TreeDropdownFieldTest: SilverStripe\Forms\Tests\TreeDropdownFieldTest
-  i18nTest: SilverStripe\i18n\Tests\i18nTest
-  i18nTest_DataObject: SilverStripe\i18n\Tests\i18nTest\TestDataObject
-  i18nTest_Object: SilverStripe\i18n\Tests\i18nTest\TestObject
-  i18nTextCollectorTest: SilverStripe\i18n\Tests\i18nTextCollectorTest
-  i18nTextCollectorTest_Collector: SilverStripe\i18n\Tests\i18nTextCollectorTest\Collector
+  i18nTest: SilverStripe\Internationalisation\Tests\InternationalisationTest
+  i18nTest_DataObject: SilverStripe\Internationalisation\Tests\InternationalisationTest\TestDataObject
+  i18nTest_Object: SilverStripe\Internationalisation\Tests\InternationalisationTest\TestObject
+  i18nTextCollectorTest: SilverStripe\Internationalisation\Tests\InternationalisationTextCollectorTest
+  i18nTextCollectorTest_Collector: SilverStripe\Internationalisation\Tests\InternationalisationTextCollectorTest\Collector
   ArrayLibTest: SilverStripe\ORM\Tests\ArrayLibTest
   ArrayListTest: SilverStripe\ORM\Tests\ArrayListTest
   ArrayListTest_Object: SilverStripe\ORM\Tests\ArrayListTest\TestObject
@@ -631,7 +711,8 @@ mappings:
   OtherSubclassWithSameField: SilverStripe\ORM\Tests\DataObjectTest\OtherSubclassWithSameField
   DataObjectTest_FieldlessTable: SilverStripe\ORM\Tests\DataObjectTest\FieldlessTable
   DataObjectTest_FieldlessSubTable: SilverStripe\ORM\Tests\DataObjectTest\FieldlessSubTable
-  DataObjectTest_Team_Extension: SilverStripe\ORM\Tests\DataObjectTest\Team_Extension
+  DataObjectTest_Team_Extension: SilverStripe\ORM\Tests\DataObjectTest\TeamExtension
+  SilverStripe\ORM\Tests\DataObjectTest\Team_Extension: SilverStripe\ORM\Tests\DataObjectTest\TeamExtension
   DataObjectTest_ValidatedObject: SilverStripe\ORM\Tests\DataObjectTest\ValidatedObject
   DataObjectTest_Company: SilverStripe\ORM\Tests\DataObjectTest\Company
   DataObjectTest_EquipmentCompany: SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany
@@ -778,10 +859,14 @@ mappings:
   ViewableDataTest_Cached: SilverStripe\View\Tests\ViewableDataTest\Cached
   ViewableDataTest_NotCached: SilverStripe\View\Tests\ViewableDataTest\NotCached
   ViewableDataTest_Failover: SilverStripe\View\Tests\ViewableDataTest\Failover
-  GridField_URLHandlerTest: SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest
-  GridField_URLHandlerTest_Controller: SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest\TestController
-  GridField_URLHandlerTest_Component: SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest\TestComponent
-  GridField_URLHandlerTest_Component_ItemRequest: SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest\TestComponent_ItemRequest
+  GridField_URLHandlerTest: SilverStripe\Forms\Tests\GridField\GridFieldURLHandlerTest
+  SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest: SilverStripe\Forms\Tests\GridField\GridFieldURLHandlerTest
+  GridField_URLHandlerTest_Controller: SilverStripe\Forms\Tests\GridField\GridFieldURLHandlerTest\TestController
+  SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest\TestController: SilverStripe\Forms\Tests\GridField\GridFieldURLHandlerTest\TestController
+  GridField_URLHandlerTest_Component: SilverStripe\Forms\Tests\GridField\GridFieldURLHandlerTest\TestComponent
+  SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest\TestComponent: SilverStripe\Forms\Tests\GridField\GridFieldURLHandlerTest\TestComponent
+  GridField_URLHandlerTest_Component_ItemRequest: SilverStripe\Forms\Tests\GridField\GridFieldURLHandlerTest\TestComponentItemRequest
+  SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest\TestComponent_ItemRequest: SilverStripe\Forms\Tests\GridField\GridFieldURLHandlerTest\TestComponentItemRequest
   GridFieldAddExistingAutocompleterTest: SilverStripe\Forms\Tests\GridField\GridFieldAddExistingAutocompleterTest
   GridFieldAddExistingAutocompleterTest_Controller: SilverStripe\Forms\Tests\GridField\GridFieldAddExistingAutocompleterTest\TestController
   GridFieldConfigTest: SilverStripe\Forms\Tests\GridField\GridFieldConfigTest
@@ -851,10 +936,13 @@ mappings:
   ThemeResourceLoaderTest: SilverStripe\Core\Tests\Manifest\ThemeResourceLoaderTest
   EmailTest: SilverStripe\Control\Tests\Email\EmailTest
   MailerTest: SilverStripe\Control\Tests\Email\SwiftMailerTest
-  ErrorControlChainTest_Chain: SilverStripe\Core\Tests\Startup\ErrorControlChainTest\ErrorControlChainTest_Chain
+  ErrorControlChainTest_Chain: SilverStripe\Core\Tests\Startup\ErrorControlChainTest\ErrorControlChainTestChain
+  SilverStripe\Core\Tests\Startup\ErrorControlChainTest\ErrorControlChainTest_Chain: SilverStripe\Core\Tests\Startup\ErrorControlChainTest\ErrorControlChainTestChain
   ErrorControlChainTest: SilverStripe\Core\Tests\Startup\ErrorControlChainTest
-  ParameterConfirmationTokenTest_Token: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_Token
-  ParameterConfirmationTokenTest_ValidToken: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_ValidToken
+  ParameterConfirmationTokenTest_Token: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTestToken
+  SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_Token: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTestToken
+  ParameterConfirmationTokenTest_ValidToken: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTestValidToken
+  SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_ValidToken: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTestValidToken
   ParameterConfirmationTokenTest: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest
   ConfigTest_DefinesFoo: SilverStripe\Core\Tests\Config\ConfigTest\DefinesFoo
   ConfigTest_DefinesBar: SilverStripe\Core\Tests\Config\ConfigTest\DefinesBar
@@ -1096,35 +1184,35 @@ warnings:
     'SilverStripe\Control\Email\Email->setTemplate()':
       message: 'Renamed to setHTMLTemplate()'
       replacement: 'setHTMLTemplate'
-    'SilverStripe\i18n\i18n::get_language_name()':
-      message: 'moved to SilverStripe\i18n\Data\Locales::languageName()'
+    'SilverStripe\Internationalisation\Internationalisation::get_language_name()':
+      message: 'moved to SilverStripe\Internationalisation\Data\Locales::languageName()'
       replacement: 'getData()->languageName'
-    'SilverStripe\i18n\i18n::get_locale_name()':
-      message: 'moved to SilverStripe\i18n\Data\Locales::localeName()'
+    'SilverStripe\Internationalisation\Internationalisation::get_locale_name()':
+      message: 'moved to SilverStripe\Internationalisation\Data\Locales::localeName()'
       replacement: 'getData()->localeName'
-    'SilverStripe\i18n\i18n::get_language_code()':
+    'SilverStripe\Internationalisation\Internationalisation::get_language_code()':
       message: 'Removed'
-    'SilverStripe\i18n\i18n::get_common_languages()':
-      message: 'moved to SilverStripe\i18n\Data\Locales::getLanguages()'
+    'SilverStripe\Internationalisation\Internationalisation::get_common_languages()':
+      message: 'moved to SilverStripe\Internationalisation\Data\Locales::getLanguages()'
       replacement: 'getData()->getLanguages'
-    'SilverStripe\i18n\i18n::get_common_locales()':
-      message: 'Removed, but you can use SilverStripe\i18n\Data\Locales::getLocales() instead'
+    'SilverStripe\Internationalisation\Internationalisation::get_common_locales()':
+      message: 'Removed, but you can use SilverStripe\Internationalisation\Data\Locales::getLocales() instead'
       replacement: 'getData()->getLocales'
-    'SilverStripe\i18n\i18n::get_existing_translations()':
-      message: 'moved to SilverStripe\i18n\Data\Sources::getKnownLocales()'
+    'SilverStripe\Internationalisation\Internationalisation::get_existing_translations()':
+      message: 'moved to SilverStripe\Internationalisation\Data\Sources::getKnownLocales()'
       replacement: 'getSources()->getKnownLocales'
-    'SilverStripe\i18n\i18n::get_owner_module()':
+    'SilverStripe\Internationalisation\Internationalisation::get_owner_module()':
       message: 'moved to SilverStripe\Core\Manifest\ClassManifest::getOwnerModule()'
-    'SilverStripe\i18n\i18n::validate_locale()':
-      message: 'moved to SilverStripe\i18n\Data\Locales::validate()'
+    'SilverStripe\Internationalisation\Internationalisation::validate_locale()':
+      message: 'moved to SilverStripe\Internationalisation\Data\Locales::validate()'
       replacement: 'getData()->validate'
-    'SilverStripe\i18n\i18n::get_lang_from_locale()':
-      message: 'moved to SilverStripe\i18n\Data\Locales::langFromLocale()'
+    'SilverStripe\Internationalisation\Internationalisation::get_lang_from_locale()':
+      message: 'moved to SilverStripe\Internationalisation\Data\Locales::langFromLocale()'
       replacement: 'getData()->langFromLocale'
-    'SilverStripe\i18n\i18n::get_locale_from_lang()':
-      message: 'moved to SilverStripe\i18n\Data\Locales::localeFromLang()'
+    'SilverStripe\Internationalisation\Internationalisation::get_locale_from_lang()':
+      message: 'moved to SilverStripe\Internationalisation\Data\Locales::localeFromLang()'
       replacement: 'getData()->localeFromLang'
-    'SilverStripe\i18n\i18n::get_tinymce_lang()':
+    'SilverStripe\Internationalisation\Internationalisation::get_tinymce_lang()':
       message: 'moved to SilverStripe\Forms\HTMLEditor\TinyMCEConfig::get_tinymce_lang()'
     'SilverStripe\ORM\Hierarchy->getChildrenAsUL()':
       message: 'Replaced with MarkedSet::renderChildren()'

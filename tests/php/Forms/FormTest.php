@@ -26,7 +26,7 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\LookupField;
 use SilverStripe\Forms\FileField;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * @skipUpgrade
@@ -52,9 +52,9 @@ class FormTest extends FunctionalTest
         parent::setUp();
 
         // Suppress themes
-        SSViewer::set_themes(
+        Viewer::set_themes(
             [
-            SSViewer::DEFAULT_THEME
+            Viewer::DEFAULT_THEME
             ]
         );
     }

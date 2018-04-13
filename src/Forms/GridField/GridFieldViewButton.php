@@ -4,14 +4,14 @@ namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * A button that allows a user to view readonly details of a record. This is
  * disabled by default and intended for use in readonly {@link GridField}
  * instances.
  */
-class GridFieldViewButton implements GridField_ColumnProvider
+class GridFieldViewButton implements GridFieldColumnProvider
 {
 
     public function augmentColumns($field, &$cols)
@@ -34,7 +34,7 @@ class GridFieldViewButton implements GridField_ColumnProvider
         $data = new ArrayData(array(
             'Link' => Controller::join_links($field->Link('item'), $record->ID, 'view')
         ));
-        $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $template = Viewer::get_templates_by_class($this, '', __CLASS__);
         return $data->renderWith($template);
     }
 

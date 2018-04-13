@@ -1,11 +1,11 @@
 <?php
 namespace SilverStripe\Control\Tests;
 
-use SilverStripe\Control\Cookie_Backend;
+use SilverStripe\Control\CookieBackend;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
 use SilverStripe\Control\Middleware\RequestHandlerMiddlewareAdapter;
 use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
@@ -529,7 +529,7 @@ class DirectorTest extends SapphireTest
         $_COOKIE = array('somekey' => 'cookievalue');
 
         $cookies = Injector::inst()->createWithArgs(
-            Cookie_Backend::class,
+            CookieBackend::class,
             array(array('somekey' => 'sometestcookievalue'))
         );
 
@@ -589,7 +589,7 @@ class DirectorTest extends SapphireTest
             strtoupper($method),
             null,
             null,
-            Injector::inst()->createWithArgs(Cookie_Backend::class, array($fixture))
+            Injector::inst()->createWithArgs(CookieBackend::class, array($fixture))
         );
 
         $this->assertInstanceOf(HTTPResponse::class, $getresponse, 'Director::test() returns HTTPResponse');
@@ -785,7 +785,7 @@ class DirectorTest extends SapphireTest
                 $this->fail("Expected to redirect to {$this->expectedRedirect} but no redirect found");
             }
             return $result;
-        } catch (HTTPResponse_Exception $exception) {
+        } catch (HTTPResponseException $exception) {
             // Check URL
             if ($this->expectedRedirect) {
                 $url = $exception->getResponse()->getHeader('Location');

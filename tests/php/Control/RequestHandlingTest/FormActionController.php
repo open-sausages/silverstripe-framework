@@ -8,7 +8,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\TextField;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 class FormActionController extends Controller implements TestOnly
 {
@@ -69,6 +69,6 @@ class FormActionController extends Controller implements TestOnly
 
     public function getViewer($action = null)
     {
-        return new SSViewer('BlankPage');
+        return new Viewer('BlankPage');
     }
 }

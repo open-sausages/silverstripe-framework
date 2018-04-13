@@ -11,7 +11,7 @@ use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBClassName;
@@ -522,7 +522,7 @@ class SecurityTest extends FunctionalTest
 
     public function testRepeatedLoginAttemptsLockingPeopleOut()
     {
-        i18n::set_locale('en_US');
+        Internationalisation::set_locale('en_US');
         Member::config()->set('lock_out_after_incorrect_logins', 5);
         Member::config()->set('lock_out_delay_mins', 15);
         DBDatetime::set_mock_now('2017-05-22 00:00:00');

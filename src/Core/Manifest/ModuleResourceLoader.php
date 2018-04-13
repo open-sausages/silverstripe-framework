@@ -5,7 +5,7 @@ namespace SilverStripe\Core\Manifest;
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\View\TemplateGlobalProvider;
+use SilverStripe\View\Templates\TemplateGlobalProvider;
 
 /**
  * Helper for mapping module resources to paths / urls

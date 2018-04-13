@@ -7,7 +7,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
@@ -206,7 +206,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * Will not do anything if a current HTTPRequest isn't available
      *
      * @param HTTPRequest|null $request Allow HTTPRequest to be used for the base comparison
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     public function throwRedirectIfNeeded(HTTPRequest $request = null)
     {
@@ -216,7 +216,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         }
         $response = $this->getRedirect($request);
         if ($response) {
-            throw new HTTPResponse_Exception($response);
+            throw new HTTPResponseException($response);
         }
     }
 

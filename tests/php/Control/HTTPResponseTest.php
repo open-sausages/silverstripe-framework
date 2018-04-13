@@ -4,7 +4,7 @@ namespace SilverStripe\Control\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 
 class HTTPResponseTest extends SapphireTest
 {
@@ -24,8 +24,8 @@ class HTTPResponseTest extends SapphireTest
 
         // Confirm that the exception's statusCode and statusDescription take precedence
         try {
-            throw new HTTPResponse_Exception($response, 404, 'not even found');
-        } catch (HTTPResponse_Exception $e) {
+            throw new HTTPResponseException($response, 404, 'not even found');
+        } catch (HTTPResponseException $e) {
             $this->assertEquals(404, $e->getResponse()->getStatusCode());
             $this->assertEquals('not even found', $e->getResponse()->getStatusDescription());
             return;
@@ -39,8 +39,8 @@ class HTTPResponseTest extends SapphireTest
 
         // Confirm that the exception's statusCode and statusDescription take precedence
         try {
-            throw new HTTPResponse_Exception("Some content that may be from a hacker", 404, 'not even found');
-        } catch (HTTPResponse_Exception $e) {
+            throw new HTTPResponseException("Some content that may be from a hacker", 404, 'not even found');
+        } catch (HTTPResponseException $e) {
             $this->assertEquals("text/plain", $e->getResponse()->getHeader("Content-Type"));
             return;
         }

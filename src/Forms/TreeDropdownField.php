@@ -807,8 +807,8 @@ class TreeDropdownField extends FormField
      */
     public function performReadonlyTransformation()
     {
-        /** @var TreeDropdownField_Readonly $copy */
-        $copy = $this->castedCopy(TreeDropdownField_Readonly::class);
+        /** @var TreeDropdownFieldReadonly $copy */
+        $copy = $this->castedCopy(TreeDropdownFieldReadonly::class);
         $copy->setKeyField($this->getKeyField());
         $copy->setLabelField($this->getLabelField());
         $this->setTitleField($this->getTitleField());

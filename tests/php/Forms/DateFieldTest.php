@@ -6,7 +6,7 @@ use IntlDateFormatter;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
@@ -17,7 +17,7 @@ class DateFieldTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
-        i18n::set_locale('en_NZ');
+        Internationalisation::set_locale('en_NZ');
         DBDatetime::set_mock_now('2011-02-01 8:34:00');
     }
 
@@ -157,7 +157,7 @@ class DateFieldTest extends SapphireTest
     public function testSetLocale()
     {
         // should get en_NZ by default through setUp()
-        i18n::set_locale('de_DE');
+        Internationalisation::set_locale('de_DE');
         $f = new DateField('Date', 'Date', '29/03/2003');
         $f->setHTML5(false);
         $f->setValue('29.06.2006');

@@ -1,11 +1,11 @@
 <?php
 
-namespace SilverStripe\i18n\Tests\i18nTest;
+namespace SilverStripe\Internationalisation\Tests\i18nTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\i18n\i18nEntityProvider;
+use SilverStripe\Internationalisation\EntityProvider;
 
-class TestObject implements TestOnly, i18nEntityProvider
+class TestObject implements TestOnly, EntityProvider
 {
     static $my_translatable_property = "Untranslated";
 

@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBTime;
@@ -13,7 +13,7 @@ class DBTimeTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
-        i18n::set_locale('en_NZ');
+        Internationalisation::set_locale('en_NZ');
     }
 
     public function dataTestParse()

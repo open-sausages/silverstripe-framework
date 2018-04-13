@@ -1,17 +1,17 @@
 <?php
 
-namespace SilverStripe\i18n\Tests;
+namespace SilverStripe\Internationalisation\Tests;
 
 use InvalidArgumentException;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\i18n\i18n;
-use SilverStripe\i18n\Messages\MessageProvider;
-use SilverStripe\i18n\Messages\Symfony\SymfonyMessageProvider;
+use SilverStripe\Internationalisation\Internationalisation;
+use SilverStripe\Internationalisation\Messages\MessageProvider;
+use SilverStripe\Internationalisation\Messages\Symfony\SymfonyMessageProvider;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 class i18nTest extends SapphireTest
 {
@@ -31,7 +31,7 @@ class i18nTest extends SapphireTest
 
     public function testGetExistingTranslations()
     {
-        $translations = i18n::getSources()->getKnownLocales();
+        $translations = Internationalisation::getSources()->getKnownLocales();
         $this->assertTrue(isset($translations['en_US']), 'Checking for en translation');
         $this->assertEquals($translations['en_US'], 'English (United States)');
         $this->assertTrue(isset($translations['de_DE']), 'Checking for de_DE translation');
@@ -41,7 +41,7 @@ class i18nTest extends SapphireTest
     {
         // Validate necessary assumptions for this test
         // As per set of locales loaded from _fakewebroot
-        $translations = i18n::getSources()->getKnownLocales();
+        $translations = Internationalisation::getSources()->getKnownLocales();
         $this->assertEquals(
             [
                 'en_GB',
@@ -59,22 +59,22 @@ class i18nTest extends SapphireTest
         );
 
         // Test indeterminate locales
-        $this->assertEmpty(i18n::get_closest_translation('zz_ZZ'));
+        $this->assertEmpty(Internationalisation::get_closest_translation('zz_ZZ'));
 
         // Test english fallback
-        $this->assertEquals('en_US', i18n::get_closest_translation('en_US'));
-        $this->assertEquals('en_GB', i18n::get_closest_translation('en_GB'));
-        $this->assertEquals('en_US', i18n::get_closest_translation('en_ZZ'));
+        $this->assertEquals('en_US', Internationalisation::get_closest_translation('en_US'));
+        $this->assertEquals('en_GB', Internationalisation::get_closest_translation('en_GB'));
+        $this->assertEquals('en_US', Internationalisation::get_closest_translation('en_ZZ'));
 
         // Test spanish fallbacks
-        $this->assertEquals('es_AR', i18n::get_closest_translation('es_AR'));
-        $this->assertEquals('es_ES', i18n::get_closest_translation('es_ES'));
-        $this->assertEquals('es_ES', i18n::get_closest_translation('es_XX'));
+        $this->assertEquals('es_AR', Internationalisation::get_closest_translation('es_AR'));
+        $this->assertEquals('es_ES', Internationalisation::get_closest_translation('es_ES'));
+        $this->assertEquals('es_ES', Internationalisation::get_closest_translation('es_XX'));
     }
 
     public function testDataObjectFieldLabels()
     {
-        i18n::set_locale('de_DE');
+        Internationalisation::set_locale('de_DE');
 
         // Load into the translator as a literal array data source
         /** @var SymfonyMessageProvider $provider */
@@ -131,14 +131,14 @@ class i18nTest extends SapphireTest
             'Untranslated'
         );
 
-        i18n::set_locale('en_US');
+        Internationalisation::set_locale('en_US');
         $this->assertEquals(
             i18nTest\TestObject::my_translatable_property(),
             'Untranslated',
             'Getter returns original static value when called in default locale'
         );
 
-        i18n::set_locale('de_DE');
+        Internationalisation::set_locale('de_DE');
         $this->assertEquals(
             i18nTest\TestObject::my_translatable_property(),
             'Übersetzt',
@@ -148,8 +148,8 @@ class i18nTest extends SapphireTest
 
     public function testTemplateTranslation()
     {
-        $oldLocale = i18n::get_locale();
-        i18n::config()->update('missing_default_warning', false);
+        $oldLocale = Internationalisation::get_locale();
+        Internationalisation::config()->update('missing_default_warning', false);
 
         /** @var SymfonyMessageProvider $provider */
         $provider = Injector::inst()->get(MessageProvider::class);
@@ -169,7 +169,7 @@ class i18nTest extends SapphireTest
             'en_US'
         );
 
-        $viewer = new SSViewer('i18nTestModule');
+        $viewer = new Viewer('i18nTestModule');
         $parsedHtml = Convert::nl2os($viewer->process(new ArrayData([
             'TestProperty' => 'TestPropertyValue'
         ])));
@@ -199,8 +199,8 @@ class i18nTest extends SapphireTest
             'de_DE'
         );
 
-        i18n::set_locale('de_DE');
-        $viewer = new SSViewer('i18nTestModule');
+        Internationalisation::set_locale('de_DE');
+        $viewer = new Viewer('i18nTestModule');
         $parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
         $this->assertContains(
             Convert::nl2os("TRANS Main Template\n"),
@@ -239,7 +239,7 @@ class i18nTest extends SapphireTest
         $this->assertContains('Multiple: 4 items', $parsedHtml);
         $this->assertContains('None: 0 items', $parsedHtml);
 
-        i18n::set_locale($oldLocale);
+        Internationalisation::set_locale($oldLocale);
     }
 
     public function testNewTMethodSignature()
@@ -259,7 +259,7 @@ class i18nTest extends SapphireTest
         $default = "Hello {name} {greeting}. But it is late, {goodbye}";
 
         // Test missing entity key
-        $translated = i18n::_t(
+        $translated = Internationalisation::_t(
             $entity . '_DOES_NOT_EXIST',
             $default,
             array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye")
@@ -271,7 +271,7 @@ class i18nTest extends SapphireTest
         );
 
         // Test standard injection
-        $translated = i18n::_t(
+        $translated = Internationalisation::_t(
             $entity,
             $default,
             ["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]
@@ -283,7 +283,7 @@ class i18nTest extends SapphireTest
         );
 
         // @deprecated 5.0 Passing in context
-        $translated = i18n::_t(
+        $translated = Internationalisation::_t(
             $entity,
             $default,
             "New context (this should be ignored)",
@@ -299,7 +299,7 @@ class i18nTest extends SapphireTest
         $this->expectExceptionMessage(InvalidArgumentException::class);
         $this->expectExceptionMessage('Injection must be an associative array');
 
-        i18n::_t(
+        Internationalisation::_t(
             $entity, // has {name} placeholders
             $default,
             ["Cat", "meow", "meow"]
@@ -311,7 +311,7 @@ class i18nTest extends SapphireTest
      * */
     public function testNewTemplateTranslation()
     {
-        i18n::config()->update('missing_default_warning', false);
+        Internationalisation::config()->update('missing_default_warning', false);
 
         /** @var SymfonyMessageProvider $provider */
         $provider = Injector::inst()->get(MessageProvider::class);
@@ -324,7 +324,7 @@ class i18nTest extends SapphireTest
             'en_US'
         );
 
-        $viewer = new SSViewer('i18nTestModule');
+        $viewer = new Viewer('i18nTestModule');
         $parsedHtml = Convert::nl2os($viewer->process(new ArrayData(['TestProperty' => 'TestPropertyValue'])));
         $this->assertContains(
             Convert::nl2os("Hello Mark welcome. But it is late, bye\n"),
@@ -341,7 +341,7 @@ class i18nTest extends SapphireTest
         //test injected calls
         $this->assertContains(
             Convert::nl2os(
-                "TRANS Hello " . Director::absoluteBaseURL() . " " . i18n::get_locale()
+                "TRANS Hello " . Director::absoluteBaseURL() . " " . Internationalisation::get_locale()
                 . ". But it is late, global calls\n"
             ),
             $parsedHtml,
@@ -351,21 +351,21 @@ class i18nTest extends SapphireTest
 
     public function testGetLocaleFromLang()
     {
-        $this->assertEquals('en_US', i18n::getData()->localeFromLang('en'));
-        $this->assertEquals('de_DE', i18n::getData()->localeFromLang('de_DE'));
-        $this->assertEquals('xy_XY', i18n::getData()->localeFromLang('xy'));
+        $this->assertEquals('en_US', Internationalisation::getData()->localeFromLang('en'));
+        $this->assertEquals('de_DE', Internationalisation::getData()->localeFromLang('de_DE'));
+        $this->assertEquals('xy_XY', Internationalisation::getData()->localeFromLang('xy'));
     }
 
     public function testValidateLocale()
     {
-        $this->assertTrue(i18n::getData()->validate('en_US'), 'Known locale in underscore format is valid');
-        $this->assertTrue(i18n::getData()->validate('en-US'), 'Known locale in dash format is valid');
-        $this->assertFalse(i18n::getData()->validate('en'), 'Short lang format is not valid');
-        $this->assertFalse(i18n::getData()->validate('xx_XX'), 'Unknown locale in correct format is not valid');
-        $this->assertFalse(i18n::getData()->validate(''), 'Empty string is not valid');
-        $this->assertTrue(i18n::getData()->validate('de_DE'), 'Known locale where language is same as region');
-        $this->assertTrue(i18n::getData()->validate('fr-FR'), 'Known locale where language is same as region');
-        $this->assertTrue(i18n::getData()->validate('zh_cmn'), 'Known locale with all lowercase letters');
+        $this->assertTrue(Internationalisation::getData()->validate('en_US'), 'Known locale in underscore format is valid');
+        $this->assertTrue(Internationalisation::getData()->validate('en-US'), 'Known locale in dash format is valid');
+        $this->assertFalse(Internationalisation::getData()->validate('en'), 'Short lang format is not valid');
+        $this->assertFalse(Internationalisation::getData()->validate('xx_XX'), 'Unknown locale in correct format is not valid');
+        $this->assertFalse(Internationalisation::getData()->validate(''), 'Empty string is not valid');
+        $this->assertTrue(Internationalisation::getData()->validate('de_DE'), 'Known locale where language is same as region');
+        $this->assertTrue(Internationalisation::getData()->validate('fr-FR'), 'Known locale where language is same as region');
+        $this->assertTrue(Internationalisation::getData()->validate('zh_cmn'), 'Known locale with all lowercase letters');
     }
 
     public function testTranslate()
@@ -396,33 +396,33 @@ class i18nTest extends SapphireTest
 
         $this->assertEquals(
             'Entity with "Double Quotes"',
-            i18n::_t('i18nTestModule.ENTITY', 'Ignored default'),
+            Internationalisation::_t('i18nTestModule.ENTITY', 'Ignored default'),
             'Returns translation in default language'
         );
 
-        i18n::set_locale('de');
+        Internationalisation::set_locale('de');
         $this->assertEquals(
             'Entity with "Double Quotes" (de)',
-            i18n::_t('i18nTestModule.ENTITY', 'Entity with "Double Quotes"'),
+            Internationalisation::_t('i18nTestModule.ENTITY', 'Entity with "Double Quotes"'),
             'Returns translation according to current locale'
         );
 
-        i18n::set_locale('de_AT');
+        Internationalisation::set_locale('de_AT');
         $this->assertEquals(
             'Entity with "Double Quotes" (de_AT)',
-            i18n::_t('i18nTestModule.ENTITY', 'Entity with "Double Quotes"'),
+            Internationalisation::_t('i18nTestModule.ENTITY', 'Entity with "Double Quotes"'),
             'Returns specific regional translation if available'
         );
         $this->assertEquals(
             'Addition (de)',
-            i18n::_t('i18nTestModule.ADDITION', 'Addition'),
+            Internationalisation::_t('i18nTestModule.ADDITION', 'Addition'),
             'Returns fallback non-regional translation if regional is not available'
         );
 
-        i18n::set_locale('fr');
+        Internationalisation::set_locale('fr');
         $this->assertEquals(
             'Entity with "Double Quotes" (fr)',
-            i18n::_t('i18nTestModule.ENTITY', 'Entity with "Double Quotes"'),
+            Internationalisation::_t('i18nTestModule.ENTITY', 'Entity with "Double Quotes"'),
             'Non-specific locales fall back to language-only localisations'
         );
     }
@@ -459,7 +459,7 @@ class i18nTest extends SapphireTest
      */
     public function testPluralisation($locale, $count, $expected)
     {
-        i18n::set_locale($locale);
+        Internationalisation::set_locale($locale);
         $this->assertEquals(
             $expected,
             _t('Month.PLURALS', 'A month|{count} months', ['count' => $count]),
@@ -469,13 +469,13 @@ class i18nTest extends SapphireTest
 
     public function testGetLanguageName()
     {
-        i18n::config()->update(
+        Internationalisation::config()->update(
             'common_languages',
             array('de_CGN' => array('name' => 'German (Cologne)', 'native' => 'K&ouml;lsch'))
         );
-        $this->assertEquals('German', i18n::getData()->languageName('de_CGN'));
-        $this->assertEquals('Deutsch', i18n::with_locale('de_CGN', function () {
-            return i18n::getData()->languageName('de_CGN');
+        $this->assertEquals('German', Internationalisation::getData()->languageName('de_CGN'));
+        $this->assertEquals('Deutsch', Internationalisation::with_locale('de_CGN', function () {
+            return Internationalisation::getData()->languageName('de_CGN');
         }));
     }
 }

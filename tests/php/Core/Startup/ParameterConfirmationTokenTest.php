@@ -6,8 +6,8 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Startup\ParameterConfirmationToken;
-use SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_Token;
-use SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_ValidToken;
+use SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTestToken;
+use SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTestValidToken;
 use SilverStripe\Dev\SapphireTest;
 
 class ParameterConfirmationTokenTest extends SapphireTest
@@ -36,31 +36,31 @@ class ParameterConfirmationTokenTest extends SapphireTest
 
     public function testParameterDetectsParameters()
     {
-        $withoutToken = new ParameterConfirmationTokenTest_Token(
+        $withoutToken = new ParameterConfirmationTokenTestToken(
             'parameterconfirmationtokentest_notoken',
             $this->request
         );
-        $emptyParameter = new ParameterConfirmationTokenTest_Token(
+        $emptyParameter = new ParameterConfirmationTokenTestToken(
             'parameterconfirmationtokentest_empty',
             $this->request
         );
-        $withToken = new ParameterConfirmationTokenTest_ValidToken(
+        $withToken = new ParameterConfirmationTokenTestValidToken(
             'parameterconfirmationtokentest_withtoken',
             $this->request
         );
-        $withoutParameter = new ParameterConfirmationTokenTest_Token(
+        $withoutParameter = new ParameterConfirmationTokenTestToken(
             'parameterconfirmationtokentest_noparam',
             $this->request
         );
-        $nullToken = new ParameterConfirmationTokenTest_Token(
+        $nullToken = new ParameterConfirmationTokenTestToken(
             'parameterconfirmationtokentest_nulltoken',
             $this->request
         );
-        $emptyToken = new ParameterConfirmationTokenTest_Token(
+        $emptyToken = new ParameterConfirmationTokenTestToken(
             'parameterconfirmationtokentest_emptytoken',
             $this->request
         );
-        $backToken = new ParameterConfirmationTokenTest_Token(
+        $backToken = new ParameterConfirmationTokenTestToken(
             'parameterconfirmationtokentest_backtoken',
             $this->request
         );
@@ -176,7 +176,7 @@ class ParameterConfirmationTokenTest extends SapphireTest
     {
         $this->request->setUrl($url);
 
-        $token = new ParameterConfirmationTokenTest_Token(
+        $token = new ParameterConfirmationTokenTestToken(
             'parameterconfirmationtokentest_parameter',
             $this->request
         );

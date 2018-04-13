@@ -7,7 +7,7 @@ use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
-use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
+use SilverStripe\Forms\GridField\GridFieldDetailFormItemRequest;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\CategoryController;
@@ -347,7 +347,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         $this->logInWithPermission('ADMIN');
 
         $component = new GridFieldDetailForm();
-        $this->assertEquals(GridFieldDetailForm_ItemRequest::class, $component->getItemRequestClass());
+        $this->assertEquals(GridFieldDetailFormItemRequest::class, $component->getItemRequestClass());
         $component->setItemRequestClass('GridFieldDetailFormTest_ItemRequest');
         $this->assertEquals('GridFieldDetailFormTest_ItemRequest', $component->getItemRequestClass());
     }
@@ -366,7 +366,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         // Note: A lot of scaffolding to execute the tested logic,
         // due to the coupling of form creation with itemRequest handling (and its context)
         /** @skipUpgrade */
-        $itemRequest = new GridFieldDetailForm_ItemRequest(
+        $itemRequest = new GridFieldDetailFormItemRequest(
             GridField::create('Categories', 'Categories'),
             $component,
             $category,

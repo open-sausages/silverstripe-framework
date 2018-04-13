@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -79,7 +79,7 @@ class ListboxField extends MultiSelectField
     /**
      * Gets the list of options to render in this formfield
      *
-     * @return ArrayList
+     * @return ArrayListInterface
      */
     public function getOptions()
     {
@@ -99,7 +99,7 @@ class ListboxField extends MultiSelectField
             ));
         }
 
-        $options = new ArrayList($options);
+        $options = new ArrayListInterface($options);
         $this->extend('updateGetOptions', $options);
         return $options;
     }

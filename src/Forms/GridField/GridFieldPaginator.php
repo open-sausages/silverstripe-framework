@@ -4,17 +4,17 @@ namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\Limitable;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use LogicException;
 
 /**
  * GridFieldPaginator paginates the {@link GridField} list and adds controls
  * to the bottom of the {@link GridField}.
  */
-class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider
+class GridFieldPaginator implements GridFieldHTMLProvider, GridFieldDataManipulator, GridFieldActionProvider
 {
     use Configurable;
 
@@ -78,7 +78,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
      * Check that this dataList is of the right data type.
      * Returns false if it's a bad data type, and if appropriate, throws an exception.
      *
-     * @param SS_List $dataList
+     * @param ListInterface $dataList
      * @return bool
      */
     protected function checkDataType($dataList)
@@ -136,7 +136,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
      * Retrieves/Sets up the state object used to store and retrieve information
      * about the current paging details of this GridField
      * @param GridField $gridField
-     * @return GridState_Data
+     * @return GridStateData
      */
     protected function getGridPagerState(GridField $gridField)
     {
@@ -151,10 +151,10 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
     /**
      *
      * @param GridField $gridField
-     * @param SS_List $dataList
-     * @return SS_List
+     * @param ListInterface $dataList
+     * @return ListInterface
      */
-    public function getManipulatedData(GridField $gridField, SS_List $dataList)
+    public function getManipulatedData(GridField $gridField, ListInterface $dataList)
     {
         if (!$this->checkDataType($dataList)) {
             return $dataList;
@@ -244,7 +244,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
             ));
         } else {
             // First page button
-            $firstPage = new GridField_FormAction($gridField, 'pagination_first', 'First', 'paginate', 1);
+            $firstPage = new GridFieldFormAction($gridField, 'pagination_first', 'First', 'paginate', 1);
             $firstPage->addExtraClass(
                 'btn btn-secondary btn--hide-text btn-sm font-icon-angle-double-left ss-gridfield-firstpage'
             );
@@ -254,7 +254,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 
             // Previous page button
             $previousPageNum = $state->currentPage <= 1 ? 1 : $state->currentPage - 1;
-            $previousPage = new GridField_FormAction(
+            $previousPage = new GridFieldFormAction(
                 $gridField,
                 'pagination_prev',
                 'Previous',
@@ -270,7 +270,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 
             // Next page button
             $nextPageNum = $state->currentPage >= $totalPages ? $totalPages : $state->currentPage + 1;
-            $nextPage = new GridField_FormAction(
+            $nextPage = new GridFieldFormAction(
                 $gridField,
                 'pagination_next',
                 'Next',
@@ -285,7 +285,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
             }
 
             // Last page button
-            $lastPage = new GridField_FormAction(
+            $lastPage = new GridFieldFormAction(
                 $gridField,
                 'pagination_last',
                 'Last',
@@ -326,7 +326,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
         if (!$forTemplate) {
             return null;
         }
-        $template = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
+        $template = Viewer::get_templates_by_class($this, '_Row', __CLASS__);
         return array(
             'footer' => $forTemplate->renderWith(
                 $template,

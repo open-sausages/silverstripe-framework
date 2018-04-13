@@ -6,7 +6,7 @@ namespace SilverStripe\View\Dev;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\State\TestState;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\Requirements_Backend;
+use SilverStripe\View\RequirementsBackend;
 
 /**
  * Resets requirements for test state
@@ -14,14 +14,14 @@ use SilverStripe\View\Requirements_Backend;
 class RequirementsTestState implements TestState
 {
     /**
-     * @var Requirements_Backend
+     * @var RequirementsBackend
      */
     protected $backend = null;
 
     public function setUp(SapphireTest $test)
     {
         $this->backend = Requirements::backend();
-        Requirements::set_backend(Requirements_Backend::create());
+        Requirements::set_backend(RequirementsBackend::create());
     }
 
     public function tearDown(SapphireTest $test)

@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms;
 
 use IntlDateFormatter;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use InvalidArgumentException;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -252,9 +252,9 @@ class DateField extends TextField
      */
     protected function getInternalFormatter()
     {
-        $locale = i18n::config()->uninherited('default_locale');
+        $locale = Internationalisation::config()->uninherited('default_locale');
         $formatter = IntlDateFormatter::create(
-            i18n::config()->uninherited('default_locale'),
+            Internationalisation::config()->uninherited('default_locale'),
             IntlDateFormatter::MEDIUM,
             IntlDateFormatter::NONE
         );
@@ -268,7 +268,7 @@ class DateField extends TextField
     {
         $attributes = parent::getAttributes();
 
-        $attributes['lang'] = i18n::convert_rfc1766($this->getLocale());
+        $attributes['lang'] = Internationalisation::convert_rfc1766($this->getLocale());
 
         if ($this->getHTML5()) {
             $attributes['min'] = $this->getMinDate();
@@ -284,7 +284,7 @@ class DateField extends TextField
     {
         $defaults = parent::getSchemaDataDefaults();
         return array_merge($defaults, [
-            'lang' => i18n::convert_rfc1766($this->getLocale()),
+            'lang' => Internationalisation::convert_rfc1766($this->getLocale()),
             'data' => array_merge($defaults['data'], [
                 'html5' => $this->getHTML5(),
                 'min' => $this->getMinDate(),
@@ -353,7 +353,7 @@ class DateField extends TextField
 
     public function performReadonlyTransformation()
     {
-        $field = $this->castedCopy(DateField_Disabled::class);
+        $field = $this->castedCopy(DateFieldDisabled::class);
         $field->setValue($this->dataValue());
         $field->setReadonly(true);
         return $field;
@@ -443,7 +443,7 @@ class DateField extends TextField
      */
     public function getLocale()
     {
-        return $this->locale ?: i18n::get_locale();
+        return $this->locale ?: Internationalisation::get_locale();
     }
 
     /**

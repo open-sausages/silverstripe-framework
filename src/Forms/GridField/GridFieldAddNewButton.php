@@ -6,7 +6,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\RelationList;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * This component provides a button for opening the add new form provided by
@@ -15,7 +15,7 @@ use SilverStripe\View\SSViewer;
  * Only returns a button if {@link DataObject->canCreate()} for this record
  * returns true.
  */
-class GridFieldAddNewButton implements GridField_HTMLProvider
+class GridFieldAddNewButton implements GridFieldHTMLProvider
 {
 
     protected $targetFragment;
@@ -64,7 +64,7 @@ class GridFieldAddNewButton implements GridField_HTMLProvider
             'ButtonName' => $this->buttonName,
         ]);
 
-        $templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $templates = Viewer::get_templates_by_class($this, '', __CLASS__);
         return [
             $this->targetFragment => $data->renderWith($templates),
         ];

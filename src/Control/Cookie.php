@@ -22,11 +22,11 @@ class Cookie
     /**
      * Fetch the current instance of the cookie backend.
      *
-     * @return Cookie_Backend
+     * @return CookieBackend
      */
     public static function get_inst()
     {
-        return Injector::inst()->get('SilverStripe\\Control\\Cookie_Backend');
+        return Injector::inst()->get('SilverStripe\\Control\\CookieBackend');
     }
 
     /**

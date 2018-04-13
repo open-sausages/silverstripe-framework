@@ -5,11 +5,11 @@ namespace SilverStripe\Control\Tests\RequestHandlingTest;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * Controller for the test
@@ -85,12 +85,12 @@ class TestController extends Controller implements TestOnly
 
     public function throwexception()
     {
-        throw new HTTPResponse_Exception('This request was invalid.', 400);
+        throw new HTTPResponseException('This request was invalid.', 400);
     }
 
     public function throwresponseexception()
     {
-        throw new HTTPResponse_Exception(new HTTPResponse('There was an internal server error.', 500));
+        throw new HTTPResponseException(new HTTPResponse('There was an internal server error.', 500));
     }
 
     public function throwhttperror()
@@ -100,6 +100,6 @@ class TestController extends Controller implements TestOnly
 
     public function getViewer($action)
     {
-        return new SSViewer('BlankPage');
+        return new Viewer('BlankPage');
     }
 }

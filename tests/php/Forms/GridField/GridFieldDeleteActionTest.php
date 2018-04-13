@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\Tests\GridField;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Control\Session;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
@@ -17,7 +17,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Security;
@@ -27,7 +27,7 @@ class GridFieldDeleteActionTest extends SapphireTest
 {
 
     /**
-     * @var ArrayList
+     * @var ArrayListInterface
      */
     protected $list;
 
@@ -92,7 +92,7 @@ class GridFieldDeleteActionTest extends SapphireTest
     public function testActionsRequireCSRF()
     {
         $this->logInWithPermission('ADMIN');
-        $this->expectException(HTTPResponse_Exception::class);
+        $this->expectException(HTTPResponseException::class);
         $this->expectExceptionMessage(_t(
             "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
             "There seems to have been a technical problem. Please click the back button, "

@@ -4,7 +4,7 @@ namespace SilverStripe\Forms;
 
 use IntlDateFormatter;
 use InvalidArgumentException;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBTime;
 
@@ -209,7 +209,7 @@ class TimeField extends TextField
     protected function getInternalFormatter()
     {
         $formatter = IntlDateFormatter::create(
-            i18n::config()->uninherited('default_locale'),
+            Internationalisation::config()->uninherited('default_locale'),
             IntlDateFormatter::NONE,
             IntlDateFormatter::MEDIUM,
             date_default_timezone_get() // Default to server timezone
@@ -237,7 +237,7 @@ class TimeField extends TextField
     {
         $defaults = parent::getSchemaDataDefaults();
         return array_merge($defaults, [
-            'lang' => i18n::convert_rfc1766($this->getLocale()),
+            'lang' => Internationalisation::convert_rfc1766($this->getLocale()),
             'data' => array_merge($defaults['data'], [
                 'html5' => $this->getHTML5(),
             ])
@@ -347,7 +347,7 @@ class TimeField extends TextField
      */
     public function getLocale()
     {
-        return $this->locale ?: i18n::get_locale();
+        return $this->locale ?: Internationalisation::get_locale();
     }
 
     /**
@@ -367,12 +367,12 @@ class TimeField extends TextField
     /**
      * Creates a new readonly field specified below
      *
-     * @return TimeField_Readonly
+     * @return TimeFieldReadonly
      */
     public function performReadonlyTransformation()
     {
-        /** @var TimeField_Readonly $result */
-        $result = $this->castedCopy(TimeField_Readonly::class);
+        /** @var TimeFieldReadonly $result */
+        $result = $this->castedCopy(TimeFieldReadonly::class);
         return $result;
     }
 

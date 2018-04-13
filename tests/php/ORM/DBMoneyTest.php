@@ -6,7 +6,7 @@ use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 
 class DBMoneyTest extends SapphireTest
 {
@@ -111,9 +111,9 @@ class DBMoneyTest extends SapphireTest
      */
     public function testGettingWrittenDataObject()
     {
-        $local = i18n::get_locale();
+        $local = Internationalisation::get_locale();
         //make sure that the $ amount is not prefixed by US$, as it would be in non-US locale
-        i18n::set_locale('en_US');
+        Internationalisation::set_locale('en_US');
 
         $obj = new DBMoneyTest\TestObject();
 
@@ -139,7 +139,7 @@ class DBMoneyTest extends SapphireTest
             "Money field not added to data object properly when read."
         );
 
-        i18n::set_locale($local);
+        Internationalisation::set_locale($local);
     }
 
     /**

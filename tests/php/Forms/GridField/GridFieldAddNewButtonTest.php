@@ -13,7 +13,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 
 class GridFieldAddNewButtonTest extends SapphireTest
 {
@@ -76,7 +76,7 @@ class GridFieldAddNewButtonTest extends SapphireTest
         $this->mockButtonFragments($list, null);
     }
 
-    protected function mockButtonFragments(SS_List $list, $parent = null)
+    protected function mockButtonFragments(ListInterface $list, $parent = null)
     {
         $form = Form::create(
             new TestController(),

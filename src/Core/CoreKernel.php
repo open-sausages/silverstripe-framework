@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 use SilverStripe\Config\Collections\CachedConfigCollection;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Core\Cache\ManifestCacheFactory;
 use SilverStripe\Core\Config\ConfigLoader;
 use SilverStripe\Core\Config\CoreConfigFactory;
@@ -25,7 +25,7 @@ use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\Logging\ErrorHandler;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\PublicThemes;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\Dev\Deprecation;
@@ -117,8 +117,8 @@ class CoreKernel implements Kernel
 
         // Load template manifest
         $themeResourceLoader = ThemeResourceLoader::inst();
-        $themeResourceLoader->addSet(SSViewer::PUBLIC_THEME, new PublicThemes());
-        $themeResourceLoader->addSet(SSViewer::DEFAULT_THEME, new ThemeManifest(
+        $themeResourceLoader->addSet(Viewer::PUBLIC_THEME, new PublicThemes());
+        $themeResourceLoader->addSet(Viewer::DEFAULT_THEME, new ThemeManifest(
             $basePath,
             null, // project is defined in config, and this argument is deprecated
             $manifestCacheFactory
@@ -257,7 +257,7 @@ class CoreKernel implements Kernel
     /**
      * Check that the database configuration is valid, throwing an HTTPResponse_Exception if it's not
      *
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     protected function validateDatabase()
     {
@@ -272,7 +272,7 @@ class CoreKernel implements Kernel
     /**
      * Check if there's a legacy _ss_environment.php file
      *
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     protected function detectLegacyEnvironment()
     {
@@ -301,7 +301,7 @@ class CoreKernel implements Kernel
 
         // Raise error
         $response = new HTTPResponse($body, 500);
-        throw new HTTPResponse_Exception($response);
+        throw new HTTPResponseException($response);
     }
 
     /**
@@ -311,7 +311,7 @@ class CoreKernel implements Kernel
     {
         // Error if installer not available
         if (!file_exists(Director::publicFolder() . '/install.php')) {
-            throw new HTTPResponse_Exception(
+            throw new HTTPResponseException(
                 'SilverStripe Framework requires database configuration defined via .env',
                 500
             );
@@ -320,7 +320,7 @@ class CoreKernel implements Kernel
         // Redirect to installer
         $response = new HTTPResponse();
         $response->redirect(Director::absoluteURL('install.php'));
-        throw new HTTPResponse_Exception($response);
+        throw new HTTPResponseException($response);
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace SilverStripe\View\Tests\SSViewerTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\View\TemplateGlobalProvider;
+use SilverStripe\View\Templates\TemplateGlobalProvider;
 
 class TestGlobalProvider implements TemplateGlobalProvider, TestOnly
 {

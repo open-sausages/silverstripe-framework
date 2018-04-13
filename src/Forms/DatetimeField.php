@@ -4,7 +4,7 @@ namespace SilverStripe\Forms;
 
 use IntlDateFormatter;
 use InvalidArgumentException;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
 
@@ -93,7 +93,7 @@ class DatetimeField extends TextField
     {
         $attributes = parent::getAttributes();
 
-        $attributes['lang'] = i18n::convert_rfc1766($this->getLocale());
+        $attributes['lang'] = Internationalisation::convert_rfc1766($this->getLocale());
 
         if ($this->getHTML5()) {
             $attributes['min'] = $this->internalToFrontend($this->getMinDatetime());
@@ -112,7 +112,7 @@ class DatetimeField extends TextField
     {
         $defaults = parent::getSchemaDataDefaults();
         return array_merge($defaults, [
-            'lang' => i18n::convert_rfc1766($this->getLocale()),
+            'lang' => Internationalisation::convert_rfc1766($this->getLocale()),
             'data' => array_merge($defaults['data'], [
                 'html5' => $this->getHTML5(),
                 'min' => $this->internalToFrontend($this->getMinDatetime()),
@@ -300,7 +300,7 @@ class DatetimeField extends TextField
         }
 
         $formatter = IntlDateFormatter::create(
-            i18n::config()->uninherited('default_locale'),
+            Internationalisation::config()->uninherited('default_locale'),
             IntlDateFormatter::MEDIUM,
             IntlDateFormatter::MEDIUM,
             $timezone
@@ -520,7 +520,7 @@ class DatetimeField extends TextField
      */
     public function getLocale()
     {
-        return $this->locale ?: i18n::get_locale();
+        return $this->locale ?: Internationalisation::get_locale();
     }
 
     /**

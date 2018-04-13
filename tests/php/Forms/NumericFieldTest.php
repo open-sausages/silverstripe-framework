@@ -5,7 +5,7 @@ namespace SilverStripe\Forms\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 
 class NumericFieldTest extends SapphireTest
 {

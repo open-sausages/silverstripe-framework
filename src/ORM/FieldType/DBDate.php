@@ -6,7 +6,7 @@ use IntlDateFormatter;
 use InvalidArgumentException;
 use NumberFormatter;
 use SilverStripe\Forms\DateField;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -146,7 +146,7 @@ class DBDate extends DBField
     {
         $number = $this->Format('d');
         if ($includeOrdinal && $number) {
-            $formatter = NumberFormatter::create(i18n::get_locale(), NumberFormatter::ORDINAL);
+            $formatter = NumberFormatter::create(Internationalisation::get_locale(), NumberFormatter::ORDINAL);
             return $formatter->format((int)$number);
         }
         return $number;
@@ -203,7 +203,7 @@ class DBDate extends DBField
      */
     public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::NONE)
     {
-        return new IntlDateFormatter(i18n::get_locale(), $dateLength, $timeLength);
+        return new IntlDateFormatter(Internationalisation::get_locale(), $dateLength, $timeLength);
     }
 
     /**

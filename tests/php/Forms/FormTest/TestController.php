@@ -14,7 +14,7 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * @skipUpgrade
@@ -107,6 +107,6 @@ class TestController extends Controller implements TestOnly
 
     public function getViewer($action = null)
     {
-        return new SSViewer('BlankPage');
+        return new Viewer('BlankPage');
     }
 }

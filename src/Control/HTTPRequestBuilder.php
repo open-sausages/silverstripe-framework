@@ -10,7 +10,7 @@ class HTTPRequestBuilder
      * Create HTTPRequest instance from the current environment variables.
      * May throw errors if request is invalid.
      *
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      * @return HTTPRequest
      */
     public static function createFromEnvironment()

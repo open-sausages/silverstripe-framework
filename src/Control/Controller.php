@@ -10,8 +10,8 @@ use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\BasicAuthMiddleware;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\View\SSViewer;
-use SilverStripe\View\TemplateGlobalProvider;
+use SilverStripe\View\Templates\Viewer;
+use SilverStripe\View\Templates\TemplateGlobalProvider;
 
 /**
  * Controllers are the cornerstone of all site functionality in SilverStripe. The {@link Director}
@@ -389,7 +389,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @param string $action
      *
-     * @return SSViewer
+     * @return \SilverStripe\View\Templates\Viewer
      */
     public function getViewer($action)
     {
@@ -419,7 +419,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $templates = array_unique(array_merge($actionTemplates, $classTemplates));
         }
 
-        return SSViewer::create($templates);
+        return Viewer::create($templates);
     }
 
     /**
@@ -473,7 +473,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         $class = static::class;
         while ($class != 'SilverStripe\\Control\\RequestHandler') {
             $templateName = strtok($class, '_') . '_' . $action;
-            if (SSViewer::hasTemplate($templateName)) {
+            if (Viewer::hasTemplate($templateName)) {
                 return $class;
             }
 
@@ -505,7 +505,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $parentClass = get_parent_class($parentClass);
         }
 
-        return SSViewer::hasTemplate($templates);
+        return Viewer::hasTemplate($templates);
     }
 
     /**

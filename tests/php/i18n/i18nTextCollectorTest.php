@@ -1,15 +1,15 @@
 <?php
 
-namespace SilverStripe\i18n\Tests;
+namespace SilverStripe\Internationalisation\Tests;
 
 use PHPUnit\Framework\Error\Notice;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\i18n\i18n;
-use SilverStripe\i18n\TextCollection\i18nTextCollector;
-use SilverStripe\i18n\Messages\YamlWriter;
-use SilverStripe\i18n\Tests\i18nTextCollectorTest\Collector;
+use SilverStripe\Internationalisation\Internationalisation;
+use SilverStripe\Internationalisation\TextCollection\TextCollector;
+use SilverStripe\Internationalisation\Messages\YamlWriter;
+use SilverStripe\Internationalisation\Tests\i18nTextCollectorTest\Collector;
 
 class i18nTextCollectorTest extends SapphireTest
 {
@@ -41,7 +41,7 @@ class i18nTextCollectorTest extends SapphireTest
 
     public function testConcatenationInEntityValues()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $module = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<PHP
@@ -73,7 +73,7 @@ PHP;
 
     public function testCollectFromNewTemplateSyntaxUsingParserSubclass()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $c->setWarnOnEmptyDefault(false);
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
@@ -122,7 +122,7 @@ SS;
 
     public function testCollectFromTemplateSimple()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $html = <<<SS
@@ -152,7 +152,7 @@ SS;
 
     public function testCollectFromTemplateAdvanced()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $c->setWarnOnEmptyDefault(false);
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
@@ -198,7 +198,7 @@ SS;
 
     public function testCollectFromCodeSimple()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<PHP
@@ -220,7 +220,7 @@ PHP;
 
     public function testCollectFromCodeAdvanced()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<PHP
@@ -295,7 +295,7 @@ PHP;
 
     public function testCollectFromCodeNamespace()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
         $php = <<<PHP
 <?php
@@ -346,7 +346,7 @@ PHP;
 
     public function testNewlinesInEntityValues()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<PHP
@@ -381,7 +381,7 @@ PHP;
      */
     public function testCollectFromCodeNewSignature()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $c->setWarnOnEmptyDefault(false); // Disable warnings for tests
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
@@ -437,7 +437,7 @@ PHP;
 
     public function testUncollectableCode()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<PHP
@@ -455,7 +455,7 @@ PHP;
 
     public function testCollectFromIncludedTemplates()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $c->setWarnOnEmptyDefault(false); // Disable warnings for tests
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
@@ -493,7 +493,7 @@ PHP;
 
     public function testCollectMergesWithExisting()
     {
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $c->setWarnOnEmptyDefault(false);
         $c->setWriter(new YamlWriter());
         $c->basePath = $this->alternateBasePath;
@@ -527,11 +527,11 @@ PHP;
 
     public function testCollectFromFilesystemAndWriteMasterTables()
     {
-        i18n::set_locale('en_US');  //set the locale to the US locale expected in the asserts
-        i18n::config()->update('default_locale', 'en_US');
-        i18n::config()->update('missing_default_warning', false);
+        Internationalisation::set_locale('en_US');  //set the locale to the US locale expected in the asserts
+        Internationalisation::config()->update('default_locale', 'en_US');
+        Internationalisation::config()->update('missing_default_warning', false);
 
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $c->setWarnOnEmptyDefault(false);
         $c->setWriter(new YamlWriter());
         $c->basePath = $this->alternateBasePath;
@@ -594,7 +594,7 @@ PHP;
         // note: Disable _fakewebroot manifest for this test
         $this->popManifests();
 
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
 
         // Collect from MyObject.php
         $filePath = __DIR__ . '/i18nTest/MyObject.php';
@@ -619,7 +619,7 @@ PHP;
     public function testCollectFromEntityProvidersInWebRoot()
     {
         // Collect from i18nProviderClass
-        $c = i18nTextCollector::create();
+        $c = TextCollector::create();
         $c->setWarnOnEmptyDefault(false);
         $c->setWriter(new YamlWriter());
         $c->basePath = $this->alternateBasePath;

@@ -10,7 +10,7 @@ use SilverStripe\Control\Tests\ControllerTest\AccessSecuredController;
 use SilverStripe\Control\Tests\ControllerTest\AccessWildcardSecuredController;
 use SilverStripe\Control\Tests\ControllerTest\ContainerController;
 use SilverStripe\Control\Tests\ControllerTest\HasAction;
-use SilverStripe\Control\Tests\ControllerTest\HasAction_Unsecured;
+use SilverStripe\Control\Tests\ControllerTest\HasActionUnsecured;
 use SilverStripe\Control\Tests\ControllerTest\IndexSecuredController;
 use SilverStripe\Control\Tests\ControllerTest\SubController;
 use SilverStripe\Control\Tests\ControllerTest\TestController;
@@ -19,7 +19,7 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 class ControllerTest extends FunctionalTest
 {
@@ -36,7 +36,7 @@ class ControllerTest extends FunctionalTest
         AccessWildcardSecuredController::class,
         ContainerController::class,
         HasAction::class,
-        HasAction_Unsecured::class,
+        HasActionUnsecured::class,
         IndexSecuredController::class,
         SubController::class,
         TestController::class,
@@ -53,9 +53,9 @@ class ControllerTest extends FunctionalTest
         $themeDir = substr(__DIR__, strlen(FRAMEWORK_DIR)) . '/ControllerTest/';
         $themes = [
             "silverstripe/framework:{$themeDir}",
-            SSViewer::DEFAULT_THEME
+            Viewer::DEFAULT_THEME
         ];
-        SSViewer::set_themes($themes);
+        Viewer::set_themes($themes);
     }
 
     protected function tearDown()
@@ -382,7 +382,7 @@ class ControllerTest extends FunctionalTest
     public function testHasAction()
     {
         $controller = new HasAction();
-        $unsecuredController = new HasAction_Unsecured();
+        $unsecuredController = new HasActionUnsecured();
         $securedController = new AccessSecuredController();
 
         $this->assertFalse(

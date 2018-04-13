@@ -54,7 +54,7 @@ class CurrencyField extends TextField
      */
     public function performReadonlyTransformation()
     {
-        return $this->castedCopy('SilverStripe\\Forms\\CurrencyField_Readonly');
+        return $this->castedCopy('SilverStripe\\Forms\\CurrencyFieldReadonly');
     }
 
     public function validate($validator)

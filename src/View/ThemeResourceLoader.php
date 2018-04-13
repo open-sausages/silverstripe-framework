@@ -5,6 +5,7 @@ namespace SilverStripe\View;
 use InvalidArgumentException;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Path;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * Handles finding templates from a stack of template manifest objects.
@@ -175,7 +176,7 @@ class ThemeResourceLoader
     public function findTemplate($template, $themes = null)
     {
         if ($themes === null) {
-            $themes = SSViewer::get_themes();
+            $themes = Viewer::get_themes();
         }
 
         $type = '';
@@ -239,7 +240,7 @@ class ThemeResourceLoader
     public function findThemedCSS($name, $themes = null)
     {
         if ($themes === null) {
-            $themes = SSViewer::get_themes();
+            $themes = Viewer::get_themes();
         }
 
         if (substr($name, -4) !== '.css') {
@@ -268,7 +269,7 @@ class ThemeResourceLoader
     public function findThemedJavascript($name, $themes = null)
     {
         if ($themes === null) {
-            $themes = SSViewer::get_themes();
+            $themes = Viewer::get_themes();
         }
 
         if (substr($name, -3) !== '.js') {
@@ -295,7 +296,7 @@ class ThemeResourceLoader
     public function findThemedResource($resource, $themes = null)
     {
         if ($themes === null) {
-            $themes = SSViewer::get_themes();
+            $themes = Viewer::get_themes();
         }
 
         $paths = $this->getThemePaths($themes);
@@ -322,7 +323,7 @@ class ThemeResourceLoader
     public function getThemePaths($themes = null)
     {
         if ($themes === null) {
-            $themes = SSViewer::get_themes();
+            $themes = Viewer::get_themes();
         }
 
         $paths = [];

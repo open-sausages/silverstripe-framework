@@ -2,13 +2,14 @@
 
 namespace SilverStripe\ORM;
 
+use Generator;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
+use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
-use SilverStripe\View\TemplateIterator;
+use SilverStripe\View\Templates\TemplateGlobalProvider;
 use SilverStripe\View\ViewableData;
-use ArrayIterator;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
@@ -33,7 +34,7 @@ use LogicException;
  *
  * Subclasses of DataList may add other methods that have the same effect.
  */
-class DataList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
+class DataList extends ViewableData implements ListInterface, Filterable, Sortable, Limitable, TemplateGlobalProvider
 {
 
     /**
@@ -53,7 +54,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * A cached Query to save repeated database calls. {@see DataList::getTemplateIteratorCount()}
      *
-     * @var SilverStripe\ORM\Connect\Query
+     * @var Query
      */
     protected $finalisedQuery;
 
@@ -238,7 +239,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
 
-
     /**
      * Returns true if this DataList can be sorted by the given field.
      *
@@ -311,7 +311,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Return a new DataList instance as a copy of this data list with the sort
      * order set.
      *
-     * @see SS_List::sort()
+     * @see ListInterface::sort()
      * @see SQLSelect::orderby
      * @example $list = $list->sort('Name'); // default ASC sorting
      * @example $list = $list->sort('Name DESC'); // DESC sorting
@@ -339,7 +339,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             list($col, $dir) = func_get_args();
 
             // Validate direction
-            if (!in_array(strtolower($dir), array('desc','asc'))) {
+            if (!in_array(strtolower($dir), array('desc', 'asc'))) {
                 user_error('Second argument to sort must be either ASC or DESC');
             }
 
@@ -374,7 +374,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Return a copy of this list which only includes items with these charactaristics
      *
-     * @see SS_List::filter()
+     * @see ListInterface::filter()
      *
      * @example $list = $list->filter('Name', 'bob'); // only bob in the list
      * @example $list = $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
@@ -484,7 +484,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
      * @param callable $callback
-     * @return ArrayList (this may change in future implementations)
+     * @return ArrayListInterface (this may change in future implementations)
      */
     public function filterByCallback($callback)
     {
@@ -494,8 +494,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 gettype($callback)
             ));
         }
-        /** @var ArrayList $output */
-        $output = ArrayList::create();
+        /** @var ArrayListInterface $output */
+        $output = ArrayListInterface::create();
         foreach ($this as $item) {
             if (call_user_func($callback, $item, $this)) {
                 $output->push($item);
@@ -863,7 +863,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * a cached result, unless the DataQuery underlying this list has been
      * modified
      *
-     * @return SilverStripe\ORM\Connect\Query
+     * @return Query
      * @internal This API may change in minor releases
      */
     protected function getFinalisedQuery()
@@ -950,7 +950,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Returns the last item in this DataList
      *
-     *  @return DataObject
+     * @return DataObject
      */
     public function last()
     {
@@ -1283,5 +1283,29 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function offsetUnset($key)
     {
         user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
+    }
+
+    public static function get_template_global_variables()
+    {
+        return ['List' => 'getDataList'];
+    }
+
+    /**
+     * This allows templates to create a new `DataList` from a known
+     * DataObject class name, and call methods such as aggregates.
+     *
+     * The common use case is for partial caching:
+     * <code>
+     *    <% cached List(Member).max(LastEdited) %>
+     *        loop members here
+     *    <% end_cached %>
+     * </code>
+     *
+     * @param string $className
+     * @return DataList
+     */
+    public static function getDataList($className)
+    {
+        return static::create($className);
     }
 }

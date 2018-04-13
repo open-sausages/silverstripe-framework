@@ -10,7 +10,7 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\Filters\SearchFilter;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\View\ArrayData;
 use SilverStripe\Forms\SelectField;
 use SilverStripe\Forms\CheckboxField;
@@ -347,11 +347,11 @@ class SearchContext
      * for each field. Returns an ArrayList of ArrayData, suitable for
      * rendering on a template.
      *
-     * @return ArrayList
+     * @return ArrayListInterface
      */
     public function getSummary()
     {
-        $list = ArrayList::create();
+        $list = ArrayListInterface::create();
         foreach ($this->searchParams as $searchField => $searchValue) {
             if (empty($searchValue)) {
                 continue;

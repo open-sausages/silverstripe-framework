@@ -9,11 +9,11 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use LogicException;
 
 /**
@@ -33,10 +33,10 @@ use LogicException;
  * {@link GridFieldConfig_RelationEditor}.
  */
 class GridFieldAddExistingAutocompleter implements
-    GridField_HTMLProvider,
-    GridField_ActionProvider,
-    GridField_DataManipulator,
-    GridField_URLHandler
+    GridFieldHTMLProvider,
+    GridFieldActionProvider,
+    GridFieldDataManipulator,
+    GridFieldURLHandler
 {
 
     /**
@@ -45,7 +45,7 @@ class GridFieldAddExistingAutocompleter implements
     protected $targetFragment;
 
     /**
-     * @var SS_List
+     * @var ListInterface
      */
     protected $searchList;
 
@@ -121,7 +121,7 @@ class GridFieldAddExistingAutocompleter implements
         $searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
         $searchField->addExtraClass('relation-search no-change-track action_gridfield_relationsearch');
 
-        $findAction = new GridField_FormAction(
+        $findAction = new GridFieldFormAction(
             $gridField,
             'gridfield_relationfind',
             _t('SilverStripe\\Forms\\GridField\\GridField.Find', "Find"),
@@ -131,7 +131,7 @@ class GridFieldAddExistingAutocompleter implements
         $findAction->setAttribute('data-icon', 'relationfind');
         $findAction->addExtraClass('action_gridfield_relationfind');
 
-        $addAction = new GridField_FormAction(
+        $addAction = new GridFieldFormAction(
             $gridField,
             'gridfield_relationadd',
             _t('SilverStripe\\Forms\\GridField\\GridField.LinkExisting', "Link Existing"),
@@ -153,7 +153,7 @@ class GridFieldAddExistingAutocompleter implements
             $forTemplate->Fields->setForm($form);
         }
 
-        $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $template = Viewer::get_templates_by_class($this, '', __CLASS__);
         return array(
             $this->targetFragment => $forTemplate->renderWith($template)
         );
@@ -192,10 +192,10 @@ class GridFieldAddExistingAutocompleter implements
      * If an object ID is set, add the object to the list
      *
      * @param GridField $gridField
-     * @param SS_List $dataList
-     * @return SS_List
+     * @param ListInterface $dataList
+     * @return ListInterface
      */
-    public function getManipulatedData(GridField $gridField, SS_List $dataList)
+    public function getManipulatedData(GridField $gridField, ListInterface $dataList)
     {
         $objectID = $gridField->State->GridFieldAddRelation(null);
         if (empty($objectID)) {
@@ -258,8 +258,8 @@ class GridFieldAddExistingAutocompleter implements
 
         $json = array();
         Config::nest();
-        SSViewer::config()->update('source_file_comments', false);
-        $viewer = SSViewer::fromString($this->resultsFormat);
+        Viewer::config()->update('source_file_comments', false);
+        $viewer = Viewer::fromString($this->resultsFormat);
         foreach ($results as $result) {
             $title = Convert::html2raw($viewer->process($result));
             $json[] = array(
@@ -297,9 +297,9 @@ class GridFieldAddExistingAutocompleter implements
      * Sets the base list instance which will be used for the autocomplete
      * search.
      *
-     * @param SS_List $list
+     * @param ListInterface $list
      */
-    public function setSearchList(SS_List $list)
+    public function setSearchList(ListInterface $list)
     {
         $this->searchList = $list;
         return $this;

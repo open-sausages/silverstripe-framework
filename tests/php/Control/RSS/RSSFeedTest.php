@@ -6,7 +6,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\RSS\RSSFeed;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\View\Parsers\ShortcodeParser;
 
 class RSSFeedTest extends SapphireTest
@@ -16,7 +16,7 @@ class RSSFeedTest extends SapphireTest
 
     public function testRSSFeed()
     {
-        $list = new ArrayList();
+        $list = new ArrayListInterface();
         $list->push(new RSSFeedTest\ItemA());
         $list->push(new RSSFeedTest\ItemB());
         $list->push(new RSSFeedTest\ItemC());
@@ -59,7 +59,7 @@ class RSSFeedTest extends SapphireTest
 
     public function testLinkEncoding()
     {
-        $list = new ArrayList();
+        $list = new ArrayListInterface();
         $rssFeed = new RSSFeed($list, "http://www.example.com/?param1=true&param2=true", "Test RSS Feed");
         $content = $rssFeed->outputToBrowser();
         $this->assertContains('<link>http://www.example.com/?param1=true&amp;param2=true', $content);
@@ -67,7 +67,7 @@ class RSSFeedTest extends SapphireTest
 
     public function testRSSFeedWithShortcode()
     {
-        $list = new ArrayList();
+        $list = new ArrayListInterface();
         $list->push(new RSSFeedTest\ItemD());
 
         $rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description");
@@ -88,7 +88,7 @@ class RSSFeedTest extends SapphireTest
      */
     public function testRenderWithTemplate()
     {
-        $rssFeed = new RSSFeed(new ArrayList(), "", "", "");
+        $rssFeed = new RSSFeed(new ArrayListInterface(), "", "", "");
         $rssFeed->setTemplate('RSSFeedTest');
 
         $content = $rssFeed->outputToBrowser();

@@ -4,8 +4,8 @@ namespace SilverStripe\Security\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\PasswordEncryptor;
-use SilverStripe\Security\Permission;
+use SilverStripe\Security\Encryptors\PasswordEncryptor;
+use SilverStripe\Security\Encryptors\Permission;
 use SilverStripe\Security\DefaultAdminService;
 
 class SecurityDefaultAdminTest extends SapphireTest

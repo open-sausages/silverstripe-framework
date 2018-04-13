@@ -369,7 +369,7 @@ YML;
 ---
 Name: mytheme
 ---
-SilverStripe\\View\\SSViewer:
+SilverStripe\\View\\Templates\\SSViewer:
   themes:
 $themeYML
 SilverStripe\\i18n\\i18n:

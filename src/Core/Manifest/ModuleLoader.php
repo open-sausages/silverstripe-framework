@@ -2,10 +2,12 @@
 
 namespace SilverStripe\Core\Manifest;
 
+use SilverStripe\View\Templates\TemplateGlobalProvider;
+
 /**
  * Module manifest holder
  */
-class ModuleLoader
+class ModuleLoader implements TemplateGlobalProvider
 {
     /**
      * @var self
@@ -97,5 +99,20 @@ class ModuleLoader
         foreach ($this->manifests as $manifest) {
             $manifest->init($includeTests, $forceRegen);
         }
+    }
+
+    public static function get_template_global_variables()
+    {
+        return ['ModulePath' => 'getModulePath'];
+    }
+
+    /**
+     * Given some pre-defined modules, return the filesystem path of the module.
+     * @param string $name Name of module to find path of
+     * @return string
+     */
+    public static function getModulePath($name)
+    {
+        return self::getModule($name)->getRelativePath();
     }
 }

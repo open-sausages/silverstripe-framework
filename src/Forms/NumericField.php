@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms;
 
 use NumberFormatter;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 
 /**
  * Text input field with validation for numeric values. Supports validating
@@ -58,7 +58,7 @@ class NumericField extends TextField
         if ($this->getHTML5()) {
             // Locale-independent html5 number formatter
             $formatter = NumberFormatter::create(
-                i18n::config()->uninherited('default_locale'),
+                Internationalisation::config()->uninherited('default_locale'),
                 NumberFormatter::DECIMAL
             );
             $formatter->setAttribute(NumberFormatter::GROUPING_USED, false);
@@ -236,7 +236,7 @@ class NumericField extends TextField
             return $this->locale;
         }
 
-        return i18n::get_locale();
+        return Internationalisation::get_locale();
     }
 
     /**

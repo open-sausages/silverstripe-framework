@@ -3,7 +3,7 @@
 namespace SilverStripe\Dev\Tests;
 
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 
@@ -104,11 +104,11 @@ class SapphireTestTest extends SapphireTest
      *
      * @param array $itemsForList
      *
-     * @return ArrayList
+     * @return ArrayListInterface
      */
     private function generateArrayListFromItems($itemsForList)
     {
-        $list = ArrayList::create();
+        $list = ArrayListInterface::create();
         foreach ($itemsForList as $data) {
             $list->push(Member::create($data));
         }

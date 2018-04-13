@@ -20,7 +20,7 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use UnexpectedValueException;
 
 /**
@@ -249,7 +249,7 @@ class ViewableData implements IteratorAggregate
      * Note that any fields you specify will take precedence over the fields on this object.
      *
      * @param array|ViewableData $data
-     * @return ViewableData_Customised
+     * @return ViewableDataCustomised
      */
     public function customise($data)
     {
@@ -258,7 +258,7 @@ class ViewableData implements IteratorAggregate
         }
 
         if ($data instanceof ViewableData) {
-            return new ViewableData_Customised($this, $data);
+            return new ViewableDataCustomised($this, $data);
         }
 
         throw new InvalidArgumentException(
@@ -378,14 +378,14 @@ class ViewableData implements IteratorAggregate
      *  - an array of possible template names - the first valid one will be used
      *  - an SSViewer instance
      *
-     * @param string|array|SSViewer $template the template to render into
+     * @param string|array|\SilverStripe\View\Templates\Viewer $template the template to render into
      * @param array $customFields fields to customise() the object with before rendering
      * @return DBHTMLText
      */
     public function renderWith($template, $customFields = null)
     {
         if (!is_object($template)) {
-            $template = SSViewer::create($template);
+            $template = Templates\Viewer::create($template);
         }
 
         $data = $this->getCustomisedObj() ?: $this;
@@ -393,7 +393,7 @@ class ViewableData implements IteratorAggregate
         if ($customFields instanceof ViewableData) {
             $data = $data->customise($customFields);
         }
-        if ($template instanceof SSViewer) {
+        if ($template instanceof Templates\Viewer) {
             return $template->process($data, is_array($customFields) ? $customFields : null);
         }
 
@@ -587,7 +587,7 @@ class ViewableData implements IteratorAggregate
      */
     public function getViewerTemplates($suffix = '')
     {
-        return SSViewer::get_templates_by_class(static::class, $suffix, self::class);
+        return Templates\Viewer::get_templates_by_class(static::class, $suffix, self::class);
     }
 
     /**
@@ -616,7 +616,7 @@ class ViewableData implements IteratorAggregate
     public function ThemeDir()
     {
         Deprecation::notice('5.0', 'Use $resourcePath or $resourceURL template helpers instead');
-        $themes = SSViewer::get_themes();
+        $themes = Templates\Viewer::get_themes();
         foreach ($themes as $theme) {
             // Skip theme sets
             if (strpos($theme, '$') === 0) {
@@ -667,10 +667,10 @@ class ViewableData implements IteratorAggregate
     /**
      * Return debug information about this object that can be rendered into a template
      *
-     * @return ViewableData_Debugger
+     * @return ViewableDataDebugger
      */
     public function Debug()
     {
-        return new ViewableData_Debugger($this);
+        return new ViewableDataDebugger($this);
     }
 }

@@ -5,7 +5,7 @@ namespace SilverStripe\View\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\ContentNegotiator;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use SilverStripe\View\Tests\SSViewerTest\TestFixture;
 
 class ContentNegotiatorTest extends SapphireTest
@@ -17,7 +17,7 @@ class ContentNegotiatorTest extends SapphireTest
      */
     private function render($templateString, $data = null)
     {
-        $t = SSViewer::fromString($templateString);
+        $t = Viewer::fromString($templateString);
         if (!$data) {
             $data = new TestFixture();
         }

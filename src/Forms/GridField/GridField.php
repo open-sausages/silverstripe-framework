@@ -7,16 +7,16 @@ use LogicException;
 use SilverStripe\Control\HasRequestHandler;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use SilverStripe\View\HTML;
 
 /**
@@ -35,9 +35,9 @@ use SilverStripe\View\HTML;
  * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
  * since the required frontend dependencies are included through CMS bundling.
  *
- * @see SS_List
+ * @see ListInterface
  *
- * @property GridState_Data $State The gridstate of this object
+ * @property GridStateData $State The gridstate of this object
  */
 class GridField extends FormField
 {
@@ -52,7 +52,7 @@ class GridField extends FormField
     /**
      * Data source.
      *
-     * @var SS_List
+     * @var ListInterface
      */
     protected $list = null;
 
@@ -113,10 +113,10 @@ class GridField extends FormField
     /**
      * @param string $name
      * @param string $title
-     * @param SS_List $dataList
+     * @param ListInterface $dataList
      * @param GridFieldConfig $config
      */
-    public function __construct($name, $title = null, SS_List $dataList = null, GridFieldConfig $config = null)
+    public function __construct($name, $title = null, ListInterface $dataList = null, GridFieldConfig $config = null)
     {
         parent::__construct($name, $title, null);
 
@@ -127,7 +127,7 @@ class GridField extends FormField
         }
 
         if (!$config) {
-            $config = GridFieldConfig_Base::create();
+            $config = GridFieldConfigBase::create();
         }
 
         $this->setConfig($config);
@@ -178,7 +178,7 @@ class GridField extends FormField
             return $this->modelClassName;
         }
 
-        /** @var DataList|ArrayList $list */
+        /** @var DataList|ArrayListInterface $list */
         $list = $this->list;
         if ($list && $list->hasMethod('dataClass')) {
             $class = $list->dataClass();
@@ -210,15 +210,15 @@ class GridField extends FormField
     {
         $this->config = $config;
 
-        if (!$this->config->getComponentByType(GridState_Component::class)) {
-            $this->config->addComponent(new GridState_Component());
+        if (!$this->config->getComponentByType(GridStateComponent::class)) {
+            $this->config->addComponent(new GridStateComponent());
         }
 
         return $this;
     }
 
     /**
-     * @return ArrayList
+     * @return ArrayListInterface
      */
     public function getComponents()
     {
@@ -262,11 +262,11 @@ class GridField extends FormField
     /**
      * Set the data source.
      *
-     * @param SS_List $list
+     * @param ListInterface $list
      *
      * @return $this
      */
-    public function setList(SS_List $list)
+    public function setList(ListInterface $list)
     {
         $this->list = $list;
 
@@ -276,7 +276,7 @@ class GridField extends FormField
     /**
      * Get the data source.
      *
-     * @return SS_List
+     * @return ListInterface
      */
     public function getList()
     {
@@ -286,14 +286,14 @@ class GridField extends FormField
     /**
      * Get the data source after applying every {@link GridField_DataManipulator} to it.
      *
-     * @return SS_List
+     * @return ListInterface
      */
     public function getManipulatedList()
     {
         $list = $this->getList();
 
         foreach ($this->getComponents() as $item) {
-            if ($item instanceof GridField_DataManipulator) {
+            if ($item instanceof GridFieldDataManipulator) {
                 $list = $item->getManipulatedData($this, $list);
             }
         }
@@ -306,7 +306,7 @@ class GridField extends FormField
      *
      * @param bool $getData
      *
-     * @return GridState_Data|GridState
+     * @return GridStateData|GridState
      */
     public function getState($getData = true)
     {
@@ -337,7 +337,7 @@ class GridField extends FormField
         );
 
         foreach ($this->getComponents() as $item) {
-            if ($item instanceof GridField_HTMLProvider) {
+            if ($item instanceof GridFieldHTMLProvider) {
                 $fragments = $item->getHTMLFragments($this);
 
                 if ($fragments) {
@@ -665,7 +665,7 @@ class GridField extends FormField
         $columns = array();
 
         foreach ($this->getComponents() as $item) {
-            if ($item instanceof GridField_ColumnProvider) {
+            if ($item instanceof GridFieldColumnProvider) {
                 $item->augmentColumns($this, $columns);
             }
         }
@@ -694,7 +694,7 @@ class GridField extends FormField
 
             foreach ($this->columnDispatch[$column] as $handler) {
                 /**
-                 * @var GridField_ColumnProvider $handler
+                 * @var GridFieldColumnProvider $handler
                  */
                 $content .= $handler->getColumnContent($this, $record, $column);
             }
@@ -775,7 +775,7 @@ class GridField extends FormField
 
             foreach ($this->columnDispatch[$column] as $handler) {
                 /**
-                 * @var GridField_ColumnProvider $handler
+                 * @var GridFieldColumnProvider $handler
                  */
                 $columnAttributes = $handler->getColumnAttributes($this, $record, $column);
 
@@ -822,7 +822,7 @@ class GridField extends FormField
 
             foreach ($this->columnDispatch[$column] as $handler) {
                 /**
-                 * @var GridField_ColumnProvider $handler
+                 * @var GridFieldColumnProvider $handler
                  */
                 $columnMetaData = $handler->getColumnMetadata($this, $column);
 
@@ -868,7 +868,7 @@ class GridField extends FormField
         $this->columnDispatch = array();
 
         foreach ($this->getComponents() as $item) {
-            if ($item instanceof GridField_ColumnProvider) {
+            if ($item instanceof GridFieldColumnProvider) {
                 $columns = $item->getColumnsHandled($this);
 
                 foreach ($columns as $column) {
@@ -960,7 +960,7 @@ class GridField extends FormField
         $actionName = strtolower($actionName);
 
         foreach ($this->getComponents() as $component) {
-            if ($component instanceof GridField_ActionProvider) {
+            if ($component instanceof GridFieldActionProvider) {
                 $actions = array_map('strtolower', (array) $component->getActions($this));
 
                 if (in_array($actionName, $actions)) {
@@ -983,7 +983,7 @@ class GridField extends FormField
      *
      * @param HTTPRequest $request
      * @return array|RequestHandler|HTTPResponse|string
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     public function handleRequest(HTTPRequest $request)
     {
@@ -1007,7 +1007,7 @@ class GridField extends FormField
         }
 
         foreach ($this->getComponents() as $component) {
-            if ($component instanceof GridField_URLHandler && $urlHandlers = $component->getURLHandlers($this)) {
+            if ($component instanceof GridFieldURLHandler && $urlHandlers = $component->getURLHandlers($this)) {
                 foreach ($urlHandlers as $rule => $action) {
                     if ($params = $request->match($rule, true)) {
                         // Actions can reference URL parameters.
@@ -1031,7 +1031,7 @@ class GridField extends FormField
 
                             try {
                                 $result = $component->$action($this, $request);
-                            } catch (HTTPResponse_Exception $responseException) {
+                            } catch (HTTPResponseException $responseException) {
                                 $result = $responseException->getResponse();
                             }
 
@@ -1083,7 +1083,7 @@ class GridField extends FormField
     public function saveInto(DataObjectInterface $record)
     {
         foreach ($this->getComponents() as $component) {
-            if ($component instanceof GridField_SaveHandler) {
+            if ($component instanceof GridFieldSaveHandler) {
                 $component->handleSave($this, $record);
             }
         }

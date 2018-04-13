@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldConfigRelationEditor;
 use SilverStripe\ORM\DataObject;
 
 class Category extends DataObject implements TestOnly
@@ -31,7 +31,7 @@ class Category extends DataObject implements TestOnly
                 'People',
                 'People',
                 $this->People(),
-                GridFieldConfig_RelationEditor::create()
+                GridFieldConfigRelationEditor::create()
             )
         );
         return $fields;

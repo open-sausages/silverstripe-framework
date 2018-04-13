@@ -25,18 +25,18 @@ use SilverStripe\Dev\Constraint\SSListContainsOnly;
 use SilverStripe\Dev\Constraint\SSListContainsOnlyMatchingItems;
 use SilverStripe\Dev\State\SapphireTestState;
 use SilverStripe\Dev\State\TestState;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\Connect\TempDatabase;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 
 if (!class_exists(TestCase::class)) {
@@ -230,7 +230,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
         static::$state->setUp($this);
 
         // i18n needs to be set to the defaults or tests fail
-        i18n::set_locale(i18n::config()->uninherited('default_locale'));
+        Internationalisation::set_locale(Internationalisation::config()->uninherited('default_locale'));
 
         // Set default timezone consistently to avoid NZ-specific dependencies
         date_default_timezone_set('UTC');
@@ -277,7 +277,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
         }
 
         // turn off template debugging
-        SSViewer::config()->update('source_file_comments', false);
+        Viewer::config()->update('source_file_comments', false);
 
         // Set up the test mailer
         Injector::inst()->registerService(new TestMailer(), Mailer::class);
@@ -665,9 +665,9 @@ abstract class SapphireTest extends TestCase implements TestOnly
      * Assert that the given {@link SS_List} includes DataObjects matching the given key-value
      * pairs.  Each match must correspond to 1 distinct record.
      *
-     * @param SS_List|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
+     * @param ListInterface|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
-     * @param SS_List $list The {@link SS_List} to test.
+     * @param ListInterface $list The {@link SS_List} to test.
      * @param string $message
      *
      * Examples
@@ -682,7 +682,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      *         ['Email' => 'i...@example.com'],
      *      ], $members);
      */
-    public static function assertListContains($matches, SS_List $list, $message = '') : void
+    public static function assertListContains($matches, ListInterface $list, $message = '') : void
     {
         if (!is_array($matches)) {
             throw InvalidArgumentHelper::factory(
@@ -715,9 +715,9 @@ abstract class SapphireTest extends TestCase implements TestOnly
     /**
      * Asserts that no items in a given list appear in the given dataobject list
      *
-     * @param SS_List|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
+     * @param ListInterface|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
-     * @param SS_List $list The {@link SS_List} to test.
+     * @param ListInterface $list The {@link SS_List} to test.
      * @param string $message
      *
      * Examples
@@ -732,7 +732,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      *          ['Email' => 'i...@example.com'],
      *      ], $members);
      */
-    public static function assertListNotContains($matches, SS_List $list, $message = '') : void
+    public static function assertListNotContains($matches, ListInterface $list, $message = '') : void
     {
         if (!is_array($matches)) {
             throw InvalidArgumentHelper::factory(
@@ -784,7 +784,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      * @param mixed $list The {@link SS_List} to test.
      * @param string $message
      */
-    public static function assertListEquals($matches, SS_List $list, $message = '') : void
+    public static function assertListEquals($matches, ListInterface $list, $message = '') : void
     {
         if (!is_array($matches)) {
             throw InvalidArgumentHelper::factory(
@@ -806,7 +806,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      * @deprecated 4.0.0:5.0.0 Use assertListEquals() instead
      *
      * @param $matches
-     * @param SS_List $dataObjectSet
+     * @param ListInterface $dataObjectSet
      */
     public function assertDOSEquals($matches, $dataObjectSet)
     {
@@ -828,7 +828,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      * @param mixed $list The {@link SS_List} to test.
      * @param string $message
      */
-    public static function assertListAllMatch($match, SS_List $list, $message = '') : void
+    public static function assertListAllMatch($match, ListInterface $list, $message = '') : void
     {
         if (!is_array($match)) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
@@ -850,9 +850,9 @@ abstract class SapphireTest extends TestCase implements TestOnly
      * @deprecated 4.0.0:5.0.0 Use assertListAllMatch() instead
      *
      * @param $match
-     * @param SS_List $dataObjectSet
+     * @param ListInterface $dataObjectSet
      */
-    public function assertDOSAllMatch($match, SS_List $dataObjectSet)
+    public function assertDOSAllMatch($match, ListInterface $dataObjectSet)
     {
         Deprecation::notice('5.0', 'Use assertListAllMatch() instead');
         static::assertListAllMatch($match, $dataObjectSet);
@@ -1124,8 +1124,8 @@ abstract class SapphireTest extends TestCase implements TestOnly
         if (strpos($themeBaseDir, BASE_PATH) === 0) {
             $themeBaseDir = substr($themeBaseDir, strlen(BASE_PATH));
         }
-        SSViewer::config()->update('theme_enabled', true);
-        SSViewer::set_themes([$themeBaseDir . '/themes/' . $theme, '$default']);
+        Viewer::config()->update('theme_enabled', true);
+        Viewer::set_themes([$themeBaseDir . '/themes/' . $theme, '$default']);
 
         try {
             $callback();

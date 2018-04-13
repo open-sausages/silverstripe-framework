@@ -4,7 +4,7 @@ namespace SilverStripe\Dev\Tests;
 
 use SilverStripe\Dev\Constraint\ViewableDataContains;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Encryptors\Member;
 use SilverStripe\View\ArrayData;
 
 class ViewableDataContainsTest extends SapphireTest

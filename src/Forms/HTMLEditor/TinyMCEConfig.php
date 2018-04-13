@@ -12,9 +12,9 @@ use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResource;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use SilverStripe\View\ThemeResourceLoader;
 
 /**
@@ -668,7 +668,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         }
 
         // Themed editor.css
-        $themes = HTMLEditorConfig::getThemes() ?: SSViewer::get_themes();
+        $themes = HTMLEditorConfig::getThemes() ?: Viewer::get_themes();
         $themedEditor = ThemeResourceLoader::inst()->findThemedCSS('editor', $themes);
         if ($themedEditor) {
             $editor[] = $themedEditor;
@@ -722,7 +722,7 @@ class TinyMCEConfig extends HTMLEditorConfig
     public static function get_tinymce_lang()
     {
         $lang = static::config()->get('tinymce_lang');
-        $locale = i18n::get_locale();
+        $locale = Internationalisation::get_locale();
         if (isset($lang[$locale])) {
             return $lang[$locale];
         }

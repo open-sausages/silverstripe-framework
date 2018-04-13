@@ -78,8 +78,8 @@
             "SilverStripe\\Dev\\Tests\\": "tests/php/Dev/",
             "SilverStripe\\Forms\\": "src/Forms/",
             "SilverStripe\\Forms\\Tests\\": "tests/php/Forms/",
-            "SilverStripe\\i18n\\": "src/i18n/",
-            "SilverStripe\\i18n\\Tests\\": "tests/php/i18n/",
+            "SilverStripe\\Internationalisation\\": "src/Internationalisation/",
+            "SilverStripe\\Internationalisation\\Tests\\": "tests/php/Internationalisation/",
             "SilverStripe\\Logging\\": "src/Logging/",
             "SilverStripe\\Logging\\Tests\\": "tests/php/Logging/",
             "SilverStripe\\ORM\\": "src/ORM/",
@@ -92,6 +92,9 @@
         },
         "files": [
             "src/includes/constants.php"
+        ],
+        "classmap": [
+            "thirdparty/php-peg/Parser.php"
         ]
     },
     "include-path": [
@@ -102,7 +105,7 @@
     "scripts": {
         "lint": "phpcs src/ tests/php/ tests/behat/src/",
         "lint-clean": "phpcbf src/ tests/php/ tests/behat/src/",
-        "php-peg": "php thirdparty/php-peg/cli.php src/View/SSTemplateParser.peg > src/View/SSTemplateParser.php"
+        "php-peg": "php thirdparty/php-peg/cli.php src/View/Templates/SSTemplateParser.peg > src/View/Templates/SSTemplateParser.php"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

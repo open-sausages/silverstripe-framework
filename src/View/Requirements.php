@@ -93,17 +93,17 @@ class Requirements implements Flushable
      * Instance of the requirements for storage. You can create your own backend to change the
      * default JS and CSS inclusion behaviour.
      *
-     * @var Requirements_Backend
+     * @var RequirementsBackend
      */
     private static $backend = null;
 
     /**
-     * @return Requirements_Backend
+     * @return RequirementsBackend
      */
     public static function backend()
     {
         if (!self::$backend) {
-            self::$backend = Requirements_Backend::create();
+            self::$backend = RequirementsBackend::create();
         }
         return self::$backend;
     }
@@ -111,9 +111,9 @@ class Requirements implements Flushable
     /**
      * Setter method for changing the Requirements backend
      *
-     * @param Requirements_Backend $backend
+     * @param RequirementsBackend $backend
      */
-    public static function set_backend(Requirements_Backend $backend)
+    public static function set_backend(RequirementsBackend $backend)
     {
         self::$backend = $backend;
     }

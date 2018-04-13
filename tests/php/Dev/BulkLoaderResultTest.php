@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Dev\Tests;
 
-use SilverStripe\Dev\BulkLoader_Result;
+use SilverStripe\Dev\BulkLoaderResult;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\Tests\BulkLoaderResultTest\Player;
 
@@ -21,7 +21,7 @@ class BulkLoaderResultTest extends SapphireTest
 
     public function testBulkLoaderResultCreated()
     {
-        $results = BulkLoader_Result::create();
+        $results = BulkLoaderResult::create();
         $player = Player::create(array('Name' => 'Rangi', 'Status' => 'Possible'));
         $player->write();
         $results->addCreated($player, 'Speedster');
@@ -46,7 +46,7 @@ class BulkLoaderResultTest extends SapphireTest
 
     public function testBulkLoaderResultDeleted()
     {
-        $results = BulkLoader_Result::create();
+        $results = BulkLoaderResult::create();
         $player = Player::get()->find('Name', 'Vincent');
         $results->addDeleted($player, 'Retired');
         $player->delete();
@@ -66,7 +66,7 @@ class BulkLoaderResultTest extends SapphireTest
 
     public function testBulkLoaderResultUpdated()
     {
-        $results = BulkLoader_Result::create();
+        $results = BulkLoaderResult::create();
         $player = Player::get()->find('Name', 'Vincent');
         $player->Status = 'Unavailable';
         $player->write();

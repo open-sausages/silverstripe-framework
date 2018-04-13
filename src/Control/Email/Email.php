@@ -13,7 +13,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ViewableData;
 use Swift_Message;
@@ -673,8 +673,8 @@ class Email extends ViewableData
         }
 
         return ThemeResourceLoader::inst()->findTemplate(
-            SSViewer::get_templates_by_class(static::class, '', self::class),
-            SSViewer::get_themes()
+            Viewer::get_templates_by_class(static::class, '', self::class),
+            Viewer::get_themes()
         );
     }
 

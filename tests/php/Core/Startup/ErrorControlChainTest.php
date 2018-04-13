@@ -28,12 +28,12 @@ class ErrorControlChainTest extends SapphireTest
     {
 
         // Errors disabled by default
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
         $chain->setDisplayErrors('Off'); // mocks display_errors: Off
         $initialValue = null;
         $whenNotSuppressed = null;
         $whenSuppressed = null;
-        $chain->then(function (ErrorControlChainTest\ErrorControlChainTest_Chain $chain) use (
+        $chain->then(function (ErrorControlChainTest\ErrorControlChainTestChain $chain) use (
             &$initialValue,
             &$whenNotSuppressed,
             &$whenSuppressed
@@ -52,12 +52,12 @@ class ErrorControlChainTest extends SapphireTest
         $this->assertEquals('Off', $chain->getDisplayErrors()); // Correctly restored after run
 
         // Errors enabled by default
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
         $chain->setDisplayErrors('Yes'); // non-falsey ini value
         $initialValue = null;
         $whenNotSuppressed = null;
         $whenSuppressed = null;
-        $chain->then(function (ErrorControlChainTest\ErrorControlChainTest_Chain $chain) use (
+        $chain->then(function (ErrorControlChainTest\ErrorControlChainTestChain $chain) use (
             &$initialValue,
             &$whenNotSuppressed,
             &$whenSuppressed
@@ -76,7 +76,7 @@ class ErrorControlChainTest extends SapphireTest
         $this->assertEquals('Yes', $chain->getDisplayErrors()); // Correctly restored after run
 
         // Fatal error
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         list($out, $code) = $chain
             ->then(function () {
@@ -91,7 +91,7 @@ class ErrorControlChainTest extends SapphireTest
 
         // User error
 
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         list($out, $code) = $chain
             ->then(function () {
@@ -106,7 +106,7 @@ class ErrorControlChainTest extends SapphireTest
 
         // Recoverable error
 
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         list($out, $code) = $chain
             ->then(function () {
@@ -123,7 +123,7 @@ class ErrorControlChainTest extends SapphireTest
 
         // Memory exhaustion
 
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         list($out, $code) = $chain
             ->then(function () {
@@ -142,7 +142,7 @@ class ErrorControlChainTest extends SapphireTest
 
         // Exceptions
 
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         list($out, $code) = $chain
             ->then(function () {
@@ -158,7 +158,7 @@ class ErrorControlChainTest extends SapphireTest
 
     public function testExceptionSuppression()
     {
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         list($out, $code) = $chain
             ->then(function () {
@@ -174,7 +174,7 @@ class ErrorControlChainTest extends SapphireTest
 
     public function testErrorControl()
     {
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         list($out, $code) = $chain
             ->then(function () {
@@ -210,7 +210,7 @@ class ErrorControlChainTest extends SapphireTest
     {
         // Turning off suppression before execution
 
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
         $chain->setSuppression(false);
 
         list($out, $code) = $chain
@@ -224,7 +224,7 @@ class ErrorControlChainTest extends SapphireTest
 
         // Turning off suppression during execution
 
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         list($out, $code) = $chain
             ->then(function ($chain) {
@@ -239,7 +239,7 @@ class ErrorControlChainTest extends SapphireTest
 
     public function testDoesntAffectNonFatalErrors()
     {
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         list($out, $code) = $chain
             ->then(function () {
@@ -261,7 +261,7 @@ class ErrorControlChainTest extends SapphireTest
 
     public function testDoesntAffectCaughtExceptions()
     {
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         list($out, $code) = $chain
             ->then(function () {
@@ -281,7 +281,7 @@ class ErrorControlChainTest extends SapphireTest
 
     public function testDoesntAffectHandledErrors()
     {
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         list($out, $code) = $chain
             ->then(function () {
@@ -305,7 +305,7 @@ class ErrorControlChainTest extends SapphireTest
 
     public function testMemoryConversion()
     {
-        $chain = new ErrorControlChainTest\ErrorControlChainTest_Chain();
+        $chain = new ErrorControlChainTest\ErrorControlChainTestChain();
 
         $this->assertEquals(200, $chain->translateMemstring('200'));
         $this->assertEquals(300, $chain->translateMemstring('300'));

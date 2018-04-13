@@ -8,7 +8,7 @@ use SilverStripe\Versioned\Versioned;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Director;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Cache\Simple\NullCache;
 
@@ -60,7 +60,7 @@ class SSViewerCacheBlockTest extends SapphireTest
             $data = $this->data->customise($data);
         }
 
-        return SSViewer::execute_string($template, $data);
+        return Viewer::execute_string($template, $data);
     }
 
     public function testParsing()
@@ -171,13 +171,13 @@ class SSViewerCacheBlockTest extends SapphireTest
         $data->setEntropy('default');
         $this->assertEquals(
             'default Stage.Stage',
-            SSViewer::execute_string('<% cached %>$Inspect<% end_cached %>', $data)
+            Viewer::execute_string('<% cached %>$Inspect<% end_cached %>', $data)
         );
         $data = new SSViewerCacheBlockTest\VersionedModel();
         $data->setEntropy('first');
         $this->assertEquals(
             'first Stage.Stage',
-            SSViewer::execute_string('<% cached %>$Inspect<% end_cached %>', $data)
+            Viewer::execute_string('<% cached %>$Inspect<% end_cached %>', $data)
         );
 
         // Run without caching in live to prove data is uncached
@@ -421,7 +421,7 @@ class SSViewerCacheBlockTest extends SapphireTest
     }
 
     /**
-     * @expectedException \SilverStripe\View\SSTemplateParseException
+     * @expectedException \SilverStripe\View\Templates\TemplateParserException
      */
     public function testErrorMessageForCachedWithinControlWithinCached()
     {
@@ -442,7 +442,7 @@ class SSViewerCacheBlockTest extends SapphireTest
     }
 
     /**
-     * @expectedException \SilverStripe\View\SSTemplateParseException
+     * @expectedException \SilverStripe\View\Templates\TemplateParserException
      */
     public function testErrorMessageForCachedWithinIf()
     {
@@ -451,7 +451,7 @@ class SSViewerCacheBlockTest extends SapphireTest
     }
 
     /**
-     * @expectedException \SilverStripe\View\SSTemplateParseException
+     * @expectedException \SilverStripe\View\Templates\TemplateParserException
      */
     public function testErrorMessageForInvalidConditional()
     {

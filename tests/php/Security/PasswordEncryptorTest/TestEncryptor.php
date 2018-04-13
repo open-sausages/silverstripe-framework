@@ -3,7 +3,7 @@
 namespace SilverStripe\Security\Tests\PasswordEncryptorTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\Security\PasswordEncryptor;
+use SilverStripe\Security\Encryptors\PasswordEncryptor;
 
 class TestEncryptor extends PasswordEncryptor implements TestOnly
 {

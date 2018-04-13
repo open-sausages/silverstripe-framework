@@ -11,7 +11,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * Represents a field in a form.
@@ -1086,7 +1086,7 @@ class FormField extends RequestHandler
      */
     protected function _templates($customTemplate = null, $customTemplateSuffix = null)
     {
-        $templates = SSViewer::get_templates_by_class(static::class, $customTemplateSuffix, __CLASS__);
+        $templates = Viewer::get_templates_by_class(static::class, $customTemplateSuffix, __CLASS__);
         // Prefer any custom template
         if ($customTemplate) {
             // Prioritise direct template

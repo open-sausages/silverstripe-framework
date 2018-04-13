@@ -6,7 +6,7 @@ use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectSchema;
@@ -1719,7 +1719,7 @@ class DataObjectTest extends SapphireTest
             DataObjectTest\Bogey::class => 'Bogeys',
             DataObjectTest\Ploy::class => 'Ploys',
         );
-        i18n::set_locale('en_NZ');
+        Internationalisation::set_locale('en_NZ');
         foreach ($assertions as $class => $expectedPluralName) {
             $this->assertEquals(
                 $expectedPluralName,

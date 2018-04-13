@@ -5,11 +5,11 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\Sortable;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use LogicException;
 
 /**
@@ -18,7 +18,7 @@ use LogicException;
  *
  * @see GridField
  */
-class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider
+class GridFieldSortableHeader implements GridFieldHTMLProvider, GridFieldDataManipulator, GridFieldActionProvider
 {
 
     /**
@@ -65,7 +65,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
      * Check that this dataList is of the right data type.
      * Returns false if it's a bad data type, and if appropriate, throws an exception.
      *
-     * @param SS_List $dataList
+     * @param ListInterface $dataList
      * @return bool
      */
     protected function checkDataType($dataList)
@@ -117,7 +117,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
         }
         /** @var Sortable $list */
         $forTemplate = new ArrayData(array());
-        $forTemplate->Fields = new ArrayList;
+        $forTemplate->Fields = new ArrayListInterface;
 
         $state = $gridField->State->GridFieldSortableHeader;
         $columns = $gridField->getColumns();
@@ -143,7 +143,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
                 $tmpItem = singleton($list->dataClass());
                 for ($idx = 0; $idx < sizeof($parts); $idx++) {
                     $methodName = $parts[$idx];
-                    if ($tmpItem instanceof SS_List) {
+                    if ($tmpItem instanceof ListInterface) {
                         // It's impossible to sort on a HasManyList/ManyManyList
                         break;
                     } elseif (method_exists($tmpItem, 'hasMethod') && $tmpItem->hasMethod($methodName)) {
@@ -169,7 +169,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
                     $dir = 'desc';
                 }
 
-                $field = GridField_FormAction::create(
+                $field = GridFieldFormAction::create(
                     $gridField,
                     'SetOrder' . $fieldName,
                     $title,
@@ -207,7 +207,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
             $forTemplate->Fields->push($field);
         }
 
-        $template = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
+        $template = Viewer::get_templates_by_class($this, '_Row', __CLASS__);
         return array(
             'header' => $forTemplate->renderWith($template),
         );
@@ -253,10 +253,10 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
      * {@link DataQuery} first.
      *
      * @param GridField $gridField
-     * @param SS_List $dataList
-     * @return SS_List
+     * @param ListInterface $dataList
+     * @return ListInterface
      */
-    public function getManipulatedData(GridField $gridField, SS_List $dataList)
+    public function getManipulatedData(GridField $gridField, ListInterface $dataList)
     {
         if (!$this->checkDataType($dataList)) {
             return $dataList;

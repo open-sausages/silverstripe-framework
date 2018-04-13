@@ -4,7 +4,7 @@ namespace SilverStripe\ORM\Tests;
 
 use PHPUnit\Framework\Error\Notice;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 
@@ -21,7 +21,7 @@ class DBDateTest extends SapphireTest
         $this->oldError = error_reporting();
         // Validate setup
         assert(date_default_timezone_get() === 'UTC');
-        i18n::set_locale('en_NZ');
+        Internationalisation::set_locale('en_NZ');
     }
 
     protected function tearDown()

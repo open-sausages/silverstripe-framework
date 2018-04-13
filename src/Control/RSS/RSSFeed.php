@@ -2,15 +2,15 @@
 
 namespace SilverStripe\Control\RSS;
 
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ListInterface;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTP;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -35,7 +35,7 @@ class RSSFeed extends ViewableData
     /**
      * Holds the feed entries
      *
-     * @var SS_List
+     * @var ListInterface
      */
     protected $entries;
 
@@ -105,7 +105,7 @@ class RSSFeed extends ViewableData
     /**
      * Constructor
      *
-     * @param SS_List $entries RSS feed entries
+     * @param ListInterface $entries RSS feed entries
      * @param string $link Link to the feed
      * @param string $title Title of the feed
      * @param string $description Description of the field
@@ -122,7 +122,7 @@ class RSSFeed extends ViewableData
      *                         every time the representation does
      */
     public function __construct(
-        SS_List $entries,
+        ListInterface $entries,
         $link,
         $title,
         $description = null,
@@ -164,16 +164,16 @@ class RSSFeed extends ViewableData
     /**
      * Get the RSS feed entries
      *
-     * @return SS_List Returns the {@link RSSFeed_Entry} objects.
+     * @return ListInterface Returns the {@link RSSFeed_Entry} objects.
      */
     public function Entries()
     {
-        $output = new ArrayList();
+        $output = new ArrayListInterface();
 
         if (isset($this->entries)) {
             foreach ($this->entries as $entry) {
                 $output->push(
-                    RSSFeed_Entry::create($entry, $this->titleField, $this->descriptionField, $this->authorField)
+                    RSSFeedEntry::create($entry, $this->titleField, $this->descriptionField, $this->authorField)
                 );
             }
         }
@@ -221,8 +221,8 @@ class RSSFeed extends ViewableData
      */
     public function outputToBrowser()
     {
-        $prevState = SSViewer::config()->uninherited('source_file_comments');
-        SSViewer::config()->update('source_file_comments', false);
+        $prevState = Viewer::config()->uninherited('source_file_comments');
+        Viewer::config()->update('source_file_comments', false);
 
         $response = Controller::curr()->getResponse();
 
@@ -239,7 +239,7 @@ class RSSFeed extends ViewableData
             $response->addHeader("Content-Type", "application/rss+xml; charset=utf-8");
         }
 
-        SSViewer::config()->update('source_file_comments', $prevState);
+        Viewer::config()->update('source_file_comments', $prevState);
         return $this->renderWith($this->getTemplates());
     }
 
@@ -272,7 +272,7 @@ class RSSFeed extends ViewableData
      */
     public function getTemplates()
     {
-        $templates = SSViewer::get_templates_by_class(static::class, '', __CLASS__);
+        $templates = Viewer::get_templates_by_class(static::class, '', __CLASS__);
         // Prefer any custom template
         if ($this->getTemplate()) {
             array_unshift($templates, $this->getTemplate());

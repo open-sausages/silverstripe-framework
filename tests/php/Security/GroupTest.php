@@ -5,7 +5,7 @@ namespace SilverStripe\Security\Tests;
 use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
@@ -173,7 +173,7 @@ class GroupTest extends FunctionalTest
         /** @var Group $group */
         $group = $this->objFromFixture(Group::class, 'parentgroup');
         $children = $group->getAllChildren();
-        $this->assertInstanceOf(ArrayList::class, $children);
+        $this->assertInstanceOf(ArrayListInterface::class, $children);
         $this->assertSame(['childgroup', 'grandchildgroup'], $children->column('Code'));
     }
 

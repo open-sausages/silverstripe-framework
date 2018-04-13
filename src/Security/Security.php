@@ -10,7 +10,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
@@ -18,16 +18,18 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\Form;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\Encryptors\PasswordEncryptor;
+use SilverStripe\Security\Encryptors\NotFoundException;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\SSViewer;
-use SilverStripe\View\TemplateGlobalProvider;
+use SilverStripe\View\Templates\Viewer;
+use SilverStripe\View\Templates\TemplateGlobalProvider;
 
 /**
  * Implements a basic security model
@@ -596,7 +598,7 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         $viewData = new ArrayData([
-            'Forms' => new ArrayList($forms),
+            'Forms' => new ArrayListInterface($forms),
         ]);
 
         return $viewData->renderWith(
@@ -669,7 +671,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param null|HTTPRequest $request
      * @param int $service
      * @return HTTPResponse|string Returns the "login" page as HTML code.
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     public function login($request = null, $service = Authenticator::LOGIN)
     {
@@ -678,7 +680,7 @@ class Security extends Controller implements TemplateGlobalProvider
         } elseif ($this->getRequest()) {
             $request = $this->getRequest();
         } else {
-            throw new HTTPResponse_Exception("No request available", 500);
+            throw new HTTPResponseException("No request available", 500);
         }
 
         // Check pre-login process
@@ -749,7 +751,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param int $service
      * @param HTTPRequest $request
      * @return array|Authenticator[]
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     protected function getServiceAuthenticatorsFromRequest($service, HTTPRequest $request)
     {
@@ -778,7 +780,7 @@ class Security extends Controller implements TemplateGlobalProvider
                     $message .= 'unknown authenticator service';
                 }
 
-                throw new HTTPResponse_Exception($message, 400);
+                throw new HTTPResponseException($message, 400);
             }
 
             $handlers = [$authName => $authenticator];
@@ -815,7 +817,7 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         return [
-            'Forms' => ArrayList::create($forms),
+            'Forms' => ArrayListInterface::create($forms),
             'Form' => $this->generateTabbedFormSet($forms)
         ];
     }
@@ -1034,7 +1036,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function getTemplatesFor($action)
     {
-        $templates = SSViewer::get_templates_by_class(static::class, "_{$action}", __CLASS__);
+        $templates = Viewer::get_templates_by_class(static::class, "_{$action}", __CLASS__);
 
         return array_merge(
             $templates,
@@ -1185,7 +1187,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * </code>
      * If the passed algorithm is invalid, FALSE will be returned.
      *
-     * @throws PasswordEncryptor_NotFoundException
+     * @throws NotFoundException
      * @see encrypt_passwords()
      */
     public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null)

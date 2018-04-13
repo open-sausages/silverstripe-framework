@@ -2,7 +2,7 @@
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\Core\Manifest\ModuleManifest;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,5 +60,5 @@ function project()
 function _t($entity, $arg = null)
 {
     // Pass args directly to handle deprecation
-    return call_user_func_array([i18n::class, '_t'], func_get_args());
+    return call_user_func_array([Internationalisation::class, '_t'], func_get_args());
 }

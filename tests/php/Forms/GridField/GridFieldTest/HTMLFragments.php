@@ -3,9 +3,9 @@
 namespace SilverStripe\Forms\Tests\GridField\GridFieldTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+use SilverStripe\Forms\GridField\GridFieldHTMLProvider;
 
-class HTMLFragments implements GridField_HTMLProvider, TestOnly
+class HTMLFragments implements GridFieldHTMLProvider, TestOnly
 {
     protected $fragments;
 

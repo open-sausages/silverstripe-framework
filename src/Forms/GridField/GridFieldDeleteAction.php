@@ -21,7 +21,7 @@ use SilverStripe\ORM\ValidationException;
  * $action = new GridFieldDeleteAction(true);
  * </code>
  */
-class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_ActionProvider
+class GridFieldDeleteAction implements GridFieldColumnProvider, GridFieldActionProvider
 {
 
     /**
@@ -121,7 +121,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             }
             $title = _t(__CLASS__ . '.UnlinkRelation', "Unlink");
 
-            $field = GridField_FormAction::create(
+            $field = GridFieldFormAction::create(
                 $gridField,
                 'UnlinkRelation' . $record->ID,
                 false,
@@ -139,7 +139,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 return null;
             }
 
-            $field = GridField_FormAction::create(
+            $field = GridFieldFormAction::create(
                 $gridField,
                 'DeleteRecord' . $record->ID,
                 false,

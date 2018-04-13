@@ -27,7 +27,7 @@ class SubController extends Controller implements TestOnly
     public function getViewer($action)
     {
         if (empty($action)) {
-            throw new SubController_Exception("Null action passed, getViewer will break");
+            throw new SubControllerException("Null action passed, getViewer will break");
         }
         return parent::getViewer($action);
     }

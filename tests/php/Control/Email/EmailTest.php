@@ -13,7 +13,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestMailer;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
@@ -172,7 +172,7 @@ class EmailTest extends SapphireTest
     public function testRenderedSendSubclass()
     {
         // Include dev theme
-        SSViewer::set_themes([
+        Viewer::set_themes([
             'silverstripe/framework:/tests/php/Control/Email/EmailTest',
             '$default',
         ]);
@@ -467,7 +467,7 @@ class EmailTest extends SapphireTest
     public function testHTMLTemplate()
     {
         // Include dev theme
-        SSViewer::set_themes([
+        Viewer::set_themes([
             'silverstripe/framework:/tests/php/Control/Email/EmailTest',
             '$default',
         ]);

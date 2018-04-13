@@ -11,7 +11,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 
 /**
  * @skipUpgrade
@@ -124,7 +124,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
             array('ID' => (int)$items[0]['data-id']),
             array('ID' => (int)$items[1]['data-id']),
             ),
-            new ArrayList(array($team1, $team2))
+            new ArrayListInterface(array($team1, $team2))
         );
     }
 }

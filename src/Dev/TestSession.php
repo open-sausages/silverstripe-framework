@@ -4,7 +4,7 @@ namespace SilverStripe\Dev;
 
 use Exception;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Cookie_Backend;
+use SilverStripe\Control\CookieBackend;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -29,7 +29,7 @@ class TestSession
     private $session;
 
     /**
-     * @var Cookie_Backend
+     * @var CookieBackend
      */
     private $cookies;
 
@@ -57,7 +57,7 @@ class TestSession
     public function __construct()
     {
         $this->session = Injector::inst()->create(Session::class, array());
-        $this->cookies = Injector::inst()->create(Cookie_Backend::class);
+        $this->cookies = Injector::inst()->create(CookieBackend::class);
         $request = new HTTPRequest('GET', '/');
         $request->setSession($this->session());
         $this->controller = new Controller();
@@ -282,7 +282,7 @@ class TestSession
 
         $builder = new SimplePageBuilder();
         if ($this->lastResponse) {
-            $page = &$builder->parse(new TestSession_STResponseWrapper($this->lastResponse));
+            $page = &$builder->parse(new TestSessionSTResponseWrapper($this->lastResponse));
             $builder->free();
             unset($builder);
 

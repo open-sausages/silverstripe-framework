@@ -4,10 +4,10 @@ namespace SilverStripe\Forms\Tests\GridField\GridFieldTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridField_ActionProvider;
-use SilverStripe\Forms\GridField\GridField_ColumnProvider;
+use SilverStripe\Forms\GridField\GridFieldActionProvider;
+use SilverStripe\Forms\GridField\GridFieldColumnProvider;
 
-class Component implements GridField_ColumnProvider, GridField_ActionProvider, TestOnly
+class Component implements GridFieldColumnProvider, GridFieldActionProvider, TestOnly
 {
 
     public function augmentColumns($gridField, &$columns)

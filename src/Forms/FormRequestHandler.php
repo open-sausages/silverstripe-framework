@@ -7,12 +7,12 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use SilverStripe\ORM\ValidationException;
 
 class FormRequestHandler extends RequestHandler
@@ -104,7 +104,7 @@ class FormRequestHandler extends RequestHandler
      *
      * @param HTTPRequest $request
      * @return HTTPResponse
-     * @throws HTTPResponse_Exception
+     * @throws HTTPResponseException
      */
     public function httpSubmission($request)
     {
@@ -394,7 +394,7 @@ class FormRequestHandler extends RequestHandler
     /**
      * Fields can have action to, let's check if anyone of the responds to $funcname them
      *
-     * @param SS_List|array $fields
+     * @param ListInterface|array $fields
      * @param callable $funcName
      * @return FormField
      */

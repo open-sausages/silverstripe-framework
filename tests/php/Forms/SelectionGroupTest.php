@@ -5,7 +5,7 @@ namespace SilverStripe\Forms\Tests;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\SelectionGroup_Item;
+use SilverStripe\Forms\SelectionGroupItem;
 use SilverStripe\Forms\SelectionGroup;
 
 class SelectionGroupTest extends SapphireTest
@@ -13,12 +13,12 @@ class SelectionGroupTest extends SapphireTest
     public function testFieldHolder()
     {
         $items = array(
-            new SelectionGroup_Item(
+            new SelectionGroupItem(
                 'one',
                 new LiteralField('one', 'one view'),
                 'one title'
             ),
-            new SelectionGroup_Item(
+            new SelectionGroupItem(
                 'two',
                 new LiteralField('two', 'two view'),
                 'two title'
@@ -43,12 +43,12 @@ class SelectionGroupTest extends SapphireTest
     public function testSelectedFieldHolder()
     {
         $items = array(
-            new SelectionGroup_Item(
+            new SelectionGroupItem(
                 'one',
                 new LiteralField('one', 'one view'),
                 'one title'
             ),
-            new SelectionGroup_Item(
+            new SelectionGroupItem(
                 'two',
                 new LiteralField('two', 'two view'),
                 'two title'

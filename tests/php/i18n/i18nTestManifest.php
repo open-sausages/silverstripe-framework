@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\i18n\Tests;
+namespace SilverStripe\Internationalisation\Tests;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
@@ -8,16 +8,16 @@ use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
-use SilverStripe\i18n\i18n;
-use SilverStripe\i18n\Messages\MessageProvider;
-use SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader;
-use SilverStripe\i18n\Messages\Symfony\SymfonyMessageProvider;
-use SilverStripe\i18n\Messages\YamlReader;
-use SilverStripe\i18n\Tests\i18nTest\MyObject;
-use SilverStripe\i18n\Tests\i18nTest\MySubObject;
-use SilverStripe\i18n\Tests\i18nTest\TestDataObject;
-use SilverStripe\View\SSViewer;
-use SilverStripe\View\SSViewer_DataPresenter;
+use SilverStripe\Internationalisation\Internationalisation;
+use SilverStripe\Internationalisation\Messages\MessageProvider;
+use SilverStripe\Internationalisation\Messages\Symfony\ModuleYamlLoader;
+use SilverStripe\Internationalisation\Messages\Symfony\SymfonyMessageProvider;
+use SilverStripe\Internationalisation\Messages\YamlReader;
+use SilverStripe\Internationalisation\Tests\i18nTest\MyObject;
+use SilverStripe\Internationalisation\Tests\i18nTest\MySubObject;
+use SilverStripe\Internationalisation\Tests\i18nTest\TestDataObject;
+use SilverStripe\View\Templates\Viewer;
+use SilverStripe\View\Templates\ViewerDataPresenter;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\View\ViewableData;
@@ -76,7 +76,7 @@ trait i18nTestManifest
     {
         // force SSViewer_DataPresenter to cache global template vars before we switch to the
         // test-project class manifest (since it will lose visibility of core classes)
-        $presenter = new SSViewer_DataPresenter(new ViewableData());
+        $presenter = new ViewerDataPresenter(new ViewableData());
         unset($presenter);
 
         // Switch to test manifest
@@ -98,13 +98,13 @@ trait i18nTestManifest
         );
         $default->init(true);
 
-        SSViewer::set_themes([
+        Viewer::set_themes([
             'testtheme1',
             '$default',
         ]);
 
-        $this->originalLocale = i18n::get_locale();
-        i18n::set_locale('en_US');
+        $this->originalLocale = Internationalisation::get_locale();
+        Internationalisation::set_locale('en_US');
 
         // Set new manifest against the root
         $classManifest = new ClassManifest($this->alternateBasePath);
@@ -127,7 +127,7 @@ trait i18nTestManifest
     public function tearDownManifest()
     {
         ThemeResourceLoader::set_instance($this->oldThemeResourceLoader);
-        i18n::set_locale($this->originalLocale);
+        Internationalisation::set_locale($this->originalLocale);
 
         // Reset any manifests pushed during this test
         $this->popManifests();

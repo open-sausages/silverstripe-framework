@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldConfigRelationEditor;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\DataObject;
 
@@ -45,7 +45,7 @@ class Person extends DataObject implements TestOnly
                 'Categories',
                 'Categories',
                 $this->Categories(),
-                GridFieldConfig_RelationEditor::create()
+                GridFieldConfigRelationEditor::create()
             )
         );
         $fields->replaceField(
@@ -54,7 +54,7 @@ class Person extends DataObject implements TestOnly
                 'FavouriteGroups',
                 'Favourite Groups',
                 $this->FavouriteGroups(),
-                GridFieldConfig_RelationEditor::create()
+                GridFieldConfigRelationEditor::create()
             )
         );
         return $fields;

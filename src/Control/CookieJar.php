@@ -16,7 +16,7 @@ use LogicException;
  * @todo Tests / a way to set the state without hacking with $_COOKIE
  * @todo Store the meta information around cookie setting (path, domain, secure, etc)
  */
-class CookieJar implements Cookie_Backend
+class CookieJar implements CookieBackend
 {
 
     /**

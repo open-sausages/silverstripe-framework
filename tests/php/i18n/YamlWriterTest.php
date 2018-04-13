@@ -1,10 +1,10 @@
 <?php
 
-namespace SilverStripe\i18n\Tests;
+namespace SilverStripe\Internationalisation\Tests;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\i18n\Messages\YamlWriter;
+use SilverStripe\Internationalisation\Messages\YamlWriter;
 
 class YamlWriterTest extends SapphireTest
 {

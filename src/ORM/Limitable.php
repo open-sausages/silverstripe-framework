@@ -8,9 +8,9 @@ namespace SilverStripe\ORM;
  * All methods in this interface are immutable - they should return new instances with the limit
  * applied, rather than applying the limit in place
  *
- * @see SS_List, Sortable, Filterable
+ * @see ListInterface, Sortable, Filterable
  */
-interface Limitable extends SS_List
+interface Limitable extends ListInterface
 {
 
     /**

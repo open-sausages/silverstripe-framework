@@ -5,7 +5,7 @@ namespace SilverStripe\Core\Startup;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Application;
 use SilverStripe\Security\Security;
@@ -55,7 +55,7 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
                         // If no reload necessary, process application
                         $result = call_user_func($next, $request);
                     }
-                } catch (HTTPResponse_Exception $exception) {
+                } catch (HTTPResponseException $exception) {
                     $result = $exception->getResponse();
                 }
             })

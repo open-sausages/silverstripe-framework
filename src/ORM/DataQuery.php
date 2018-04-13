@@ -613,11 +613,11 @@ class DataQuery
      *
      * That is a subgroup joined by OR
      *
-     * @return DataQuery_SubGroup
+     * @return DataQuerySubGroup
      */
     public function disjunctiveGroup()
     {
-        return new DataQuery_SubGroup($this, 'OR');
+        return new DataQuerySubGroup($this, 'OR');
     }
 
     /**
@@ -625,11 +625,11 @@ class DataQuery
      *
      * That is a subgroup joined by AND
      *
-     * @return DataQuery_SubGroup
+     * @return DataQuerySubGroup
      */
     public function conjunctiveGroup()
     {
-        return new DataQuery_SubGroup($this, 'AND');
+        return new DataQuerySubGroup($this, 'AND');
     }
 
     /**

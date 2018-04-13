@@ -13,7 +13,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\GridField\GridFieldConfigRecordEditor;
 use SilverStripe\Forms\GridField\GridField;
 
 class GridFieldSortableHeaderTest extends SapphireTest
@@ -39,7 +39,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
 
         // Generate sortable header and extract HTML
         $list = new DataList(Team::class);
-        $config = new GridFieldConfig_RecordEditor();
+        $config = new GridFieldConfigRecordEditor();
         $form = new Form(null, 'Form', new FieldList(), new FieldList());
         $gridField = new GridField('testfield', 'testfield', $list, $config);
         $gridField->setForm($form);
@@ -69,7 +69,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
     public function testGetManipulatedData()
     {
         $list = new DataList(Team::class);
-        $config = new GridFieldConfig_RecordEditor();
+        $config = new GridFieldConfigRecordEditor();
         $gridField = new GridField('testfield', 'testfield', $list, $config);
 
         // Test normal sorting
@@ -133,7 +133,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
     public function testInheritedGetManiplatedData()
     {
         $list = TeamGroup::get();
-        $config = new GridFieldConfig_RecordEditor();
+        $config = new GridFieldConfigRecordEditor();
         $gridField = new GridField('testfield', 'testfield', $list, $config);
         $state = $gridField->State->GridFieldSortableHeader;
         $component = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);

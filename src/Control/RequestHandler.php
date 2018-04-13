@@ -199,7 +199,7 @@ class RequestHandler extends ViewableData
                 return $this->httpError(403, "Action '$action' isn't allowed $classMessage.");
             }
             $result = $this->handleAction($request, $action);
-        } catch (HTTPResponse_Exception $e) {
+        } catch (HTTPResponseException $e) {
             return $e->getResponse();
         } catch (PermissionFailureException $e) {
             $result = Security::permissionFailure(null, $e->getMessage());
@@ -510,8 +510,8 @@ class RequestHandler extends ViewableData
      *
      * @param int $errorCode
      * @param string $errorMessage Plaintext error message
-     * @uses HTTPResponse_Exception
-     * @throws HTTPResponse_Exception
+     * @uses HTTPResponseException
+     * @throws HTTPResponseException
      */
     public function httpError($errorCode, $errorMessage = null)
     {
@@ -524,7 +524,7 @@ class RequestHandler extends ViewableData
         $this->extend('onBeforeHTTPError', $errorCode, $request);
 
         // Throw a new exception
-        throw new HTTPResponse_Exception($errorMessage, $errorCode);
+        throw new HTTPResponseException($errorMessage, $errorCode);
     }
 
     /**

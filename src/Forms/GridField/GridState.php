@@ -23,7 +23,7 @@ class GridState extends HiddenField
     protected $grid;
 
     /**
-     * @var GridState_Data
+     * @var GridStateData
      */
     protected $data = null;
 
@@ -60,7 +60,7 @@ class GridState extends HiddenField
     public function setValue($value, $data = null)
     {
         if (is_string($value)) {
-            $this->data = new GridState_Data(json_decode($value, true));
+            $this->data = new GridStateData(json_decode($value, true));
         }
 
         parent::setValue($value);
@@ -68,12 +68,12 @@ class GridState extends HiddenField
     }
 
     /**
-     * @return GridState_Data
+     * @return GridStateData
      */
     public function getData()
     {
         if (!$this->data) {
-            $this->data = new GridState_Data();
+            $this->data = new GridStateData();
         }
 
         return $this->data;

@@ -9,7 +9,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Permission;
-use SilverStripe\Security\Security;
+use SilverStripe\Security\Encryptors\Security;
 use ReflectionClass;
 
 class TaskRunner extends Controller

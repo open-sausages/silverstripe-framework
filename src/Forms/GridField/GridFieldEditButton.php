@@ -5,7 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * Provides the entry point to editing a single record presented by the
@@ -17,7 +17,7 @@ use SilverStripe\View\SSViewer;
  * The default routing applies to the {@link GridFieldDetailForm} component,
  * which has to be added separately to the {@link GridField} configuration.
  */
-class GridFieldEditButton implements GridField_ColumnProvider
+class GridFieldEditButton implements GridFieldColumnProvider
 {
     /**
      * HTML classes to be added to GridField edit buttons
@@ -109,7 +109,7 @@ class GridFieldEditButton implements GridField_ColumnProvider
             'ExtraClass' => $this->getExtraClass()
         ));
 
-        $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $template = Viewer::get_templates_by_class($this, '', __CLASS__);
         return $data->renderWith($template);
     }
 

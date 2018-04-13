@@ -8,7 +8,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Queries\SQLSelect;
 use Exception;
@@ -287,7 +287,7 @@ class MySQLDatabase extends Database
             $objects[] = new $record['ClassName']($record);
         }
 
-        $list = new PaginatedList(new ArrayList($objects));
+        $list = new PaginatedList(new ArrayListInterface($objects));
         $list->setPageStart($start);
         $list->setPageLength($pageLength);
         $list->setTotalItems($totalCount);

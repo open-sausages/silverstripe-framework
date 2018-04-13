@@ -10,7 +10,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tests\DatetimeFieldTest\Model;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
 class DatetimeFieldTest extends SapphireTest
@@ -20,7 +20,7 @@ class DatetimeFieldTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
-        i18n::set_locale('en_NZ');
+        Internationalisation::set_locale('en_NZ');
         // Fix now to prevent race conditions
         DBDatetime::set_mock_now('2010-04-04');
         $this->timezone = date_default_timezone_get();

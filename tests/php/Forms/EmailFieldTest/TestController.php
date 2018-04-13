@@ -10,7 +10,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 
 /**
  * @skipUpgrade
@@ -77,6 +77,6 @@ class TestController extends Controller implements TestOnly
 
     public function getViewer($action = null)
     {
-        return new SSViewer('BlankPage');
+        return new Viewer('BlankPage');
     }
 }

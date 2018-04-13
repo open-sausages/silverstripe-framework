@@ -5,10 +5,10 @@ namespace SilverStripe\Security;
 use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FormField;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ListInterface;
 use Traversable;
 
 /**
@@ -29,7 +29,7 @@ class PermissionCheckboxSetField extends FormField
     protected $hiddenPermissions = array();
 
     /**
-     * @var SS_List
+     * @var ListInterface
      */
     protected $records = null;
 
@@ -43,7 +43,7 @@ class PermissionCheckboxSetField extends FormField
      * @param String $title
      * @param String $managedClass
      * @param String $filterField
-     * @param Group|SS_List $records One or more {@link Group} or {@link PermissionRole} records
+     * @param Group|ListInterface $records One or more {@link Group} or {@link PermissionRole} records
      *  used to determine permission checkboxes.
      *  Caution: saveInto() can only be used with a single record, all inherited permissions will be marked readonly.
      *  Setting multiple groups only makes sense in a readonly context. (Optional)
@@ -53,10 +53,10 @@ class PermissionCheckboxSetField extends FormField
         $this->filterField = $filterField;
         $this->managedClass = $managedClass;
 
-        if ($records instanceof SS_List) {
+        if ($records instanceof ListInterface) {
             $this->records = $records;
         } elseif ($records instanceof Group) {
-            $this->records = new ArrayList(array($records));
+            $this->records = new ArrayListInterface(array($records));
         } elseif ($records) {
             throw new InvalidArgumentException(
                 '$record should be either a Group record, or a SS_List of Group records'
@@ -93,7 +93,7 @@ class PermissionCheckboxSetField extends FormField
     {
         $uninheritedCodes = array();
         $inheritedCodes = array();
-        $records = ($this->records) ? $this->records : new ArrayList();
+        $records = ($this->records) ? $this->records : new ArrayListInterface();
 
         // Get existing values from the form record (assuming the formfield name is a join field on the record)
         if (is_object($this->form)) {
@@ -338,11 +338,11 @@ class PermissionCheckboxSetField extends FormField
     }
 
     /**
-     * @return PermissionCheckboxSetField_Readonly
+     * @return PermissionCheckboxSetFieldReadonly
      */
     public function performReadonlyTransformation()
     {
-        $readonly = new PermissionCheckboxSetField_Readonly(
+        $readonly = new PermissionCheckboxSetFieldReadonly(
             $this->name,
             $this->title,
             $this->managedClass,

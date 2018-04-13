@@ -169,7 +169,7 @@ abstract class BulkLoader extends ViewableData
      *
      * @param string $filepath Absolute path to the file we're importing (with UTF8 content)
      * @param boolean $preview If true, we'll just output a summary of changes but not actually do anything
-     * @return BulkLoader_Result A collection of objects which are either created, updated or deleted.
+     * @return BulkLoaderResult A collection of objects which are either created, updated or deleted.
      * 'message': free-text string that can optionally provide some more information about what changes have
      */
     abstract protected function processAll($filepath, $preview = false);
@@ -180,7 +180,7 @@ abstract class BulkLoader extends ViewableData
      *
      * @param array $record An map of the data, keyed by the header field defined in {@link self::$columnMap}
      * @param array $columnMap
-     * @param $result BulkLoader_Result (passed as reference)
+     * @param $result BulkLoaderResult (passed as reference)
      * @param boolean $preview
      */
     abstract protected function processRecord($record, $columnMap, &$result, $preview = false);

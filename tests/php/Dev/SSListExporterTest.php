@@ -4,7 +4,7 @@ namespace SilverStripe\Dev\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\SSListExporter;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
@@ -27,7 +27,7 @@ class SSListExporterTest extends SapphireTest
     public function provideClassesForExport()
     {
         return [
-            [ArrayList::class, false],
+            [ArrayListInterface::class, false],
             [DataObject::class, false],
             [DataList::class, Member::class],
             [ArrayData::class, false]

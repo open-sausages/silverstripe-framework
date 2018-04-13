@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\HTML;
 
@@ -50,7 +50,7 @@ class SelectionGroup extends CompositeField
         $selectionItems = array();
 
         foreach ($items as $key => $item) {
-            if ($item instanceof SelectionGroup_Item) {
+            if ($item instanceof SelectionGroupItem) {
                 $selectionItems[] = $item;
             } else {
                 // Convert legacy format
@@ -59,7 +59,7 @@ class SelectionGroup extends CompositeField
                 } else {
                     $title = null;
                 }
-                $selectionItems[] = new SelectionGroup_Item($key, $item, $title);
+                $selectionItems[] = new SelectionGroupItem($key, $item, $title);
             }
         }
 
@@ -79,7 +79,7 @@ class SelectionGroup extends CompositeField
         $count = 0;
         $newItems = array();
 
-        /** @var SelectionGroup_Item $item */
+        /** @var SelectionGroupItem $item */
         foreach ($items as $item) {
             if ($this->value == $item->getValue()) {
                 $firstSelected = true;
@@ -109,7 +109,7 @@ class SelectionGroup extends CompositeField
             $newItems[] = $item->customise($extra);
         }
 
-        return new ArrayList($newItems);
+        return new ArrayListInterface($newItems);
     }
 
     public function hasData()

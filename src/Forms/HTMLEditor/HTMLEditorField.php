@@ -167,11 +167,11 @@ class HTMLEditorField extends TextareaField
     }
 
     /**
-     * @return HTMLEditorField_Readonly
+     * @return HTMLEditorFieldReadonly
      */
     public function performReadonlyTransformation()
     {
-        return $this->castedCopy(HTMLEditorField_Readonly::class);
+        return $this->castedCopy(HTMLEditorFieldReadonly::class);
     }
 
     public function performDisabledTransformation()

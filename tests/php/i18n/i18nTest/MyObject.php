@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\i18n\Tests\i18nTest;
+namespace SilverStripe\Internationalisation\Tests\i18nTest;
 
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\ORM\DataObject;

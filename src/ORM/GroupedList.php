@@ -8,7 +8,7 @@ use SilverStripe\View\ArrayData;
  * A list decorator that allows a list to be grouped into sub-lists by common
  * values of a field.
  */
-class GroupedList extends ListDecorator
+class GroupedList extends ListInterfaceDecorator
 {
 
     /**
@@ -27,7 +27,7 @@ class GroupedList extends ListDecorator
             if (array_key_exists($key, $result)) {
                 $result[$key]->push($item);
             } else {
-                $result[$key] = new ArrayList(array($item));
+                $result[$key] = new ArrayListInterface(array($item));
             }
         }
 
@@ -40,12 +40,12 @@ class GroupedList extends ListDecorator
      *
      * @param  string $index
      * @param  string $children Name of the control under which children can be iterated on
-     * @return ArrayList
+     * @return ArrayListInterface
      */
     public function GroupedBy($index, $children = 'Children')
     {
         $grouped = $this->groupBy($index);
-        $result  = new ArrayList();
+        $result  = new ArrayListInterface();
 
         foreach ($grouped as $indVal => $list) {
             $list = GroupedList::create($list);

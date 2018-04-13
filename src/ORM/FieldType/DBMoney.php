@@ -5,7 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use NumberFormatter;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\MoneyField;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 
 /**
  * Provides storage of a localised money object in currency and amount components.
@@ -158,7 +158,7 @@ class DBMoney extends DBComposite
      */
     public function getLocale()
     {
-        return $this->locale ?: i18n::get_locale();
+        return $this->locale ?: Internationalisation::get_locale();
     }
 
     /**

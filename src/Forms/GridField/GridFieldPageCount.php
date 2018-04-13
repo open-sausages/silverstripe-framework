@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\View\SSViewer;
+use SilverStripe\View\Templates\Viewer;
 use LogicException;
 
 /**
@@ -12,7 +12,7 @@ use LogicException;
  *
  * Depends on {@link GridFieldPaginator} being added to the {@link GridField}.
  */
-class GridFieldPageCount implements GridField_HTMLProvider
+class GridFieldPageCount implements GridFieldHTMLProvider
 {
     use Configurable;
 
@@ -68,7 +68,7 @@ class GridFieldPageCount implements GridField_HTMLProvider
         // Retrieve paging parameters from the directing paginator component
         $paginator = $this->getPaginator($gridField);
         if ($paginator && ($forTemplate = $paginator->getTemplateParameters($gridField))) {
-            $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+            $template = Viewer::get_templates_by_class($this, '', __CLASS__);
             return array(
                 $this->targetFragment => $forTemplate->renderWith($template)
             );

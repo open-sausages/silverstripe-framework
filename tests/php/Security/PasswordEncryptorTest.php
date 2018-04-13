@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Security\Tests;
 
-use SilverStripe\Security\PasswordEncryptor_Blowfish;
-use SilverStripe\Security\PasswordEncryptor;
+use SilverStripe\Security\Encryptors\BlowfishEncryptor;
+use SilverStripe\Security\Encryptors\PasswordEncryptor;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Security\PasswordEncryptor_LegacyPHPHash;
-use SilverStripe\Security\PasswordEncryptor_PHPHash;
+use SilverStripe\Security\Encryptors\LegacyPHPHashEncryptorEncryptor;
+use SilverStripe\Security\Encryptors\PHPHashEncryptor;
 use SilverStripe\Security\Tests\PasswordEncryptorTest\TestEncryptor;
 
 class PasswordEncryptorTest extends SapphireTest
@@ -15,7 +15,7 @@ class PasswordEncryptorTest extends SapphireTest
     protected function tearDown()
     {
         parent::tearDown();
-        PasswordEncryptor_Blowfish::set_cost(10);
+        BlowfishEncryptor::set_cost(10);
     }
 
     public function testCreateForCode()
@@ -30,7 +30,7 @@ class PasswordEncryptorTest extends SapphireTest
     }
 
     /**
-     * @expectedException \SilverStripe\Security\PasswordEncryptor_NotFoundException
+     * @expectedException \SilverStripe\Security\Encryptors\NotFoundException
      */
     public function testCreateForCodeNotFound()
     {
@@ -55,9 +55,9 @@ class PasswordEncryptorTest extends SapphireTest
         Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
-            ['test_md5' => [PasswordEncryptor_PHPHash::class=>'md5']]
+            ['test_md5' => [PHPHashEncryptor::class=>'md5']]
         );
-        /** @var PasswordEncryptor_PHPHash $e */
+        /** @var PHPHashEncryptor $e */
         $e = PasswordEncryptor::create_for_algorithm('test_md5');
         $this->assertEquals('md5', $e->getAlgorithm());
     }
@@ -67,7 +67,7 @@ class PasswordEncryptorTest extends SapphireTest
         Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
-            ['test_sha1' => [PasswordEncryptor_PHPHash::class => 'sha1']]
+            ['test_sha1' => [PHPHashEncryptor::class => 'sha1']]
         );
         $e = PasswordEncryptor::create_for_algorithm('test_sha1');
         $password = 'mypassword';
@@ -83,9 +83,9 @@ class PasswordEncryptorTest extends SapphireTest
         Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
-            ['test_blowfish' => [PasswordEncryptor_Blowfish::class => '']]
+            ['test_blowfish' => [BlowfishEncryptor::class => '']]
         );
-        /** @var PasswordEncryptor_Blowfish $e */
+        /** @var BlowfishEncryptor $e */
         $e = PasswordEncryptor::create_for_algorithm('test_blowfish');
 
         $password = 'mypassword';
@@ -101,32 +101,32 @@ class PasswordEncryptorTest extends SapphireTest
         $this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
         $this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", $modSalt));
 
-        PasswordEncryptor_Blowfish::set_cost(1);
+        BlowfishEncryptor::set_cost(1);
         $salt = $e->salt($password);
         $modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
 
-        $this->assertNotEquals(1, PasswordEncryptor_Blowfish::get_cost());
-        $this->assertEquals(4, PasswordEncryptor_Blowfish::get_cost());
+        $this->assertNotEquals(1, BlowfishEncryptor::get_cost());
+        $this->assertEquals(4, BlowfishEncryptor::get_cost());
 
         $this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
         $this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
         $this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", $modSalt));
 
-        PasswordEncryptor_Blowfish::set_cost(11);
+        BlowfishEncryptor::set_cost(11);
         $salt = $e->salt($password);
         $modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
 
-        $this->assertEquals(11, PasswordEncryptor_Blowfish::get_cost());
+        $this->assertEquals(11, BlowfishEncryptor::get_cost());
 
         $this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
         $this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
         $this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", $modSalt));
 
 
-        PasswordEncryptor_Blowfish::set_cost(35);
+        BlowfishEncryptor::set_cost(35);
 
-        $this->assertNotEquals(35, PasswordEncryptor_Blowfish::get_cost());
-        $this->assertEquals(31, PasswordEncryptor_Blowfish::get_cost());
+        $this->assertNotEquals(35, BlowfishEncryptor::get_cost());
+        $this->assertEquals(31, BlowfishEncryptor::get_cost());
 
         //Don't actually test this one. It takes too long. 31 takes too long to process
     }
@@ -136,7 +136,7 @@ class PasswordEncryptorTest extends SapphireTest
         Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
-            ['test_sha1' => [PasswordEncryptor_PHPHash::class => 'sha1']]
+            ['test_sha1' => [PHPHashEncryptor::class => 'sha1']]
         );
         $e = PasswordEncryptor::create_for_algorithm('test_sha1');
         $this->assertTrue($e->check(sha1('mypassword'), 'mypassword'));
@@ -154,7 +154,7 @@ class PasswordEncryptorTest extends SapphireTest
         Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
-            ['test_sha1legacy' => [PasswordEncryptor_LegacyPHPHash::class => 'sha1']]
+            ['test_sha1legacy' => [LegacyPHPHashEncryptorEncryptor::class => 'sha1']]
         );
         $e = PasswordEncryptor::create_for_algorithm('test_sha1legacy');
         // precomputed hashes for 'mypassword' from different architectures

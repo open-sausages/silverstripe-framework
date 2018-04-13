@@ -1,9 +1,9 @@
 <?php
 
-namespace SilverStripe\i18n\Tests;
+namespace SilverStripe\Internationalisation\Tests;
 
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\i18n\Messages\YamlReader;
+use SilverStripe\Internationalisation\Messages\YamlReader;
 
 class YamlReaderTest extends SapphireTest
 {

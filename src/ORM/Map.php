@@ -31,11 +31,11 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Construct a new map around an SS_list.
      *
-     * @param SS_List $list The list to build a map from
+     * @param ListInterface $list The list to build a map from
      * @param string $keyField The field to use as the key of each map entry
      * @param string $valueField The field to use as the value of each map entry
      */
-    public function __construct(SS_List $list, $keyField = "ID", $valueField = "Title")
+    public function __construct(ListInterface $list, $keyField = "ID", $valueField = "Title")
     {
         $this->list = $list;
         $this->keyField = $keyField;

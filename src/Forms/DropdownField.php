@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ArrayListInterface;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -138,7 +138,7 @@ class DropdownField extends SingleSelectField
         }
 
         $properties = array_merge($properties, array(
-            'Options' => new ArrayList($options)
+            'Options' => new ArrayListInterface($options)
         ));
 
         return parent::Field($properties);

@@ -7,7 +7,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -16,11 +16,11 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\Member_Validator;
+use SilverStripe\Security\MemberValidator;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
 use SilverStripe\Security\MemberPassword;
-use SilverStripe\Security\PasswordEncryptor_Blowfish;
+use SilverStripe\Security\Encryptors\BlowfishEncryptor;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
@@ -43,7 +43,7 @@ class MemberTest extends FunctionalTest
         //Setting the locale has to happen in the constructor (using the setUp and tearDown methods doesn't work)
         //This is because the test relies on the yaml file being interpreted according to a particular date format
         //and this setup occurs before the setUp method is run
-        i18n::config()->set('default_locale', 'en_US');
+        Internationalisation::config()->set('default_locale', 'en_US');
     }
 
     /**
@@ -897,7 +897,7 @@ class MemberTest extends FunctionalTest
 
     public function testValidateAutoLoginToken()
     {
-        $enc = new PasswordEncryptor_Blowfish();
+        $enc = new BlowfishEncryptor();
 
         $m1 = new Member();
         $m1->write();
@@ -1218,7 +1218,7 @@ class MemberTest extends FunctionalTest
     public function testMemberValidator()
     {
         // clear custom requirements for this test
-        Member_Validator::config()->update('customRequired', null);
+        MemberValidator::config()->update('customRequired', null);
         /** @var Member $memberA */
         $memberA = $this->objFromFixture(Member::class, 'admin');
         /** @var Member $memberB */
@@ -1227,7 +1227,7 @@ class MemberTest extends FunctionalTest
         // create a blank form
         $form = new MemberTest\ValidatorForm();
 
-        $validator = new Member_Validator();
+        $validator = new MemberValidator();
         $validator->setForm($form);
 
         // Simulate creation of a new member via form, but use an existing member identifier
@@ -1294,14 +1294,14 @@ class MemberTest extends FunctionalTest
     public function testMemberValidatorWithExtensions()
     {
         // clear custom requirements for this test
-        Member_Validator::config()->update('customRequired', null);
+        MemberValidator::config()->update('customRequired', null);
 
         // create a blank form
         $form = new MemberTest\ValidatorForm();
 
         // Test extensions
-        Member_Validator::add_extension(MemberTest\SurnameMustMatchFirstNameExtension::class);
-        $validator = new Member_Validator();
+        MemberValidator::add_extension(MemberTest\SurnameMustMatchFirstNameExtension::class);
+        $validator = new MemberValidator();
         $validator->setForm($form);
 
         // This test should fail, since the extension enforces FirstName == Surname
@@ -1332,8 +1332,8 @@ class MemberTest extends FunctionalTest
         );
 
         // Add another extension that always fails. This ensures that all extensions are considered in the validation
-        Member_Validator::add_extension(MemberTest\AlwaysFailExtension::class);
-        $validator = new Member_Validator();
+        MemberValidator::add_extension(MemberTest\AlwaysFailExtension::class);
+        $validator = new MemberValidator();
         $validator->setForm($form);
 
         // Even though the data is valid, This test should still fail, since one extension always returns false
@@ -1351,21 +1351,21 @@ class MemberTest extends FunctionalTest
         );
 
         // Remove added extensions
-        Member_Validator::remove_extension(MemberTest\AlwaysFailExtension::class);
-        Member_Validator::remove_extension(MemberTest\SurnameMustMatchFirstNameExtension::class);
+        MemberValidator::remove_extension(MemberTest\AlwaysFailExtension::class);
+        MemberValidator::remove_extension(MemberTest\SurnameMustMatchFirstNameExtension::class);
     }
 
     public function testCustomMemberValidator()
     {
         // clear custom requirements for this test
-        Member_Validator::config()->update('customRequired', null);
+        MemberValidator::config()->update('customRequired', null);
 
         $member = $this->objFromFixture(Member::class, 'admin');
 
         $form = new MemberTest\ValidatorForm();
         $form->loadDataFrom($member);
 
-        $validator = new Member_Validator();
+        $validator = new MemberValidator();
         $validator->setForm($form);
 
         $pass = $validator->php(

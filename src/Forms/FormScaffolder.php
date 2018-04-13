@@ -5,7 +5,7 @@ namespace SilverStripe\Forms;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldConfigRelationEditor;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -157,7 +157,7 @@ class FormScaffolder
                         $relationship,
                         $this->obj->fieldLabel($relationship),
                         $this->obj->$relationship(),
-                        GridFieldConfig_RelationEditor::create()
+                        GridFieldConfigRelationEditor::create()
                     );
                     if ($this->tabbed) {
                         $fields->addFieldToTab("Root.$relationship", $grid);
@@ -187,7 +187,7 @@ class FormScaffolder
                         $relationship,
                         $this->obj->fieldLabel($relationship),
                         $this->obj->$relationship(),
-                        GridFieldConfig_RelationEditor::create()
+                        GridFieldConfigRelationEditor::create()
                     );
                     if ($this->tabbed) {
                         $fields->addFieldToTab("Root.$relationship", $grid);
