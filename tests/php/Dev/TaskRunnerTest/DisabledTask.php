@@ -4,9 +4,9 @@ namespace SilverStripe\Dev\Tests\TaskRunnerTest;
 
 use SilverStripe\Dev\BuildTask;
 
-abstract class TaskRunnerTest_AbstractTask extends BuildTask
+class DisabledTask extends BuildTask
 {
-    protected $enabled = true;
+    protected $enabled = false;
 
     public function run($request)
     {

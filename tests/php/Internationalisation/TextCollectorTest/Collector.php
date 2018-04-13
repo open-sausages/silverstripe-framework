@@ -1,8 +1,7 @@
 <?php
 
-namespace SilverStripe\Internationalisation\Tests\i18nTextCollectorTest;
+namespace SilverStripe\Internationalisation\Tests\TextCollectorTest;
 
-use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Internationalisation\TextCollection\TextCollector;

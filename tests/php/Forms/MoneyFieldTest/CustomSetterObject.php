@@ -9,9 +9,8 @@ use SilverStripe\ORM\DataObject;
  * Customised class, implementing custom getter and setter methods for
  * MyMoney.
  */
-class CustomSetter_Object extends DataObject implements TestOnly
+class CustomSetterObject extends DataObject implements TestOnly
 {
-
     private static $table_name = 'MoneyFieldTest_CustomSetter_Object';
 
     private static $db = array(

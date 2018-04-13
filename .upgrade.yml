@@ -585,10 +585,14 @@ mappings:
   MySQLDatabaseConfigurationHelperTest: SilverStripe\Dev\Tests\MySQLDatabaseConfigurationHelperTest
   SapphireTestTest: SilverStripe\Dev\Tests\SapphireTestTest
   TaskRunnerTest: SilverStripe\Dev\Tests\TaskRunnerTest
-  TaskRunnerTest_EnabledTask: SilverStripe\Dev\Tests\TaskRunnerTest\TaskRunnerTest_EnabledTask
-  TaskRunnerTest_DisabledTask: SilverStripe\Dev\Tests\TaskRunnerTest\TaskRunnerTest_DisabledTask
-  TaskRunnerTest_AbstractTask: SilverStripe\Dev\Tests\TaskRunnerTest\TaskRunnerTest_AbstractTask
-  TaskRunnerTest_ChildOfAbstractTask: SilverStripe\Dev\Tests\TaskRunnerTest\TaskRunnerTest_ChildOfAbstractTask
+  TaskRunnerTest_EnabledTask: SilverStripe\Dev\Tests\TaskRunnerTest\EnabledTask
+  SilverStripe\Dev\Tests\TaskRunnerTest\TaskRunnerTest_EnabledTask: SilverStripe\Dev\Tests\TaskRunnerTest\EnabledTask
+  TaskRunnerTest_DisabledTask: SilverStripe\Dev\Tests\TaskRunnerTest\DisabledTask
+  SilverStripe\Dev\Tests\TaskRunnerTest\TaskRunnerTest_DisabledTask: SilverStripe\Dev\Tests\TaskRunnerTest\DisabledTask
+  TaskRunnerTest_AbstractTask: SilverStripe\Dev\Tests\TaskRunnerTest\AbstractTask
+  SilverStripe\Dev\Tests\TaskRunnerTest\TaskRunnerTest_AbstractTask: SilverStripe\Dev\Tests\TaskRunnerTest\AbstractTask
+  TaskRunnerTest_ChildOfAbstractTask: SilverStripe\Dev\Tests\TaskRunnerTest\ChildOfAbstractTask
+  SilverStripe\Dev\Tests\TaskRunnerTest\TaskRunnerTest_ChildOfAbstractTask: SilverStripe\Dev\Tests\TaskRunnerTest\ChildOfAbstractTask
   YamlFixtureTest: SilverStripe\Dev\Tests\YamlFixtureTest
   YamlFixtureTest_DataObject: SilverStripe\Dev\Tests\YamlFixtureTest\TestDataObject
   YamlFixtureTest_DataObjectRelation: SilverStripe\Dev\Tests\YamlFixtureTest\DataObjectRelation
@@ -644,7 +648,8 @@ mappings:
   LookupFieldTest: SilverStripe\Forms\Tests\LookupFieldTest
   MoneyFieldTest: SilverStripe\Forms\Tests\MoneyFieldTest
   MoneyFieldTest_Object: SilverStripe\Forms\Tests\MoneyFieldTest\TestObject
-  MoneyFieldTest_CustomSetter_Object: SilverStripe\Forms\Tests\MoneyFieldTest\CustomSetter_Object
+  MoneyFieldTest_CustomSetter_Object: SilverStripe\Forms\Tests\MoneyFieldTest\CustomSetterObject
+  SilverStripe\Forms\Tests\MoneyFieldTest\CustomSetter_Object: SilverStripe\Forms\Tests\MoneyFieldTest\CustomSetterObject
   NullableFieldTests: SilverStripe\Forms\Tests\NullableFieldTests
   NumericFieldTest: SilverStripe\Forms\Tests\NumericFieldTest
   NumericFieldTest_Object: SilverStripe\Forms\Tests\NumericFieldTest\TestObject

@@ -9,11 +9,11 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\Internationalisation\TextCollection\TextCollector;
 use SilverStripe\Internationalisation\Messages\YamlWriter;
-use SilverStripe\Internationalisation\Tests\i18nTextCollectorTest\Collector;
+use SilverStripe\Internationalisation\Tests\TextCollectorTest\Collector;
 
-class i18nTextCollectorTest extends SapphireTest
+class TextCollectorTest extends SapphireTest
 {
-    use i18nTestManifest;
+    use InternationalisationTestManifest;
 
     /**
      * @var string

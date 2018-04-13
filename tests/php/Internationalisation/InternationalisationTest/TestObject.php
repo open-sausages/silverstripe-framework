@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Internationalisation\Tests\i18nTest;
+namespace SilverStripe\Internationalisation\Tests\InternationalisationTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Internationalisation\EntityProvider;

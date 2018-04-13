@@ -13,9 +13,9 @@ use SilverStripe\Internationalisation\Messages\MessageProvider;
 use SilverStripe\Internationalisation\Messages\Symfony\ModuleYamlLoader;
 use SilverStripe\Internationalisation\Messages\Symfony\SymfonyMessageProvider;
 use SilverStripe\Internationalisation\Messages\YamlReader;
-use SilverStripe\Internationalisation\Tests\i18nTest\MyObject;
-use SilverStripe\Internationalisation\Tests\i18nTest\MySubObject;
-use SilverStripe\Internationalisation\Tests\i18nTest\TestDataObject;
+use SilverStripe\Internationalisation\Tests\InternationalisationTest\MyObject;
+use SilverStripe\Internationalisation\Tests\InternationalisationTest\MySubObject;
+use SilverStripe\Internationalisation\Tests\InternationalisationTest\TestDataObject;
 use SilverStripe\View\Templates\Viewer;
 use SilverStripe\View\Templates\ViewerDataPresenter;
 use SilverStripe\View\ThemeResourceLoader;
@@ -27,7 +27,7 @@ use Symfony\Component\Translation\Translator;
 /**
  * Helper trait for bootstrapping test manifest for i18n tests
  */
-trait i18nTestManifest
+trait InternationalisationTestManifest
 {
     /**
      * Fake webroot with a single module /i18ntestmodule which contains some files with _t() calls.

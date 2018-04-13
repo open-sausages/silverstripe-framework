@@ -10,12 +10,14 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Internationalisation\Internationalisation;
 use SilverStripe\Internationalisation\Messages\MessageProvider;
 use SilverStripe\Internationalisation\Messages\Symfony\SymfonyMessageProvider;
+use SilverStripe\Internationalisation\Tests\InternationalisationTest\TestDataObject;
+use SilverStripe\Internationalisation\Tests\InternationalisationTest\TestObject;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Templates\Viewer;
 
-class i18nTest extends SapphireTest
+class InternationalisationTest extends SapphireTest
 {
-    use i18nTestManifest;
+    use InternationalisationTestManifest;
 
     protected function setUp()
     {
@@ -81,22 +83,22 @@ class i18nTest extends SapphireTest
         $provider = Injector::inst()->get(MessageProvider::class);
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestDataObject::class . '.MyProperty' => 'MyProperty' ],
+            [TestDataObject::class . '.MyProperty' => 'MyProperty'],
             'en_US'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestDataObject::class . '.MyProperty' => 'Mein Attribut' ],
+            [TestDataObject::class . '.MyProperty' => 'Mein Attribut'],
             'de_DE'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestDataObject::class . '.MyUntranslatedProperty' => 'Mein Attribut' ],
+            [TestDataObject::class . '.MyUntranslatedProperty' => 'Mein Attribut'],
             'en_US'
         );
 
         // Test field labels
-        $obj = new i18nTest\TestDataObject();
+        $obj = new TestDataObject();
         $this->assertEquals(
             'Mein Attribut',
             $obj->fieldLabel('MyProperty')
@@ -113,34 +115,34 @@ class i18nTest extends SapphireTest
         $provider = Injector::inst()->get(MessageProvider::class);
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestObject::class . '.MyProperty' => 'Untranslated' ],
+            [TestObject::class . '.MyProperty' => 'Untranslated'],
             'en_US'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestObject::class . '.my_translatable_property' => 'Übersetzt' ],
+            [TestObject::class . '.my_translatable_property' => 'Übersetzt'],
             'de_DE'
         );
 
         $this->assertEquals(
-            i18nTest\TestObject::$my_translatable_property,
+            TestObject::$my_translatable_property,
             'Untranslated'
         );
         $this->assertEquals(
-            i18nTest\TestObject::my_translatable_property(),
+            TestObject::my_translatable_property(),
             'Untranslated'
         );
 
         Internationalisation::set_locale('en_US');
         $this->assertEquals(
-            i18nTest\TestObject::my_translatable_property(),
+            TestObject::my_translatable_property(),
             'Untranslated',
             'Getter returns original static value when called in default locale'
         );
 
         Internationalisation::set_locale('de_DE');
         $this->assertEquals(
-            i18nTest\TestObject::my_translatable_property(),
+            TestObject::my_translatable_property(),
             'Übersetzt',
             'Getter returns translated value when called in another locale'
         );
@@ -262,7 +264,7 @@ class i18nTest extends SapphireTest
         $translated = Internationalisation::_t(
             $entity . '_DOES_NOT_EXIST',
             $default,
-            array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye")
+            array("name" => "Mark", "greeting" => "welcome", "goodbye" => "bye")
         );
         $this->assertContains(
             "Hello Mark welcome. But it is late, bye",
@@ -274,7 +276,7 @@ class i18nTest extends SapphireTest
         $translated = Internationalisation::_t(
             $entity,
             $default,
-            ["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]
+            ["name" => "Paul", "greeting" => "good you are here", "goodbye" => "see you"]
         );
         $this->assertContains(
             "TRANS Hello Paul good you are here. But it is late, see you",
@@ -287,7 +289,7 @@ class i18nTest extends SapphireTest
             $entity,
             $default,
             "New context (this should be ignored)",
-            ["name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"]
+            ["name" => "Steffen", "greeting" => "willkommen", "goodbye" => "wiedersehen"]
         );
         $this->assertContains(
             "TRANS Hello Steffen willkommen. But it is late, wiedersehen",
@@ -358,14 +360,38 @@ class i18nTest extends SapphireTest
 
     public function testValidateLocale()
     {
-        $this->assertTrue(Internationalisation::getData()->validate('en_US'), 'Known locale in underscore format is valid');
-        $this->assertTrue(Internationalisation::getData()->validate('en-US'), 'Known locale in dash format is valid');
-        $this->assertFalse(Internationalisation::getData()->validate('en'), 'Short lang format is not valid');
-        $this->assertFalse(Internationalisation::getData()->validate('xx_XX'), 'Unknown locale in correct format is not valid');
-        $this->assertFalse(Internationalisation::getData()->validate(''), 'Empty string is not valid');
-        $this->assertTrue(Internationalisation::getData()->validate('de_DE'), 'Known locale where language is same as region');
-        $this->assertTrue(Internationalisation::getData()->validate('fr-FR'), 'Known locale where language is same as region');
-        $this->assertTrue(Internationalisation::getData()->validate('zh_cmn'), 'Known locale with all lowercase letters');
+        $this->assertTrue(
+            Internationalisation::getData()->validate('en_US'),
+            'Known locale in underscore format is valid'
+        );
+        $this->assertTrue(
+            Internationalisation::getData()->validate('en-US'),
+            'Known locale in dash format is valid'
+        );
+        $this->assertFalse(
+            Internationalisation::getData()->validate('en'),
+            'Short lang format is not valid'
+        );
+        $this->assertFalse(
+            Internationalisation::getData()->validate('xx_XX'),
+            'Unknown locale in correct format is not valid'
+        );
+        $this->assertFalse(
+            Internationalisation::getData()->validate(''),
+            'Empty string is not valid'
+        );
+        $this->assertTrue(
+            Internationalisation::getData()->validate('de_DE'),
+            'Known locale where language is same as region'
+        );
+        $this->assertTrue(
+            Internationalisation::getData()->validate('fr-FR'),
+            'Known locale where language is same as region'
+        );
+        $this->assertTrue(
+            Internationalisation::getData()->validate('zh_cmn'),
+            'Known locale with all lowercase letters'
+        );
     }
 
     public function testTranslate()
@@ -374,7 +400,7 @@ class i18nTest extends SapphireTest
         $provider = Injector::inst()->get(MessageProvider::class);
         $provider->getTranslator()->addResource(
             'array',
-            [ 'i18nTestModule.ENTITY' => 'Entity with "Double Quotes"' ],
+            ['i18nTestModule.ENTITY' => 'Entity with "Double Quotes"'],
             'en_US'
         );
         $provider->getTranslator()->addResource(

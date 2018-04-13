@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\Forms\Tests\MoneyFieldTest\CustomSetter_Object;
+use SilverStripe\Forms\Tests\MoneyFieldTest\CustomSetterObject;
 use SilverStripe\Forms\Tests\MoneyFieldTest\TestObject;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Dev\SapphireTest;
@@ -14,7 +14,7 @@ class MoneyFieldTest extends SapphireTest
 
     protected static $extra_dataobjects = array(
         TestObject::class,
-        CustomSetter_Object::class,
+        CustomSetterObject::class,
     );
 
     public function testSaveInto()
@@ -94,7 +94,7 @@ class MoneyFieldTest extends SapphireTest
      */
     public function testSetValueViaSetter()
     {
-        $o = new CustomSetter_Object();
+        $o = new CustomSetterObject();
 
         $f = new MoneyField('CustomMoney', 'Test Money Field');
         $f->setSubmittedValue([
