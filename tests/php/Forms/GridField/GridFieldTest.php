@@ -26,7 +26,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\HTMLFragments;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
 use SilverStripe\Versioned\VersionedGridFieldStateExtension;
@@ -64,7 +64,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGridFieldSetList()
     {
-        $list = ArrayListInterface::create(array(1 => 'hello', 2 => 'goodbye'));
+        $list = ArrayList::create(array(1 => 'hello', 2 => 'goodbye'));
         $obj = new GridField('testfield', 'testfield', $list);
         $this->assertEquals($list, $obj->getList(), 'Testing getList');
     }
@@ -79,7 +79,7 @@ class GridFieldTest extends SapphireTest
     {
         $obj = new GridField('testfield', 'testfield');
 
-        $expectedComponents = new ArrayListInterface([
+        $expectedComponents = new ArrayList([
             new GridFieldToolbarHeader(),
             $sort = new GridFieldSortableHeader(),
             $filter = new GridFieldFilterHeader(),
@@ -106,9 +106,9 @@ class GridFieldTest extends SapphireTest
         $config->addComponent(new GridFieldSortableHeader());
         $config->addComponent(new GridFieldDataColumns());
 
-        $obj = new GridField('testfield', 'testfield', ArrayListInterface::create(array()), $config);
+        $obj = new GridField('testfield', 'testfield', ArrayList::create(array()), $config);
 
-        $expectedComponents = new ArrayListInterface(
+        $expectedComponents = new ArrayList(
             array(
             0 => new GridFieldSortableHeader,
             1 => new GridFieldDataColumns,
@@ -138,7 +138,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGridFieldModelClassThrowsException()
     {
-        $obj = new GridField('testfield', 'testfield', ArrayListInterface::create());
+        $obj = new GridField('testfield', 'testfield', ArrayList::create());
         $obj->getModelClass();
     }
 
@@ -149,7 +149,7 @@ class GridFieldTest extends SapphireTest
     public function testSetAndGetList()
     {
         $list = Member::get();
-        $arrayList = ArrayListInterface::create(array(1, 2, 3));
+        $arrayList = ArrayList::create(array(1, 2, 3));
         $obj = new GridField('testfield', 'testfield', $list);
         $this->assertEquals($list, $obj->getList());
         $obj->setList($arrayList);
@@ -246,7 +246,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnContent()
     {
-        $list = new ArrayListInterface(
+        $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -263,7 +263,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnContentBadArguments()
     {
-        $list = new ArrayListInterface(
+        $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -278,7 +278,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnAttributesEmptyArray()
     {
-        $list = new ArrayListInterface(
+        $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -293,7 +293,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnAttributes()
     {
-        $list = new ArrayListInterface(
+        $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -310,7 +310,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnAttributesBadArguments()
     {
-        $list = new ArrayListInterface(
+        $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -325,7 +325,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnAttributesBadResponseFromComponent()
     {
-        $list = new ArrayListInterface(
+        $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -341,7 +341,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnMetadata()
     {
-        $list = new ArrayListInterface(
+        $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -358,7 +358,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnMetadataBadResponseFromComponent()
     {
-        $list = new ArrayListInterface(
+        $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
             )
@@ -375,7 +375,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGetColumnMetadataBadArguments()
     {
-        $list = ArrayListInterface::create();
+        $list = ArrayList::create();
         $config = GridFieldConfig::create()->addComponent(new Component);
         $obj = new GridField('testfield', 'testfield', $list, $config);
         $obj->getColumnMetadata('non-exist-qweqweqwe');
@@ -398,7 +398,7 @@ class GridFieldTest extends SapphireTest
     public function testHandleAction()
     {
         $config = GridFieldConfig::create()->addComponent(new Component);
-        $obj = new GridField('testfield', 'testfield', ArrayListInterface::create(), $config);
+        $obj = new GridField('testfield', 'testfield', ArrayList::create(), $config);
         $this->assertEquals('handledAction is executed', $obj->handleAlterAction('jump', array(), array()));
     }
 
@@ -477,7 +477,7 @@ class GridFieldTest extends SapphireTest
                 )
             )
         );
-        $field = new GridField('testfield', 'testfield', ArrayListInterface::create(), $config);
+        $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
         $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
 
         $this->assertContains(
@@ -513,7 +513,7 @@ class GridFieldTest extends SapphireTest
                 )
             )
         );
-        $field = new GridField('testfield', 'testfield', ArrayListInterface::create(), $config);
+        $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
         $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
 
         $this->assertContains(
@@ -551,7 +551,7 @@ class GridFieldTest extends SapphireTest
                 )
             )
         );
-        $field = new GridField('testfield', 'testfield', ArrayListInterface::create(), $config);
+        $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
         $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
 
         $field->FieldHolder();
@@ -563,7 +563,7 @@ class GridFieldTest extends SapphireTest
     public function testCanViewOnlyOddIDs()
     {
         $this->logInWithPermission();
-        $list = new ArrayListInterface(
+        $list = new ArrayList(
             array(
             new Permissions(
                 array(
@@ -625,7 +625,7 @@ class GridFieldTest extends SapphireTest
     public function testChainedDataManipulators()
     {
         $config = new GridFieldConfig();
-        $data = new ArrayListInterface(array(1, 2, 3, 4, 5, 6));
+        $data = new ArrayList(array(1, 2, 3, 4, 5, 6));
         $gridField = new GridField('testfield', 'testfield', $data, $config);
         $endList = $gridField->getManipulatedList();
         $this->assertEquals($endList->count(), 6);

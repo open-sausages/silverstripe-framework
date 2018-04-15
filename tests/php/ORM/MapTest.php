@@ -3,7 +3,7 @@
 namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\ORM\Map;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\DataObjectTest\TeamComment;
@@ -49,7 +49,7 @@ class MapTest extends SapphireTest
             $map->values()
         );
 
-        $map = new Map(new ArrayListInterface());
+        $map = new Map(new ArrayList());
         $map->push('Push', 'Pushed value');
 
         $this->assertEquals(
@@ -59,7 +59,7 @@ class MapTest extends SapphireTest
             $map->values()
         );
 
-        $map = new Map(new ArrayListInterface());
+        $map = new Map(new ArrayList());
         $map->unshift('Unshift', 'Unshift item');
 
         $this->assertEquals(
@@ -161,7 +161,7 @@ class MapTest extends SapphireTest
             $map->keys()
         );
 
-        $map = new Map(new ArrayListInterface());
+        $map = new Map(new ArrayList());
         $map->push('Push', 'Item');
 
         $this->assertEquals(
@@ -171,7 +171,7 @@ class MapTest extends SapphireTest
             $map->keys()
         );
 
-        $map = new Map(new ArrayListInterface());
+        $map = new Map(new ArrayList());
         $map->unshift('Unshift', 'Item');
 
         $this->assertEquals(
@@ -296,7 +296,7 @@ class MapTest extends SapphireTest
         $map->unshift(2, 'Item shifted');
         $this->assertEquals(5, $map->count());
 
-        $map = new Map(new ArrayListInterface());
+        $map = new Map(new ArrayList());
         $map->unshift('1', 'shifted');
 
         $this->assertEquals(1, $map->count());
@@ -349,7 +349,7 @@ class MapTest extends SapphireTest
 
     public function testIterationWithEmptyListUnshifted()
     {
-        $map = new Map(new ArrayListInterface());
+        $map = new Map(new ArrayList());
         $map->unshift('1', 'unshifted');
 
         $text = "";
@@ -363,7 +363,7 @@ class MapTest extends SapphireTest
 
     public function testIterationWithEmptyListPushed()
     {
-        $map = new Map(new ArrayListInterface());
+        $map = new Map(new ArrayList());
         $map->push('1', 'pushed');
 
         $text = "";

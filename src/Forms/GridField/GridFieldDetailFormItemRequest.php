@@ -11,7 +11,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\HasManyList;
@@ -596,7 +596,7 @@ class GridFieldDetailFormItemRequest extends RequestHandler
      * see {@link LeftAndMain->Breadcrumbs()} for details.
      *
      * @param boolean $unlinked
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     public function Breadcrumbs($unlinked = false)
     {
@@ -604,7 +604,7 @@ class GridFieldDetailFormItemRequest extends RequestHandler
             return null;
         }
 
-        /** @var ArrayListInterface $items */
+        /** @var ArrayList $items */
         $items = $this->popupController->Breadcrumbs($unlinked);
 
         if ($this->record && $this->record->ID) {

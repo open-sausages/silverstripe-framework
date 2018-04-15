@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DropdownField;
@@ -29,7 +29,7 @@ class DropdownFieldTest extends SapphireTest
             $field->getSource()
         );
 
-        $items = new ArrayListInterface(
+        $items = new ArrayList(
             array(
             array( 'ID' => 1, 'Title' => 'ichi', 'OtherField' => 'notone' ),
             array( 'ID' => 2, 'Title' => 'ni', 'OtherField' => 'nottwo' ),
@@ -66,7 +66,7 @@ class DropdownFieldTest extends SapphireTest
         $this->assertEquals($items, $field->getSource());
 
         // SS_List
-        $list = new ArrayListInterface(
+        $list = new ArrayList(
             array(
             new ArrayData(
                 array(

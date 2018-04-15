@@ -3,7 +3,7 @@
 namespace SilverStripe\View\Tests\SSViewerTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ViewableData;
 
 class LevelTestData extends ViewableData implements TestOnly
@@ -27,7 +27,7 @@ class LevelTestData extends ViewableData implements TestOnly
         for ($i = 0; $i < (int)$number; ++$i) {
             $ret[] = new TestObject("!$i");
         }
-        return new ArrayListInterface($ret);
+        return new ArrayList($ret);
     }
 
     public function forWith($number)

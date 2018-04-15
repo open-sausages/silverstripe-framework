@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -74,7 +74,7 @@ class GroupedDropdownField extends DropdownField
         }
 
         // Build children from options list
-        $options = new ArrayListInterface();
+        $options = new ArrayList();
         foreach ($titleOrOptions as $childValue => $childTitle) {
             $options->push($this->getFieldOption($childValue, $childTitle));
         }

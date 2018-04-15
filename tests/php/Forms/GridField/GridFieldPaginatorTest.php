@@ -15,13 +15,13 @@ use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 
 class GridFieldPaginatorTest extends FunctionalTest
 {
     /**
-     * @var ArrayListInterface
+     * @var ArrayList
      */
     protected $list;
 

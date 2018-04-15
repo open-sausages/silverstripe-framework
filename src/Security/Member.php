@@ -24,7 +24,7 @@ use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Internationalisation\Internationalisation;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -1331,7 +1331,7 @@ class Member extends DataObject
             return static::get()->sort(array('Surname' => 'ASC', 'FirstName' => 'ASC'))->map();
         }
 
-        $membersList = new ArrayListInterface();
+        $membersList = new ArrayList();
         // This is a bit ineffective, but follow the ORM style
         /** @var Group $group */
         foreach (Group::get()->byIDs($groupIDList) as $group) {
@@ -1358,7 +1358,7 @@ class Member extends DataObject
     {
         // Check CMS module exists
         if (!class_exists(LeftAndMain::class)) {
-            return ArrayListInterface::create()->map();
+            return ArrayList::create()->map();
         }
 
         if (count($groups) == 0) {

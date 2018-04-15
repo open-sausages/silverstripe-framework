@@ -4,7 +4,7 @@ namespace SilverStripe\Dev\Tests;
 
 use SilverStripe\Dev\Constraint\SSListContains;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Member;
 
 class SSListContainsTest extends SapphireTest
@@ -77,11 +77,11 @@ class SSListContainsTest extends SapphireTest
     }
 
     /**
-     * @return ArrayListInterface|Member[]
+     * @return ArrayList|Member[]
      */
     private function getListToMatch()
     {
-        $list = ArrayListInterface::create();
+        $list = ArrayList::create();
         $list->push(Member::create(['FirstName' => 'Ingo', 'Surname' => 'Schommer']));
         $list->push(Member::create(['FirstName' => 'Sam', 'Surname' => 'Minnee']));
         $list->push(Member::create(['FirstName' => 'Foo', 'Surname' => 'Bar']));

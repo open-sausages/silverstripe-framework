@@ -6,7 +6,7 @@ use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\ListInterface;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Templates\Viewer;
 use LogicException;
@@ -170,7 +170,7 @@ class GridFieldFilterHeader implements GridFieldHTMLProvider, GridFieldDataManip
 
         /** @var Filterable $list */
         $forTemplate = new ArrayData(array());
-        $forTemplate->Fields = new ArrayListInterface();
+        $forTemplate->Fields = new ArrayList();
 
         $columns = $gridField->getColumns();
         $filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();

@@ -7,7 +7,7 @@ use InvalidArgumentException;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Storage\AssetContainer;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\RelationList;
@@ -136,11 +136,11 @@ trait FileUploadReceiver
 
         // If we're not passed a value directly, we can attempt to infer the field
         // value from the second parameter by inspecting its relations
-        $items = new ArrayListInterface();
+        $items = new ArrayList();
 
         // Determine format of presented data
         if ($value instanceof File) {
-            $items = ArrayListInterface::create([$value]);
+            $items = ArrayList::create([$value]);
             $value = null;
         } elseif ($value instanceof ListInterface) {
             $items = $value;
@@ -186,7 +186,7 @@ trait FileUploadReceiver
         }
 
         // Filter items by what's allowed to be viewed
-        $filteredItems = new ArrayListInterface();
+        $filteredItems = new ArrayList();
         $fileIDs = array();
         /** @var File $file */
         foreach ($items as $file) {
@@ -227,7 +227,7 @@ trait FileUploadReceiver
      */
     public function getItems()
     {
-        return $this->items ? $this->items : new ArrayListInterface();
+        return $this->items ? $this->items : new ArrayList();
     }
 
     /**

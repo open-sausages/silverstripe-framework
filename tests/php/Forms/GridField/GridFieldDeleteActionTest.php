@@ -17,7 +17,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Security;
@@ -27,7 +27,7 @@ class GridFieldDeleteActionTest extends SapphireTest
 {
 
     /**
-     * @var ArrayListInterface
+     * @var ArrayList
      */
     protected $list;
 

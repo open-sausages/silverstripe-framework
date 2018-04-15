@@ -6,7 +6,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Internationalisation\EntityProvider;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ListInterface;
@@ -466,7 +466,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     {
         $toplevelGroups = self::get_groups_by_permission($code);
         if (!$toplevelGroups) {
-            return new ArrayListInterface();
+            return new ArrayList();
         }
 
         $groupIDs = array();
@@ -478,7 +478,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         }
 
         if (empty($groupIDs)) {
-            return new ArrayListInterface();
+            return new ArrayList();
         }
 
         $groupClause = DB::placeholders($groupIDs);

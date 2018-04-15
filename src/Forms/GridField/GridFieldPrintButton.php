@@ -5,7 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -208,7 +208,7 @@ class GridFieldPrintButton implements GridFieldHTMLProvider, GridFieldActionProv
         $header = null;
 
         if ($this->printHasHeader) {
-            $header = new ArrayListInterface();
+            $header = new ArrayList();
 
             foreach ($printColumns as $field => $label) {
                 $header->push(new ArrayData(array(
@@ -218,11 +218,11 @@ class GridFieldPrintButton implements GridFieldHTMLProvider, GridFieldActionProv
         }
 
         $items = $gridField->getManipulatedList();
-        $itemRows = new ArrayListInterface();
+        $itemRows = new ArrayList();
 
         /** @var DataObject $item */
         foreach ($items->limit(null) as $item) {
-            $itemRow = new ArrayListInterface();
+            $itemRow = new ArrayList();
 
             foreach ($printColumns as $field => $label) {
                 $value = $gridField->getDataFieldValue($item, $field);

@@ -25,7 +25,7 @@ use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\HasManyList;
@@ -94,7 +94,7 @@ class Group extends DataObject
 
     public function getAllChildren()
     {
-        $doSet = new ArrayListInterface();
+        $doSet = new ArrayList();
 
         $children = Group::get()->filter("ParentID", $this->ID);
         /** @var Group $child */
@@ -246,7 +246,7 @@ class Group extends DataObject
             }
             if ($this->ID) {
                 $groupRoles = $this->Roles();
-                $inheritedRoles = new ArrayListInterface();
+                $inheritedRoles = new ArrayList();
                 $ancestors = $this->getAncestors();
                 foreach ($ancestors as $ancestor) {
                     $ancestorRoles = $ancestor->Roles();
@@ -625,13 +625,13 @@ class Group extends DataObject
      * Returns all of the children for the CMS Tree.
      * Filters to only those groups that the current user can edit
      *
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     public function AllChildrenIncludingDeleted()
     {
         $children = parent::AllChildrenIncludingDeleted();
 
-        $filteredChildren = new ArrayListInterface();
+        $filteredChildren = new ArrayList();
 
         if ($children) {
             foreach ($children as $child) {

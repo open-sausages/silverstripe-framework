@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -128,7 +128,7 @@ class OptionsetField extends SingleSelectField
         }
 
         $properties = array_merge($properties, array(
-            'Options' => new ArrayListInterface($options)
+            'Options' => new ArrayList($options)
         ));
 
         return FormField::Field($properties);

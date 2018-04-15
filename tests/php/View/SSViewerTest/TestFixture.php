@@ -2,7 +2,7 @@
 
 namespace SilverStripe\View\Tests\SSViewerTest;
 
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -35,7 +35,7 @@ class TestFixture extends ViewableData
 
         // Special field name Loop### to create a list
         if (preg_match('/^Loop([0-9]+)$/', $fieldName, $matches)) {
-            $output = new ArrayListInterface();
+            $output = new ArrayList();
             for ($i = 0; $i < $matches[1]; $i++) {
                 $output->push(new TestFixture($childName));
             }

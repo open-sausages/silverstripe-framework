@@ -13,7 +13,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Internationalisation\Internationalisation;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\PaginatedList;
@@ -141,7 +141,7 @@ class SSViewerTest extends SapphireTest
     {
         $data = new ArrayData([
             'Title' => 'TruthyTest',
-            'Items' => new ArrayListInterface([
+            'Items' => new ArrayList([
                 new ArrayData(['Title' => 'Item 1']),
                 new ArrayData(['Title' => '']),
                 new ArrayData(['Title' => true]),
@@ -170,7 +170,7 @@ class SSViewerTest extends SapphireTest
     {
         return new ArrayData([
             'Title' => 'TopTitleValue',
-            'Items' => new ArrayListInterface([
+            'Items' => new ArrayList([
                 new ArrayData(['Title' => 'Item 1']),
                 new ArrayData(['Title' => 'Item 2']),
                 new ArrayData(['Title' => 'Item 3']),
@@ -483,7 +483,7 @@ SS;
     {
         // Data to run the loop tests on - one sequence of three items, each with a subitem
         $data = new ArrayData([
-            'Foo' => new ArrayListInterface([
+            'Foo' => new ArrayList([
                 'Subocean' => new ArrayData([
                     'Name' => 'Higher'
                 ]),
@@ -955,7 +955,7 @@ after'
             $this->render(
                 '<% include SSViewerTestIncludeScopeInheritanceWithArgsInLoop Title="SomeArg" %>',
                 new ArrayData(
-                    array('Items' => new ArrayListInterface(
+                    array('Items' => new ArrayList(
                         array(
                         new ArrayData(array('Title' => 'Foo')),
                         new ArrayData(array('Title' => 'Bar'))
@@ -1076,12 +1076,12 @@ after'
         $data = new ArrayData(
             array(
             'Title' => 'A',
-            'Children' => new ArrayListInterface(
+            'Children' => new ArrayList(
                 array(
                 new ArrayData(
                     array(
                     'Title' => 'A1',
-                    'Children' => new ArrayListInterface(
+                    'Children' => new ArrayList(
                         array(
                         new ArrayData(array( 'Title' => 'A1 i', )),
                         new ArrayData(array( 'Title' => 'A1 ii', )),
@@ -1168,7 +1168,7 @@ after'
     {
         $data = new ArrayData(
             array(
-            'Set' => new ArrayListInterface(
+            'Set' => new ArrayList(
                 array(
                 new SSViewerTest\TestObject("1"),
                 new SSViewerTest\TestObject("2"),
@@ -1400,7 +1400,7 @@ after'
         $data = new ArrayData(
             array(
             'Name' => 'Top',
-            'Foo' => new ArrayListInterface(
+            'Foo' => new ArrayList(
                 array(
                 new ArrayData(
                     array(
@@ -1493,12 +1493,12 @@ after'
         // (of a different size to the main sequence)
         $data = new ArrayData(
             array(
-            'Foo' => new ArrayListInterface(
+            'Foo' => new ArrayList(
                 array(
                 new ArrayData(
                     array(
                     'Name' => '1',
-                    'Children' => new ArrayListInterface(
+                    'Children' => new ArrayList(
                         array(
                         new ArrayData(
                             array(
@@ -1517,13 +1517,13 @@ after'
                 new ArrayData(
                     array(
                     'Name' => '2',
-                    'Children' => new ArrayListInterface(),
+                    'Children' => new ArrayList(),
                     )
                 ),
                 new ArrayData(
                     array(
                     'Name' => '3',
-                    'Children' => new ArrayListInterface(),
+                    'Children' => new ArrayList(),
                     )
                 ),
                 )
@@ -1846,7 +1846,7 @@ after'
 
     public function testLoopIteratorIterator()
     {
-        $list = new PaginatedList(new ArrayListInterface());
+        $list = new PaginatedList(new ArrayList());
         $viewer = new ViewerFromString('<% loop List %>$ID - $FirstName<br /><% end_loop %>');
         $result = $viewer->process(new ArrayData(array('List' => $list)));
         $this->assertEquals($result, '');
@@ -1906,7 +1906,7 @@ after'
     {
         $data = new ArrayData(
             array(
-            'Set' => new ArrayListInterface(
+            'Set' => new ArrayList(
                 array(
                 new SSViewerTest\TestObject("1"),
                 new SSViewerTest\TestObject("2"),

@@ -7,7 +7,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ListInterface;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Versioned\Versioned;
@@ -204,7 +204,7 @@ class Hierarchy extends DataExtension
      * - Modified children will be marked as "ModifiedOnStage"
      * - Everything else has "SameOnStage" set, as an indicator that this information has been looked up.
      *
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     public function AllChildrenIncludingDeleted()
     {
@@ -217,7 +217,7 @@ class Hierarchy extends DataExtension
             // Next, go through the live children.  Only some of these will be listed
             $liveChildren = $owner->liveChildren(true, true);
             if ($liveChildren) {
-                $merged = new ArrayListInterface();
+                $merged = new ArrayList();
                 $merged->merge($stageChildren);
                 $merged->merge($liveChildren);
                 $stageChildren = $merged;
@@ -396,11 +396,11 @@ class Hierarchy extends DataExtension
      * Return all the parents of this class in a set ordered from the closest to furtherest parent.
      *
      * @param bool $includeSelf
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     public function getAncestors($includeSelf = false)
     {
-        $ancestors = new ArrayListInterface();
+        $ancestors = new ArrayList();
         $object = $this->owner;
 
         if ($includeSelf) {

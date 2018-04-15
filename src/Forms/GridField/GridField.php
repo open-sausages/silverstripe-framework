@@ -11,7 +11,7 @@ use SilverStripe\Control\HTTPResponseException;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
@@ -178,7 +178,7 @@ class GridField extends FormField
             return $this->modelClassName;
         }
 
-        /** @var DataList|ArrayListInterface $list */
+        /** @var DataList|ArrayList $list */
         $list = $this->list;
         if ($list && $list->hasMethod('dataClass')) {
             $class = $list->dataClass();
@@ -218,7 +218,7 @@ class GridField extends FormField
     }
 
     /**
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     public function getComponents()
     {

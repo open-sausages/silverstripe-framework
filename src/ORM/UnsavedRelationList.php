@@ -17,7 +17,7 @@ use SilverStripe\ORM\FieldType\DBField;
  * of $dataClass). Unsaved objects are then written when the list is saved
  * into an instance of {@link RelationList}.
  */
-class UnsavedRelationList extends ArrayListInterface implements Relation
+class UnsavedRelationList extends ArrayList implements Relation
 {
 
     /**
@@ -272,7 +272,7 @@ class UnsavedRelationList extends ArrayListInterface implements Relation
      */
     public function column($colName = 'ID')
     {
-        $list = new ArrayListInterface($this->toArray());
+        $list = new ArrayList($this->toArray());
         return $list->column($colName);
     }
 

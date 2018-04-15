@@ -6,7 +6,7 @@ use League\Csv\Reader;
 use SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\NoView;
 use SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\Team;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridFieldConfig;
@@ -152,7 +152,7 @@ class GridFieldExportButtonTest extends SapphireTest
         $this->gridField->getConfig()->addComponent(new GridFieldPaginator());
 
         //Create an ArrayList 1 greater the Paginator's default 15 rows
-        $arrayList = new ArrayListInterface();
+        $arrayList = new ArrayList();
         for ($i = 1; $i <= 16; $i++) {
             $dataobject = new DataObject(['ID' => $i]);
             $arrayList->add($dataobject);

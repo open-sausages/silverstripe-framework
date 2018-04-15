@@ -4,7 +4,7 @@ namespace SilverStripe\Dev;
 
 use Countable;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 
@@ -96,7 +96,7 @@ class BulkLoaderResult implements Countable
      * Returns all created objects. Each object might
      * contain specific importer feedback in the "_BulkLoaderMessage" property.
      *
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     public function Created()
     {
@@ -104,7 +104,7 @@ class BulkLoaderResult implements Countable
     }
 
     /**
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     public function Updated()
     {
@@ -112,11 +112,11 @@ class BulkLoaderResult implements Countable
     }
 
     /**
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     public function Deleted()
     {
-        $set = new ArrayListInterface();
+        $set = new ArrayList();
         foreach ($this->deleted as $arrItem) {
             $set->push(ArrayData::create($arrItem));
         }
@@ -175,11 +175,11 @@ class BulkLoaderResult implements Countable
 
     /**
      * @param array $arr containing ID and ClassName maps
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     protected function mapToArrayList($arr)
     {
-        $set = new ArrayListInterface();
+        $set = new ArrayList();
         foreach ($arr as $arrItem) {
             $obj = DataObject::get_by_id($arrItem['ClassName'], $arrItem['ID']);
             $obj->_BulkLoaderMessage = $arrItem['Message'];

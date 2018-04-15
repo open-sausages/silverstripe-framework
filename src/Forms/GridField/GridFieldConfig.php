@@ -5,7 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 
 /**
  * Encapsulates a collection of components following the
@@ -31,13 +31,13 @@ class GridFieldConfig
     use Configurable;
 
     /**
-     * @var ArrayListInterface
+     * @var ArrayList
      */
     protected $components = null;
 
     public function __construct()
     {
-        $this->components = new ArrayListInterface();
+        $this->components = new ArrayList();
     }
 
     /**
@@ -49,7 +49,7 @@ class GridFieldConfig
     {
         if ($insertBefore) {
             $existingItems = $this->getComponents();
-            $this->components = new ArrayListInterface;
+            $this->components = new ArrayList;
             $inserted = false;
             foreach ($existingItems as $existingItem) {
                 if (!$inserted && $existingItem instanceof $insertBefore) {
@@ -111,12 +111,12 @@ class GridFieldConfig
     }
 
     /**
-     * @return ArrayListInterface Of GridFieldComponent
+     * @return ArrayList Of GridFieldComponent
      */
     public function getComponents()
     {
         if (!$this->components) {
-            $this->components = new ArrayListInterface();
+            $this->components = new ArrayList();
         }
         return $this->components;
     }
@@ -125,11 +125,11 @@ class GridFieldConfig
      * Returns all components extending a certain class, or implementing a certain interface.
      *
      * @param string $type Class name or interface
-     * @return ArrayListInterface Of GridFieldComponent
+     * @return ArrayList Of GridFieldComponent
      */
     public function getComponentsByType($type)
     {
-        $components = new ArrayListInterface();
+        $components = new ArrayList();
         foreach ($this->components as $component) {
             if ($component instanceof $type) {
                 $components->push($component);

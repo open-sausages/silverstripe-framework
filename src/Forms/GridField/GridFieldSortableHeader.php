@@ -5,7 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\Sortable;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\ListInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
@@ -117,7 +117,7 @@ class GridFieldSortableHeader implements GridFieldHTMLProvider, GridFieldDataMan
         }
         /** @var Sortable $list */
         $forTemplate = new ArrayData(array());
-        $forTemplate->Fields = new ArrayListInterface;
+        $forTemplate->Fields = new ArrayList;
 
         $state = $gridField->State->GridFieldSortableHeader;
         $columns = $gridField->getColumns();

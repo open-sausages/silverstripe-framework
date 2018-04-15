@@ -5,7 +5,7 @@ namespace SilverStripe\Security;
 use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FormField;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\ListInterface;
@@ -56,7 +56,7 @@ class PermissionCheckboxSetField extends FormField
         if ($records instanceof ListInterface) {
             $this->records = $records;
         } elseif ($records instanceof Group) {
-            $this->records = new ArrayListInterface(array($records));
+            $this->records = new ArrayList(array($records));
         } elseif ($records) {
             throw new InvalidArgumentException(
                 '$record should be either a Group record, or a SS_List of Group records'
@@ -93,7 +93,7 @@ class PermissionCheckboxSetField extends FormField
     {
         $uninheritedCodes = array();
         $inheritedCodes = array();
-        $records = ($this->records) ? $this->records : new ArrayListInterface();
+        $records = ($this->records) ? $this->records : new ArrayList();
 
         // Get existing values from the form record (assuming the formfield name is a join field on the record)
         if (is_object($this->form)) {

@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\HTML;
 
@@ -109,7 +109,7 @@ class SelectionGroup extends CompositeField
             $newItems[] = $item->customise($extra);
         }
 
-        return new ArrayListInterface($newItems);
+        return new ArrayList($newItems);
     }
 
     public function hasData()

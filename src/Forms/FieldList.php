@@ -3,14 +3,14 @@
 namespace SilverStripe\Forms;
 
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 
 /**
  * A list designed to hold form field instances.
  *
  * @method FormField[] getIterator()
  */
-class FieldList extends ArrayListInterface
+class FieldList extends ArrayList
 {
 
     /**

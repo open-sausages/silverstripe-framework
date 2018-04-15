@@ -484,7 +484,7 @@ class DataList extends ViewableData implements ListInterface, Filterable, Sortab
      *
      * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
      * @param callable $callback
-     * @return ArrayListInterface (this may change in future implementations)
+     * @return ArrayList (this may change in future implementations)
      */
     public function filterByCallback($callback)
     {
@@ -494,8 +494,8 @@ class DataList extends ViewableData implements ListInterface, Filterable, Sortab
                 gettype($callback)
             ));
         }
-        /** @var ArrayListInterface $output */
-        $output = ArrayListInterface::create();
+        /** @var ArrayList $output */
+        $output = ArrayList::create();
         foreach ($this as $item) {
             if (call_user_func($callback, $item, $this)) {
                 $output->push($item);

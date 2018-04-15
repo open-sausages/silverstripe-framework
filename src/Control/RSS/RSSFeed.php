@@ -3,7 +3,7 @@
 namespace SilverStripe\Control\RSS;
 
 use SilverStripe\ORM\ListInterface;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Director;
@@ -168,7 +168,7 @@ class RSSFeed extends ViewableData
      */
     public function Entries()
     {
-        $output = new ArrayListInterface();
+        $output = new ArrayList();
 
         if (isset($this->entries)) {
             foreach ($this->entries as $entry) {

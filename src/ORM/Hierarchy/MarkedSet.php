@@ -6,7 +6,7 @@ use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ArrayLib;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\ListInterface;
@@ -192,7 +192,7 @@ class MarkedSet
     protected function getChildren(DataObject $node)
     {
         $method = $this->getChildrenMethod();
-        return $node->$method() ?: ArrayListInterface::create();
+        return $node->$method() ?: ArrayList::create();
     }
 
     /**
@@ -321,7 +321,7 @@ class MarkedSet
     protected function renderSubtree($data, $template, $context = [])
     {
         // Render children
-        $childNodes = new ArrayListInterface();
+        $childNodes = new ArrayList();
         foreach ($data['children'] as $child) {
             $childData = $this->renderSubtree($child, $template, $context);
             $childNodes->push($childData);

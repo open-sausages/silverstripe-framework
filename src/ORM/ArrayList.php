@@ -23,7 +23,7 @@ use LogicException;
  *   - filter
  *   - exclude
  */
-class ArrayListInterface extends ViewableData implements ListInterface, Filterable, Sortable, Limitable
+class ArrayList extends ViewableData implements ListInterface, Filterable, Sortable, Limitable
 {
 
     /**
@@ -385,7 +385,7 @@ class ArrayListInterface extends ViewableData implements ListInterface, Filterab
     /**
      * Reverses an {@link ArrayList}
      *
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     public function reverse()
     {
@@ -536,7 +536,7 @@ class ArrayListInterface extends ViewableData implements ListInterface, Filterab
     /**
      * Filter the list to include items with these charactaristics
      *
-     * @return ArrayListInterface
+     * @return ArrayList
      * @see ListInterface::filter()
      * @example $list->filter('Name', 'bob'); // only bob in the list
      * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
@@ -647,7 +647,7 @@ class ArrayListInterface extends ViewableData implements ListInterface, Filterab
      * Filter this list to only contain the given Primary IDs
      *
      * @param array $ids Array of integers, will be automatically cast/escaped.
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     public function byIDs($ids)
     {
@@ -671,7 +671,7 @@ class ArrayListInterface extends ViewableData implements ListInterface, Filterab
      *
      * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
      * @param callable $callback
-     * @return ArrayListInterface
+     * @return ArrayList
      */
     public function filterByCallback($callback)
     {
@@ -696,7 +696,7 @@ class ArrayListInterface extends ViewableData implements ListInterface, Filterab
     /**
      * Exclude the list to not contain items with these charactaristics
      *
-     * @return ArrayListInterface
+     * @return ArrayList
      * @see ListInterface::exclude()
      * @example $list->exclude('Name', 'bob'); // exclude bob from list
      * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list

@@ -8,7 +8,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 
 /**
  * @skipUpgrade
@@ -39,7 +39,7 @@ class TestController extends Controller implements TestOnly
         $gridConfig = GridFieldConfig::create();
         $gridConfig->addComponent(new TestComponent());
 
-        $gridData = new ArrayListInterface();
+        $gridData = new ArrayList();
         $gridField = new GridField('Grid', 'My grid', $gridData, $gridConfig);
 
         return new Form(

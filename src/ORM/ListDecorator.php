@@ -10,7 +10,7 @@ use LogicException;
  * functionality. It passes through list methods to the underlying list
  * implementation.
  */
-abstract class ListInterfaceDecorator extends ViewableData implements ListInterface, Sortable, Filterable, Limitable
+abstract class ListDecorator extends ViewableData implements ListInterface, Sortable, Filterable, Limitable
 {
 
     /**
@@ -225,7 +225,7 @@ abstract class ListInterfaceDecorator extends ViewableData implements ListInterf
      *
      * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
      * @param callable $callback
-     * @return ArrayListInterface (this may change in future implementations)
+     * @return ArrayList (this may change in future implementations)
      */
     public function filterByCallback($callback)
     {
@@ -235,7 +235,7 @@ abstract class ListInterfaceDecorator extends ViewableData implements ListInterf
                 gettype($callback)
             ));
         }
-        $output = ArrayListInterface::create();
+        $output = ArrayList::create();
         foreach ($this->list as $item) {
             if (call_user_func($callback, $item, $this->list)) {
                 $output->push($item);

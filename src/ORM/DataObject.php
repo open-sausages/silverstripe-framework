@@ -1203,8 +1203,8 @@ class DataObject extends ViewableData implements DataObjectInterface, EntityProv
      *   - This will only be useful prior to deletion, as post-deletion this record will no longer exist.
      *
      * @param bool $recursive True if recursive
-     * @param ArrayListInterface $list Optional list to add items to
-     * @return ArrayListInterface list of objects
+     * @param ArrayList $list Optional list to add items to
+     * @return ArrayList list of objects
      */
     public function findCascadeDeletes($recursive = true, $list = null)
     {
@@ -3978,14 +3978,14 @@ class DataObject extends ViewableData implements DataObjectInterface, EntityProv
      *
      * @param string $source Config property to extract relationships from
      * @param bool $recursive True if recursive
-     * @param ArrayListInterface $list If specified, items will be added to this list. If not, a new
+     * @param ArrayList $list If specified, items will be added to this list. If not, a new
      * instance of ArrayList will be constructed and returned
-     * @return ArrayListInterface The list of related objects
+     * @return ArrayList The list of related objects
      */
     public function findRelatedObjects($source, $recursive = true, $list = null)
     {
         if (!$list) {
-            $list = new ArrayListInterface();
+            $list = new ArrayList();
         }
 
         // Skip search for unsaved records
@@ -4027,13 +4027,13 @@ class DataObject extends ViewableData implements DataObjectInterface, EntityProv
      * Helper method to merge owned/owning items into a list.
      * Items already present in the list will be skipped.
      *
-     * @param ArrayListInterface $list Items to merge into
+     * @param ArrayList $list Items to merge into
      * @param mixed $items List of new items to merge
-     * @return ArrayListInterface List of all newly added items that did not already exist in $list
+     * @return ArrayList List of all newly added items that did not already exist in $list
      */
     public function mergeRelatedObjects($list, $items)
     {
-        $added = new ArrayListInterface();
+        $added = new ArrayList();
         if (!$items) {
             return $added;
         }
@@ -4052,8 +4052,8 @@ class DataObject extends ViewableData implements DataObjectInterface, EntityProv
      * Merge single object into a list, but ensures that existing objects are not
      * re-added.
      *
-     * @param ArrayListInterface $list Global list
-     * @param ArrayListInterface $added Additional list to insert into
+     * @param ArrayList $list Global list
+     * @param ArrayList $added Additional list to insert into
      * @param DataObject $item Item to add
      */
     protected function mergeRelatedObject($list, $added, $item)

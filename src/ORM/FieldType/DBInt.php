@@ -4,7 +4,7 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -43,7 +43,7 @@ class DBInt extends DBField
 
     public function Times()
     {
-        $output = new ArrayListInterface();
+        $output = new ArrayList();
         for ($i = 0; $i < $this->value; $i++) {
             $output->push(new ArrayData(array( 'Number' => $i + 1 )));
         }

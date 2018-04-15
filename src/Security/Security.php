@@ -18,7 +18,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\Form;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
@@ -598,7 +598,7 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         $viewData = new ArrayData([
-            'Forms' => new ArrayListInterface($forms),
+            'Forms' => new ArrayList($forms),
         ]);
 
         return $viewData->renderWith(
@@ -817,7 +817,7 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         return [
-            'Forms' => ArrayListInterface::create($forms),
+            'Forms' => ArrayList::create($forms),
             'Form' => $this->generateTabbedFormSet($forms)
         ];
     }

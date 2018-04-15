@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Forms\Tests\CheckboxSetFieldTest\Article;
 use SilverStripe\Forms\Tests\CheckboxSetFieldTest\Tag;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
@@ -76,7 +76,7 @@ class CheckboxSetFieldTest extends SapphireTest
         $this->assertEquals($items, $field->getSource());
 
         // SS_List
-        $list = new ArrayListInterface(
+        $list = new ArrayList(
             array(
             new ArrayData(
                 array(

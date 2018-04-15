@@ -4,7 +4,7 @@ namespace SilverStripe\Forms;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
@@ -110,11 +110,11 @@ class TreeMultiselectField extends TreeDropdownField
 
     /**
      * Return this field's linked items
-     * @return ArrayListInterface|DataList $items
+     * @return ArrayList|DataList $items
      */
     public function getItems()
     {
-        $items = new ArrayListInterface();
+        $items = new ArrayList();
 
         // If the value has been set, use that
         if ($this->value != 'unchanged') {

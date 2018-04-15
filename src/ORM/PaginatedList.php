@@ -13,7 +13,7 @@ use IteratorIterator;
 /**
  * A decorator that wraps around a data list in order to provide pagination.
  */
-class PaginatedList extends ListInterfaceDecorator
+class PaginatedList extends ListDecorator
 {
 
     protected $request;
@@ -252,7 +252,7 @@ class PaginatedList extends ListInterfaceDecorator
      */
     public function Pages($max = null)
     {
-        $result = new ArrayListInterface();
+        $result = new ArrayList();
 
         if ($max) {
             $start = ($this->CurrentPage() - floor($max / 2)) - 1;
@@ -324,7 +324,7 @@ class PaginatedList extends ListInterfaceDecorator
      */
     public function PaginationSummary($context = 4)
     {
-        $result = new ArrayListInterface();
+        $result = new ArrayList();
         $current = $this->CurrentPage();
         $total = $this->TotalPages();
 

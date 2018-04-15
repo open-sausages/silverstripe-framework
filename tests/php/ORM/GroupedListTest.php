@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\ORM\ArrayListInterface;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\GroupedList;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
@@ -16,7 +16,7 @@ class GroupedListTest extends SapphireTest
     public function testGroupBy()
     {
         $list = new GroupedList(
-            new ArrayListInterface(
+            new ArrayList(
                 array(
                 array('Name' => 'AAA'),
                 array('Name' => 'AAA'),
@@ -41,7 +41,7 @@ class GroupedListTest extends SapphireTest
     public function testGroupedBy()
     {
         $list = new GroupedList(
-            new ArrayListInterface(
+            new ArrayList(
                 array(
                 array('Name' => 'AAA'),
                 array('Name' => 'AAA'),
@@ -68,7 +68,7 @@ class GroupedListTest extends SapphireTest
     public function testGroupedByChildren()
     {
         $list = GroupedList::create(
-            ArrayListInterface::create(
+            ArrayList::create(
                 array(
                     ArrayData::create(
                         array(
@@ -163,7 +163,7 @@ class GroupedListTest extends SapphireTest
     public function testTotalItems()
     {
         $list = GroupedList::create(
-            ArrayListInterface::create(
+            ArrayList::create(
                 array(
                     ArrayData::create(
                         array(
