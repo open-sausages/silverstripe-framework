@@ -106,6 +106,16 @@ class GridField extends FormField
     protected $name = '';
 
     /**
+     * @var array
+     */
+    protected $reactComponents = [];
+
+    /**
+     * @var string
+     */
+    protected $schemaComponent = 'ReactGridField';
+
+    /**
      * Pattern used for looking up
      */
     const FRAGMENT_REGEX = '/\$DefineFragment\(([a-z0-9\-_]+)\)/i';
@@ -145,6 +155,34 @@ class GridField extends FormField
     public function index($request)
     {
         return $this->gridFieldAlterAction(array(), $this->getForm(), $request);
+    }
+
+    /**
+     * @param $position
+     * @param $component
+     * @return $this
+     */
+    public function addReactComponent($position, $component)
+    {
+        $this->reactComponents[$component] = $position;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getReactComponents()
+    {
+        $components = [];
+        foreach ($this->reactComponents as $name => $pos) {
+            $components[] = [
+                'position' => $pos,
+                'component' => $name,
+            ];
+        }
+
+        return $components;
     }
 
     /**
