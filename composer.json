@@ -60,7 +60,8 @@
     },
     "extra": {
         "branch-alias": {
-            "4.x-dev": "4.3.x-dev"
+            "4.x-dev": "4.3.x-dev",
+            "dev-experimental/gridfield": "4.3.x-dev"
         },
         "expose": [
             "client/images",
