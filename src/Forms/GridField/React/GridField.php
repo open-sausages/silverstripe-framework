@@ -1,82 +1,19 @@
 <?php
 
-namespace SilverStripe\Forms\GridField;
+namespace SilverStripe\Forms\GridField\React;
 
+use Exception;
 use InvalidArgumentException;
-use LogicException;
-use SilverStripe\Control\HasRequestHandler;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Control\RequestHandler;
-use SilverStripe\Forms\Form;
+use SilverStripe\Admin\GraphQL\GraphQLQuery;
+use SilverStripe\Admin\GraphQL\GraphQLReadQuery;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FormField;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\GraphQL\Manager;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\View\HTML;
 
-/**
- * Displays a {@link SS_List} in a grid format.
- *
- * GridField is a field that takes an SS_List and displays it in an table with rows and columns.
- * It reminds of the old TableFields but works with SS_List types and only loads the necessary
- * rows from the list.
- *
- * The minimum configuration is to pass in name and title of the field and a SS_List.
- *
- * <code>
- * $gridField = new GridField('ExampleGrid', 'Example grid', new DataList('Page'));
- * </code>
- *
- * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
- * since the required frontend dependencies are included through CMS bundling.
- *
- * @see SS_List
- *
- * @property GridState_Data $State The gridstate of this object
- */
 class GridField extends FormField
 {
-    /**
-     * @var array
-     */
-    private static $allowed_actions = array(
-        'index',
-        'gridFieldAlterAction',
-    );
-
-    /**
-     * Data source.
-     *
-     * @var SS_List
-     */
-    protected $list = null;
-
-    /**
-     * Class name of the DataObject that the GridField will display.
-     *
-     * Defaults to the value of $this->list->dataClass.
-     *
-     * @var string
-     */
-    protected $modelClassName = '';
-
-    /**
-     * Current state of the GridField.
-     *
-     * @var GridState
-     */
-    protected $state = null;
-
-    /**
-     * @var GridFieldConfig
-     */
-    protected $config = null;
-
     /**
      * Components list.
      *
@@ -85,66 +22,139 @@ class GridField extends FormField
     protected $components = array();
 
     /**
-     * Internal dispatcher for column handlers.
-     *
-     * Keys are column names and values are GridField_ColumnProvider objects.
-     *
-     * @var array
-     */
-    protected $columnDispatch = null;
-
-    /**
-     * Map of callbacks for custom data fields.
-     *
-     * @var array
-     */
-    protected $customDataFields = array();
-
-    /**
      * @var string
      */
     protected $name = '';
 
     /**
-     * Pattern used for looking up
+     * @var string
      */
-    const FRAGMENT_REGEX = '/\$DefineFragment\(([a-z0-9\-_]+)\)/i';
+    protected $schemaComponent = 'ReactGridField';
 
     /**
+     * @var string
+     */
+    protected $modelClass;
+
+    /**
+     * @var GraphQLQuery
+     */
+    protected $graphQLQuery;
+
+    /**
+     * GridField constructor.
      * @param string $name
      * @param string $title
-     * @param SS_List $dataList
-     * @param GridFieldConfig $config
+     * @param string $modelClass
      */
-    public function __construct($name, $title = null, SS_List $dataList = null, GridFieldConfig $config = null)
+    public function __construct($name, $title = null, $modelClass = null)
     {
         parent::__construct($name, $title, null);
 
         $this->name = $name;
 
-        if ($dataList) {
-            $this->setList($dataList);
+        if ($modelClass) {
+            $this->setModelClass($modelClass);
         }
 
-        if (!$config) {
-            $config = GridFieldConfig_Base::create();
-        }
-
-        $this->setConfig($config);
-
-        $this->state = new GridState($this);
-
-        $this->addExtraClass('grid-field');
+        $this->addExtraClass('react-grid-field');
     }
 
     /**
-     * @param HTTPRequest $request
-     *
-     * @return string
+     * @param $class
+     * @return $this
      */
-    public function index($request)
+    public function setModelClass($class)
     {
-        return $this->gridFieldAlterAction(array(), $this->getForm(), $request);
+        if (!is_subclass_of($class, DataObject::class)) {
+            // Todo: Otherwise, use your own GraphQL resolver and custom query! Yeah!
+            throw new InvalidArgumentException('GridField only works with DataObject classes');
+        }
+
+        $this->modelClass = $class;
+
+        return $this;
+    }
+
+    /**
+     * @param $position
+     * @param $component
+     * @return $this
+     */
+    public function addComponent($position, $component)
+    {
+        $this->components[$component] = $position;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getComponents()
+    {
+        $components = [];
+        foreach ($this->components as $name => $pos) {
+            $components[] = [
+                'position' => $pos,
+                'component' => $name,
+            ];
+        }
+
+        return $components;
+    }
+
+    /**
+     * Set GridField specific schema data
+     */
+    public function getSchemaDataDefaults()
+    {
+        $data = parent::getSchemaDataDefaults();
+        if (!$this->getGraphQLQuery()) {
+            $this->setGraphQLQuery($this->buildGraphQLQuery());
+        }
+        $query = $this->getGraphQLQuery()->getQueryData();
+        $data['data']['queryName'] = $query->QueryName;
+        $data['data']['graphqlQuery'] = $query->toGraphQL();
+        $data['data']['components'] = $this->getComponents();
+
+        return $data;
+    }
+
+    /**
+     * @param GraphQLQuery $query
+     * @return $this
+     */
+    public function setGraphQLQuery(GraphQLQuery $query)
+    {
+        $this->graphQLQuery = $query;
+
+        return $this;
+    }
+
+    public function getGraphQLQuery()
+    {
+        return $this->graphQLQuery;
+    }
+
+    protected function buildGraphQLQuery()
+    {
+        /* @var Manager $manager */
+        $manager = Injector::inst()->get(Manager::class . '.admin');
+
+        /* @var GraphQLQuery $query */
+        $query = Injector::inst()->createWithArgs(
+            GraphQLReadQuery::class,
+            [
+                $this->modelClass,
+                $manager,
+            ]
+        );
+
+        $query->setFields($this->getColumns());
+
+        return $query;
+
     }
 
     /**
