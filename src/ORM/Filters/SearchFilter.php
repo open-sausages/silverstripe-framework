@@ -197,7 +197,8 @@ abstract class SearchFilter
      *
      * @return array
      */
-    public function getSupportedModifiers()
+    public function
+     ogetSupportedModifiers()
     {
         // By default support 'not' as a modifier for all filters
         return ['not'];
