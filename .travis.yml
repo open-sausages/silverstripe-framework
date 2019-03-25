@@ -52,6 +52,11 @@ matrix:
         - DB=MYSQL
         - PHPUNIT_TEST=framework
 
+    - php: 7.3
+      env:
+        - DB=MYSQL
+        - BEHAT_TEST="@framework"
+
 before_script:
 # Extra $PATH
   - export PATH=~/.composer/vendor/bin:$PATH
@@ -75,6 +80,18 @@ before_script:
 # Log constants to CI for debugging purposes
   - php ./tests/dump_constants.php
 
+  - |
+    if [[ "$BEHAT_TEST" ]]; then
+      export PATH=/usr/lib/chromium-browser/:$PATH;
+      mkdir artifacts;
+      cp composer.lock artifacts;
+      sh -e /etc/init.d/xvfb start;
+      sleep 3;
+      chromedriver > artifacts/chromedriver.log 2>&1 &
+      vendor/bin/serve --bootstrap-file vendor/silverstripe/cms/tests/behat/serve-bootstrap.php &> artifacts/serve.log &
+      sleep 3;
+    fi
+
 script:
   - if [[ $PHPUNIT_TEST ]]; then vendor/bin/phpunit --testsuite $PHPUNIT_TEST; fi
   - if [[ $PHPUNIT_COVERAGE_TEST ]]; then phpdbg -qrr vendor/bin/phpunit --testsuite $PHPUNIT_COVERAGE_TEST --coverage-clover=coverage.xml; fi
@@ -82,7 +99,10 @@ script:
   - if [[ $PHPCS_TEST ]]; then composer run-script php-peg; fi
   - if [[ $PHPCS_TEST ]]; then git diff-files --quiet -w --relative=src; fi
   - if [[ $PHPCS_TEST ]]; then git diff -w --no-color --relative=src; fi
+  - if [[ $BEHAT_TEST ]]; then vendor/bin/behat $BEHAT_TEST; fi
 
 after_success:
   - if [[ $PHPUNIT_COVERAGE_TEST ]]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi
 
+after_failure:
+  - if [[ $BEHAT_TEST ]]; then php ./vendor/silverstripe/framework/tests/behat/travis-upload-artifacts.php --if-env ARTIFACTS_BUCKET,ARTIFACTS_KEY,ARTIFACTS_SECRET --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_BUCKET/ --artifacts-path ./artifacts/; fi
