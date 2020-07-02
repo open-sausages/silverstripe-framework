@@ -235,6 +235,12 @@ class ManyManyThroughList extends RelationList
         if ($item instanceof DataObject) {
             $item->setJoin($record, $this->manipulator->getJoinAlias());
         }
+
+        // Call addCallback, if applicable
+        if ($this->addCallback) {
+            $callback = $this->addCallback;
+            $callback($this, $item, $extraFields);
+        }
     }
 
     /**

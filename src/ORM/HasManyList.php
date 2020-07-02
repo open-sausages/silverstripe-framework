@@ -93,6 +93,12 @@ class HasManyList extends RelationList
         $item->$foreignKey = $foreignID;
 
         $item->write();
+
+        // Call addCallback, if applicable
+        if ($this->addCallback) {
+            $callback = $this->addCallback;
+            $callback($this, $item, []);
+        }
     }
 
     /**

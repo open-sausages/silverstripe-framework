@@ -322,6 +322,12 @@ class ManyManyList extends RelationList
 
             DB::manipulate($manipulation);
         }
+
+        // Call addCallback, if applicable
+        if ($this->addCallback) {
+            $callback = $this->addCallback;
+            $callback($this, $item, $extraFields);
+        }
     }
 
     /**

@@ -11,6 +11,24 @@ use Exception;
  */
 abstract class RelationList extends DataList implements Relation
 {
+    protected $addCallback;
+
+    /**
+     * Set a callback that is called after the add() action is completed.
+     *
+     * Callback will be passed ($this, $item, $extraFields).
+     * If a relation methods is manually defined, this can be called to adjust the behaviour
+     * when adding records to this list.
+     *
+     * Note that subclasses of RelationList must implement the callback for it to function
+     *
+     * @return this
+     */
+    public function setAddCallback($callback): self
+    {
+        $this->addCallback = $callback;
+        return $this;
+    }
 
     /**
      * @var Callable
