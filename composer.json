@@ -32,6 +32,7 @@
         "psr/container": "1.0.0",
         "silverstripe/config": "^1@dev",
         "silverstripe/assets": "^1@dev",
+        "silverstripe/event-dispatcher": "^0.1.0",
         "silverstripe/vendor-plugin": "^1.4",
         "sminnee/callbacklist": "^0.1",
         "swiftmailer/swiftmailer": "~5.4",

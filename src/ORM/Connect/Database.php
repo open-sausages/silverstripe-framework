@@ -9,6 +9,8 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\ORM\Queries\SQLInsert;
+use SilverStripe\EventDispatcher\Dispatch\Dispatcher;
+use SilverStripe\EventDispatcher\Symfony\Event;
 use BadMethodCallException;
 use Exception;
 use SilverStripe\Dev\Backtrace;
@@ -151,6 +153,13 @@ abstract class Database
             return null;
         }
 
+        Dispatcher::singleton()->trigger('database.query', Event::create(
+            null,
+            [
+                'sql' => $sql
+            ]
+        ));
+
         // Benchmark query
         $connector = $this->connector;
         return $this->benchmarkQuery(
@@ -176,6 +185,14 @@ abstract class Database
         if ($this->previewWrite($sql)) {
             return null;
         }
+
+        Dispatcher::singleton()->trigger('database.preparedQuery', Event::create(
+            null,
+            [
+                'sql' => $sql,
+                'parameters' => $parameters
+            ]
+        ));
 
         // Benchmark query
         $connector = $this->connector;
